@@ -14,7 +14,7 @@ public class ConexionBD {
     private static String usuario = "LLE";
     private static String password = "YVL";
 
-    public static Connection conectar() throws SQLException {
+    public static Connection oracle() throws SQLException {
         Connection conexion = null;
         try {
             DriverManager.registerDriver(new OracleDriver());
