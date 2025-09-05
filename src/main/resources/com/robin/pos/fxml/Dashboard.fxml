@@ -84,20 +84,6 @@
     <center>
         <VBox prefHeight="800.0" prefWidth="1216.0" BorderPane.alignment="CENTER">
             <children>
-                <!-- Top Bar -->
-                <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="1256.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 0 30 0 30;">
-                    <children>
-                        <!-- Search Bar -->
-                        <TextField fx:id="searchField" prefHeight="24.0" prefWidth="300.0" promptText="Buscar..." style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #bdc3c7; -fx-padding: 5 15 5 15;" />
-
-                        <!-- User Profile -->
-                        <Button fx:id="profileBtn" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" prefHeight="34.0" prefWidth="40.0" style="-fx-background-color: #3498db; -fx-background-radius: 20; -fx-border-radius: 20; -fx-text-fill: white;" text="👤">
-                            <cursor>
-                                <Cursor fx:constant="HAND" />
-                            </cursor>
-                        </Button>
-                    </children>
-                </HBox>
 
                 <!-- Main Content -->
                 <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
@@ -266,4 +252,20 @@
             </children>
         </VBox>
     </center>
+   <top>
+          <!-- Top Bar -->
+          <HBox alignment="CENTER_RIGHT" prefHeight="39.0" prefWidth="1400.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 0 30 0 30;" BorderPane.alignment="CENTER">
+              <children>
+                  <!-- Search Bar -->
+                  <TextField fx:id="searchField" prefHeight="24.0" prefWidth="300.0" promptText="Buscar..." style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #bdc3c7; -fx-padding: 5 15 5 15;" />
+
+                  <!-- User Profile -->
+                  <Button fx:id="profileBtn" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" prefHeight="34.0" prefWidth="40.0" style="-fx-background-color: #3498db; -fx-background-radius: 20; -fx-border-radius: 20; -fx-text-fill: white;" text="👤">
+                      <cursor>
+                          <Cursor fx:constant="HAND" />
+                      </cursor>
+                  </Button>
+              </children>
+          </HBox>
+   </top>
 </BorderPane>
