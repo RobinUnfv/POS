@@ -3,6 +3,7 @@ module com.robin.pos {
     requires javafx.fxml;
     requires java.sql;
     requires ojdbc8;
+    requires org.kordamp.bootstrapfx.core;
 
 
     opens com.robin.pos to javafx.fxml;

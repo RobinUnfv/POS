@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.DashboardController">
+    <left>
+        <!-- Sidebar -->
+        <VBox prefHeight="800.0" prefWidth="153.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+            <children>
+                <!-- Logo/Header -->
+                <HBox alignment="CENTER" prefHeight="153.0" prefWidth="144.0" style="-fx-background-color: white;">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="165.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../imagenes/logos-nexer.png" />
+                     </image>
+                  </ImageView>
+               </children>
+                </HBox>
+
+                <!-- Menu Items -->
+                <VBox spacing="5.0" style="-fx-padding: 20 0 0 0;">
+                    <children>
+                  <Separator prefWidth="200.0" />
+                        <!-- Dashboard -->
+                        <Button fx:id="dashboardBtn" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="250.0" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-border-width: 0; -fx-font-size: 14px;" text="   📊  Dashboard">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+
+                        <!-- Ventas -->
+                        <Button fx:id="ventasBtn" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="250.0" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-border-width: 0; -fx-font-size: 14px;" text="   💰  Ventas">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+
+                        <!-- Clientes -->
+                        <Button fx:id="clientesBtn" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="250.0" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-border-width: 0; -fx-font-size: 14px;" text="   👥  Clientes">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+
+                        <!-- Productos -->
+                        <Button fx:id="productosBtn" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="250.0" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-border-width: 0; -fx-font-size: 14px;" text="   📦  Productos">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+
+                        <!-- Reportes -->
+                        <Button fx:id="reportesBtn" alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="250.0" style="-fx-background-color: transparent; -fx-text-fill: black; -fx-border-width: 0; -fx-font-size: 14px;" text="   📈  Reportes">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                    </children>
+                </VBox>
+
+                <!-- Account Section -->
+                <Region prefHeight="246.0" prefWidth="144.0" VBox.vgrow="ALWAYS" />
+            </children>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox prefHeight="800.0" prefWidth="1216.0" BorderPane.alignment="CENTER">
+            <children>
+                <!-- Top Bar -->
+                <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="1256.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 0 30 0 30;">
+                    <children>
+                        <!-- Search Bar -->
+                        <TextField fx:id="searchField" prefHeight="24.0" prefWidth="300.0" promptText="Buscar..." style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #bdc3c7; -fx-padding: 5 15 5 15;" />
+
+                        <!-- User Profile -->
+                        <Button fx:id="profileBtn" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" prefHeight="34.0" prefWidth="40.0" style="-fx-background-color: #3498db; -fx-background-radius: 20; -fx-border-radius: 20; -fx-text-fill: white;" text="👤">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                    </children>
+                </HBox>
+
+                <!-- Main Content -->
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+                    <content>
+                        <VBox spacing="30.0" style="-fx-padding: 30;">
+                            <children>
+                                <!-- Page Title -->
+                                <Label textFill="#2c3e50">
+                                    <font>
+                                        <Font name="System Bold" size="28.0" />
+                                    </font>
+                                </Label>
+
+                                <!-- Stats Cards -->
+                                <GridPane hgap="25.0" vgap="25.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <!-- Clientes Card -->
+                                        <VBox alignment="CENTER" prefHeight="150.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2); -fx-padding: 25;">
+                                            <children>
+                                                <HBox alignment="CENTER" spacing="15.0">
+                                                    <children>
+                                                        <VBox alignment="CENTER_LEFT" spacing="5.0">
+                                                            <children>
+                                                                <Label text="CLIENTES" textFill="#7f8c8d">
+                                                                    <font>
+                                                                        <Font name="System Bold" size="12.0" />
+                                                                    </font>
+                                                                </Label>
+                                                                <Label fx:id="clientesCountLabel" text="123k" textFill="#2c3e50">
+                                                                    <font>
+                                                                        <Font name="System Bold" size="32.0" />
+                                                                    </font>
+                                                                </Label>
+                                                            </children>
+                                                        </VBox>
+                                                        <StackPane prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #e8f4fd; -fx-background-radius: 15;">
+                                                            <children>
+                                                                <Label text="👥" textFill="#3498db">
+                                                                    <font>
+                                                                        <Font size="24.0" />
+                                                                    </font>
+                                                                </Label>
+                                                            </children>
+                                                        </StackPane>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+
+                                        <!-- Ventas Card -->
+                                        <VBox alignment="CENTER" prefHeight="150.0" spacing="15.0" style="-fx-background-color: #ff6b6b; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2); -fx-padding: 25;" GridPane.columnIndex="1">
+                                            <children>
+                                                <HBox alignment="CENTER" spacing="15.0">
+                                                    <children>
+                                                        <VBox alignment="CENTER_LEFT" spacing="5.0">
+                                                            <children>
+                                                                <Label text="VENTAS" textFill="white">
+                                                                    <font>
+                                                                        <Font name="System Bold" size="12.0" />
+                                                                    </font>
+                                                                </Label>
+                                                                <Label fx:id="ventasCountLabel" text="340" textFill="white">
+                                                                    <font>
+                                                                        <Font name="System Bold" size="32.0" />
+                                                                    </font>
+                                                                </Label>
+                                                            </children>
+                                                        </VBox>
+                                                        <StackPane prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 15;">
+                                                            <children>
+                                                                <Label text="💰" textFill="white">
+                                                                    <font>
+                                                                        <Font size="24.0" />
+                                                                    </font>
+                                                                </Label>
+                                                            </children>
+                                                        </StackPane>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+
+                                        <!-- Productos Card -->
+                                        <VBox alignment="CENTER" prefHeight="150.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2); -fx-padding: 25;" GridPane.columnIndex="2">
+                                            <children>
+                                                <HBox alignment="CENTER" spacing="15.0">
+                                                    <children>
+                                                        <VBox alignment="CENTER_LEFT" spacing="5.0">
+                                                            <children>
+                                                                <Label text="PRODUCTOS" textFill="#7f8c8d">
+                                                                    <font>
+                                                                        <Font name="System Bold" size="12.0" />
+                                                                    </font>
+                                                                </Label>
+                                                                <Label fx:id="productosCountLabel" text="2k" textFill="#2c3e50">
+                                                                    <font>
+                                                                        <Font name="System Bold" size="32.0" />
+                                                                    </font>
+                                                                </Label>
+                                                            </children>
+                                                        </VBox>
+                                                        <StackPane prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #fff3e0; -fx-background-radius: 15;">
+                                                            <children>
+                                                                <Label text="📦" textFill="#ff9800">
+                                                                    <font>
+                                                                        <Font size="24.0" />
+                                                                    </font>
+                                                                </Label>
+                                                            </children>
+                                                        </StackPane>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+
+                                        <!-- Ingresos Card -->
+                                        <VBox alignment="CENTER" prefHeight="150.0" spacing="15.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2); -fx-padding: 25;" GridPane.columnIndex="3">
+                                            <children>
+                                                <HBox alignment="CENTER" spacing="15.0">
+                                                    <children>
+                                                        <VBox alignment="CENTER_LEFT" spacing="5.0">
+                                                            <children>
+                                                                <Label text="INGRESOS" textFill="#7f8c8d">
+                                                                    <font>
+                                                                        <Font name="System Bold" size="12.0" />
+                                                                    </font>
+                                                                </Label>
+                                                                <Label fx:id="ingresosCountLabel" text="S/ 45k" textFill="#2c3e50">
+                                                                    <font>
+                                                                        <Font name="System Bold" size="32.0" />
+                                                                    </font>
+                                                                </Label>
+                                                            </children>
+                                                        </VBox>
+                                                        <StackPane prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #e8f5e8; -fx-background-radius: 15;">
+                                                            <children>
+                                                                <Label text="💵" textFill="#4caf50">
+                                                                    <font>
+                                                                        <Font size="24.0" />
+                                                                    </font>
+                                                                </Label>
+                                                            </children>
+                                                        </StackPane>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </GridPane>
+
+                                <!-- Content Sections -->
+                                <HBox spacing="30.0" />
+                            </children>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>
