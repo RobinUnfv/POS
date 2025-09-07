@@ -20,6 +20,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="558.0" prefWidth="1312.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.VentaController">
     <center>
         <HBox prefHeight="558.0" prefWidth="1260.0" BorderPane.alignment="CENTER">
@@ -31,8 +33,8 @@
                         <!-- RUC / DNI con botones -->
                         <GridPane>
                             <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="10.0" prefWidth="135.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="10.0" prefWidth="87.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="10.0" prefWidth="118.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="10.0" prefWidth="96.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="47.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="76.0" minWidth="10.0" prefWidth="37.0" />
                             </columnConstraints>
@@ -75,8 +77,17 @@
                                     </cursor>
                                 </Button>
                         <Label prefHeight="17.0" prefWidth="82.0" text="Doc. Identidad" />
-                        <ComboBox fx:id="cbxDocIdentidad" prefHeight="25.0" prefWidth="290.0" promptText="VENTA CONTADO" GridPane.rowIndex="1" />
-                            </children>
+                        <ComboBox fx:id="cbxDocIdentidad" prefHeight="25.0" prefWidth="290.0"  GridPane.rowIndex="1" >
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="DNI" />
+                                    <String fx:value="RUC" />
+                                    <String fx:value="CARNET EXTRANJERIA" />
+                                    <String fx:value="PASAPORTE" />
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                             </children>
                         </GridPane>
 
                         <!-- Resto de campos -->
