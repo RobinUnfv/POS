@@ -55,8 +55,14 @@ public class DashboardController {
         this.cambiarColorBtnSeleccionado((Button) event.getSource());
         FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/Venta.fxml"));
         BorderPane ap = loader.load();
-        VentaController ventaController = loader.getController();
-        Tab tabVenta = new Tab(LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEE dd MMM hh:mm:ss a")), ap);
+        //VentaController ventaController = loader.getController();
+        // LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEE dd MMM hh:mm:ss a"))
+
+        ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/carritoCompras16.png").toString());
+        icono.setFitWidth(16);
+        icono.setFitHeight(16);
+        Tab tabVenta = new Tab("Venta", ap);
+        tabVenta.setGraphic(icono);
         tabVenta.setClosable(true);
         this.tabPane.getTabs().add(tabVenta);
         this.tabPane.getSelectionModel().select(tabVenta);
