@@ -10,11 +10,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class DashboardController {
 
@@ -45,6 +42,8 @@ public class DashboardController {
     @FXML
     private TabPane tabPane;
 
+    private Tab tabVenta;
+
     @FXML
     void ingresarDashboard(ActionEvent event) {
         this.cambiarColorBtnSeleccionado((Button) event.getSource());
@@ -53,19 +52,24 @@ public class DashboardController {
     @FXML
     void ingreasarVenta(ActionEvent  event) throws IOException {
         this.cambiarColorBtnSeleccionado((Button) event.getSource());
-        FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/Venta.fxml"));
-        BorderPane ap = loader.load();
-        //VentaController ventaController = loader.getController();
-        // LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEE dd MMM hh:mm:ss a"))
+        if (tabVenta == null) {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/Venta.fxml"));
+            BorderPane ap = loader.load();
+            //VentaController ventaController = loader.getController();
+            // LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEE dd MMM hh:mm:ss a"))
 
-        ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/carritoCompras16.png").toString());
-        icono.setFitWidth(16);
-        icono.setFitHeight(16);
-        Tab tabVenta = new Tab("Venta", ap);
-        tabVenta.setGraphic(icono);
-        tabVenta.setClosable(true);
-        this.tabPane.getTabs().add(tabVenta);
+            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/carritoCompras16.png").toString());
+            icono.setFitWidth(16);
+            icono.setFitHeight(16);
+            tabVenta = new Tab("Venta", ap);
+            tabVenta.setGraphic(icono);
+            tabVenta.setClosable(true);
+            tabVenta.setOnClosed(e -> tabVenta = null);
+
+            this.tabPane.getTabs().add(tabVenta);
+        }
         this.tabPane.getSelectionModel().select(tabVenta);
+
     }
 
     @FXML
