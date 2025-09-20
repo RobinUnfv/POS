@@ -1,5 +1,6 @@
 package com.robin.pos.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -8,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 
 public class VentaController {
 
@@ -19,16 +19,13 @@ public class VentaController {
     private Button btnBoleta;
 
     @FXML
-    private ImageView btnBuscarCliente;
-
-    @FXML
-    private ImageView btnBuscarReniec;
+    private Button btnBuscarCliente;
 
     @FXML
     private Button btnFactura;
 
     @FXML
-    private Button buscarClienteButton;
+    private Button btnNuevoCliente;
 
     @FXML
     private ComboBox<?> cbxDocIdentidad;
@@ -43,9 +40,6 @@ public class VentaController {
     private ComboBox<?> cbxMotConting;
 
     @FXML
-    private TextField descripcionProductoField;
-
-    @FXML
     private TextField lblIgv;
 
     @FXML
@@ -56,9 +50,6 @@ public class VentaController {
 
     @FXML
     private Label lblTotal;
-
-    @FXML
-    private Button nuevoClienteButton;
 
     @FXML
     private TableView<?> tProducto;
@@ -80,5 +71,10 @@ public class VentaController {
 
     @FXML
     private TextField txtVuelto;
+
+    @FXML
+    void buscarCliente(ActionEvent event) {
+
+    }
 
 }

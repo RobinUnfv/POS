@@ -49,9 +49,9 @@
                                     </GridPane.margin>
                                 </Label>
                                 <TextField fx:id="txtNumDoc" prefHeight="25.0" prefWidth="180.0" promptText="Num. Doc." text="99999999998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                <Button fx:id="buscarClienteButton" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" prefHeight="27.0" prefWidth="25.0" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                <Button fx:id="btnBuscarCliente" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#buscarCliente" prefHeight="27.0" prefWidth="25.0" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                     <graphic>
-                                        <ImageView fx:id="btnBuscarCliente" fitHeight="19.0" fitWidth="18.0" pickOnBounds="true" smooth="false">
+                                        <ImageView fitHeight="19.0" fitWidth="18.0" pickOnBounds="true" smooth="false">
                                             <image>
                                                 <Image url="@../imagenes/buscarCliente16.png" />
                                             </image>
@@ -64,9 +64,9 @@
                                         <Cursor fx:constant="HAND" />
                                     </cursor>
                                 </Button>
-                                <Button fx:id="nuevoClienteButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" prefHeight="28.0" prefWidth="25.0" text="Button" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                <Button fx:id="btnNuevoCliente" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" prefHeight="28.0" prefWidth="25.0" text="Button" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                     <graphic>
-                                        <ImageView fx:id="btnBuscarReniec" fitHeight="20.0" fitWidth="18.0" pickOnBounds="true">
+                                        <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true">
                                             <image>
                                                 <Image url="@../imagenes/newCliente16.png" />
                                             </image>
