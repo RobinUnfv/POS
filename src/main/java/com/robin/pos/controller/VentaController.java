@@ -1,5 +1,6 @@
 package com.robin.pos.controller;
 
+import com.robin.pos.util.Mensaje;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -74,7 +75,7 @@ public class VentaController {
 
     @FXML
     void buscarCliente(ActionEvent event) {
-
+        Mensaje.alerta(null, "Cliente","Cliente no encontrado.");
     }
 
 }
