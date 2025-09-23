@@ -1,15 +1,18 @@
 package com.robin.pos.controller;
 
+import com.robin.pos.dao.ClienteDao;
+import com.robin.pos.model.Cliente;
+import com.robin.pos.util.ConexionBD;
 import com.robin.pos.util.Mensaje;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.layout.AnchorPane;
+
+import java.sql.SQLException;
 
 public class VentaController {
 
@@ -73,9 +76,40 @@ public class VentaController {
     @FXML
     private TextField txtVuelto;
 
+    private ClienteDao clienteDao;
+
+    @FXML
+    AnchorPane root;
+
     @FXML
     void buscarCliente(ActionEvent event) {
-        Mensaje.alerta(null, "Cliente","Cliente no encontrado.");
+
+       if (this.txtNumDoc.getText().isEmpty()) {
+           Mensaje.alerta(null,"Número Documento","Ingrese el Número de documento");
+           return;
+       }
+
+       Task<Cliente> clienteTask = new Task<Cliente>() {
+           @Override
+           protected Cliente call() throws Exception {
+              clienteDao = new ClienteDao();
+              return clienteDao.buscarPorNumId("01",txtNumDoc.getText());
+           }
+       };
+
+       clienteTask.setOnSucceeded(e -> {
+           Cliente cliente = clienteTask.getValue();
+           if (cliente ==  null) {
+               Mensaje.alerta(null,"Consulta cliente","El número de documento "+this.txtNumDoc.getText()+" no valido.");
+           }
+       });
+
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+
+        Thread hilo = new Thread(clienteTask);
+        hilo.start();
+
     }
 
 }

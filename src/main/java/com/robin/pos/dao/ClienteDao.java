@@ -2,6 +2,7 @@ package com.robin.pos.dao;
 
 import com.robin.pos.model.Cliente;
 import com.robin.pos.util.ConexionBD;
+import com.robin.pos.util.Mensaje;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -68,6 +69,7 @@ public class ClienteDao {
 
         } catch (SQLException ex) {
             Logger.getLogger(ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
+            Mensaje.error(null, "Consultar numero documento","Error en la consulta de cliente.");
         } finally {
             ConexionBD.cerrarCxOracle(cx);
         }

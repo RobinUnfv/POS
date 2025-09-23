@@ -11,4 +11,12 @@ public class Mensaje {
         alert.setContentText(contenido);
         alert.showAndWait();
     }
+
+    public static void error(String header, String titulo, String contenido) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(header);
+        alert.setTitle(titulo);
+        alert.setContentText(contenido);
+        alert.showAndWait();
+    }
 }
