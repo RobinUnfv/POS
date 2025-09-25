@@ -7,9 +7,11 @@ import com.robin.pos.util.Mensaje;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
 import java.sql.SQLException;
@@ -79,9 +81,6 @@ public class VentaController {
     private ClienteDao clienteDao;
 
     @FXML
-    AnchorPane root;
-
-    @FXML
     void buscarCliente(ActionEvent event) {
 
        if (this.txtNumDoc.getText().isEmpty()) {
@@ -89,27 +88,35 @@ public class VentaController {
            return;
        }
 
-       Task<Cliente> clienteTask = new Task<Cliente>() {
-           @Override
-           protected Cliente call() throws Exception {
-              clienteDao = new ClienteDao();
-              return clienteDao.buscarPorNumId("01",txtNumDoc.getText());
-           }
-       };
+       clienteDao = new ClienteDao();
+       Cliente cliente = clienteDao.buscarPorNumId("01",txtNumDoc.getText());
 
-       clienteTask.setOnSucceeded(e -> {
-           Cliente cliente = clienteTask.getValue();
-           if (cliente ==  null) {
-               Mensaje.alerta(null,"Consulta cliente","El número de documento "+this.txtNumDoc.getText()+" no valido.");
-           }
-       });
+       if (cliente ==  null) {
+            Mensaje.error(null,"Consulta cliente","El número de documento "+this.txtNumDoc.getText()+" no valido.");
+            this.limpiarCliente();
+            return;
+       }
 
-        ProgressIndicator progressIndicator = new ProgressIndicator();
-        progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+       this.mostrarCliente(cliente);
+    }
 
-        Thread hilo = new Thread(clienteTask);
-        hilo.start();
+    @FXML
+    void buscarClienteNumId(KeyEvent event) {
+         switch (event.getCode()) {
+             case ENTER:
 
+         }
+    }
+
+    void mostrarCliente(Cliente cliente) {
+        txtNumDoc.setText(cliente.getNoCliente());
+        txtRazSocNom.setText(cliente.getNombre());
+        txtDireccion.setText(cliente.getDireccion());
+    }
+
+    void limpiarCliente(){
+        txtRazSocNom.setText("");
+        txtDireccion.setText("");
     }
 
 }

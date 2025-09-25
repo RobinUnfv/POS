@@ -48,7 +48,7 @@
                                         <Insets left="5.0" />
                                     </GridPane.margin>
                                 </Label>
-                                <TextField fx:id="txtNumDoc" prefHeight="25.0" prefWidth="180.0" promptText="Num. Doc." text="99999999998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <TextField fx:id="txtNumDoc" onKeyPressed="#buscarClienteNumId" prefHeight="25.0" prefWidth="180.0" promptText="Num. Doc." text="99999999998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                 <Button fx:id="btnBuscarCliente" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#buscarCliente" prefHeight="27.0" prefWidth="25.0" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                     <graphic>
                                         <ImageView fitHeight="19.0" fitWidth="18.0" pickOnBounds="true" smooth="false">
@@ -86,6 +86,9 @@
                                     <String fx:value="RUC" />
                                 </FXCollections>
                             </items>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                         </ComboBox>
                              </children>
                         </GridPane>
