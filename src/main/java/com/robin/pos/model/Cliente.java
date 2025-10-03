@@ -23,11 +23,9 @@ public class Cliente {
     public String getNoCliente() {
         return noCliente.get();
     }
-
     public StringProperty noClienteProperty() {
         return noCliente;
     }
-
     public void setNoCliente(String noCliente) {
         this.noCliente.set(noCliente);
     }
@@ -35,11 +33,9 @@ public class Cliente {
     public String getNombre() {
         return nombre.get();
     }
-
     public StringProperty nombreProperty() {
         return nombre;
     }
-
     public void setNombre(String nombre) {
         this.nombre.set(nombre);
     }
@@ -47,11 +43,9 @@ public class Cliente {
     public String getTelefono() {
         return telefono.get();
     }
-
     public StringProperty telefonoProperty() {
         return telefono;
     }
-
     public void setTelefono(String telefono) {
         this.telefono.set(telefono);
     }
@@ -59,11 +53,9 @@ public class Cliente {
     public String getRuc() {
         return ruc.get();
     }
-
     public StringProperty rucProperty() {
         return ruc;
     }
-
     public void setRuc(String ruc) {
         this.ruc.set(ruc);
     }
@@ -71,11 +63,9 @@ public class Cliente {
     public String getTipoCliente() {
         return tipoCliente.get();
     }
-
     public StringProperty tipoClienteProperty() {
         return tipoCliente;
     }
-
     public void setTipoCliente(String tipoCliente) {
         this.tipoCliente.set(tipoCliente);
     }
@@ -83,7 +73,6 @@ public class Cliente {
     public String getTipoPersona() {
         return tipoPersona.get();
     }
-
     public StringProperty tipoPersonaProperty() {
         return tipoPersona;
     }

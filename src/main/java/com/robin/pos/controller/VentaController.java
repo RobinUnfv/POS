@@ -79,6 +79,9 @@ public class VentaController {
     @FXML
     private TextField txtVuelto;
 
+    @FXML
+    private TextField txtListaProd;
+
     private ClienteDao clienteDao;
 
     @FXML

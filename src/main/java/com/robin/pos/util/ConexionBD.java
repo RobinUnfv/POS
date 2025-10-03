@@ -1,6 +1,5 @@
 package com.robin.pos.util;
 
-
 import oracle.jdbc.OracleDriver;
 
 import java.sql.*;
@@ -10,7 +9,7 @@ import java.util.logging.Logger;
 public class ConexionBD {
     // DESKTOP-UAQQ6TN --> PC ROBIN
     // Mat
-    private static String host = "Mat";
+    private static String host = "DESKTOP-UAQQ6TN";
     private static String puerto = "1521";
     private static String sid = "BDNX1";
     private static String usuario = "LLE";

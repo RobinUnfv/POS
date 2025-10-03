@@ -66,8 +66,9 @@ public class ClienteDao {
                 cliente.setCodiDist(rs.getString("CODI_DIST"));
                 cliente.setEstabSunat(rs.getString("ESTAB_SUNAT"));
             }
-
+            ConexionBD.cerrarCxOracle(cx);
         } catch (SQLException ex) {
+            ConexionBD.cerrarCxOracle(cx);
             Logger.getLogger(ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
             Mensaje.error(null, "Consultar numero documento","Error en la consulta de cliente.");
         } finally {

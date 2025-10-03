@@ -4,6 +4,9 @@ module com.robin.pos {
     requires java.sql;
     requires ojdbc8;
     requires org.kordamp.bootstrapfx.core;
+    requires javafx.base;
+
+    requires java.logging;
 
 
     opens com.robin.pos to javafx.fxml;
