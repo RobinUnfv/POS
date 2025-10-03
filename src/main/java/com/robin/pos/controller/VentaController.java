@@ -11,6 +11,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
@@ -34,7 +35,7 @@ public class VentaController {
     private Button btnNuevoCliente;
 
     @FXML
-    private ComboBox<?> cbxDocIdentidad;
+    private ComboBox<String> cbxDocIdentidad;
 
     @FXML
     private ComboBox<?> cbxFormaPago;
@@ -102,10 +103,23 @@ public class VentaController {
 
     @FXML
     void buscarClienteNumId(KeyEvent event) {
-         switch (event.getCode()) {
-             case ENTER:
+        if (event.getCode() == KeyCode.ENTER) {
+            if (this.txtNumDoc.getText().isEmpty()) {
+                this.limpiarCliente();
+                return;
+            }
 
-         }
+            clienteDao = new ClienteDao();
+            Cliente cliente = clienteDao.buscarPorNumId("01",txtNumDoc.getText());
+
+            if (cliente ==  null) {
+                Mensaje.error(null,"Consulta cliente","El número de documento "+this.txtNumDoc.getText()+" no valido.");
+                this.limpiarCliente();
+                return;
+            }
+
+            this.mostrarCliente(cliente);
+        }
     }
 
     void mostrarCliente(Cliente cliente) {
@@ -117,6 +131,38 @@ public class VentaController {
     void limpiarCliente(){
         txtRazSocNom.setText("");
         txtDireccion.setText("");
+    }
+
+    @FXML
+    void escogerTipoDocumento(ActionEvent event) {
+        this.limpiarCliente();
+        this.txtNumDoc.setText("");
+
+        if (this.cbxDocIdentidad.getSelectionModel().getSelectedItem().equals("DNI")) {
+            this.txtNumDoc.setPromptText("DNI");
+            this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
+                    change.getControlNewText().length() <= 8 ? change : null));
+        } else if (this.cbxDocIdentidad.getSelectionModel().getSelectedItem().equals("RUC")) {
+            this.txtNumDoc.setPromptText("RUC");
+            this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
+                    change.getControlNewText().length() <= 11 ? change : null));
+
+        } else if (this.cbxDocIdentidad.getSelectionModel().getSelectedItem().equals("OTR")) {
+            this.txtNumDoc.setPromptText("OTROS");
+            this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
+                    change.getControlNewText().length() <= 11 ? change : null));
+            this.txtNumDoc.setText("99999999998");
+
+        } else {
+            this.txtNumDoc.setPromptText("Número Documento");
+            this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
+                    change.getControlNewText().length() <= 15 ? change : null));
+        }
+
+        this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
+                change.getControlNewText().matches("\\d*") ? change : null));
+
+        this.txtNumDoc.requestFocus();
     }
 
 }
