@@ -4,6 +4,8 @@ import com.robin.pos.model.Arinda1;
 import com.robin.pos.model.Cliente;
 import com.robin.pos.util.ConexionBD;
 import com.robin.pos.util.Mensaje;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,14 +18,14 @@ import java.util.logging.Logger;
 
 public class Arinda1Dao {
 
-    public List<Arinda1> buscarProducto(String noCia, String descripcion) {
-        List<Arinda1> listArinda1 = new ArrayList<>();
+    public ObservableList<Arinda1> buscarProducto(String noCia, String descripcion) {
+        ObservableList<Arinda1> listArinda1 = FXCollections.observableArrayList();
 
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT NO_ARTI, DESCRIPCION ");
         sql.append("FROM INVE.ARINDA1 ");
         sql.append("WHERE NO_CIA = ? ");
-        sql.append("AND DESCRIPCION LIKE ''%?%'' ");
+        sql.append("AND DESCRIPCION LIKE UPPER(?) ");
         sql.append("ORDER BY DESCRIPCION");
 
         Connection cx = null;
@@ -32,7 +34,7 @@ public class Arinda1Dao {
             cx = ConexionBD.oracle();
             PreparedStatement ps = cx.prepareStatement(sql.toString());
             ps.setString(1, noCia);
-            ps.setString(2, descripcion.toUpperCase());
+            ps.setString(2, descripcion);
 
             ResultSet rs = ps.executeQuery();
 

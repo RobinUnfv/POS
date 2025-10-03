@@ -1,7 +1,10 @@
 package com.robin.pos.controller;
 
+import com.robin.pos.dao.Arinda1Dao;
 import com.robin.pos.dao.ClienteDao;
+import com.robin.pos.model.Arinda1;
 import com.robin.pos.model.Cliente;
+import com.robin.pos.util.AutoCompleteTextField;
 import com.robin.pos.util.ConexionBD;
 import com.robin.pos.util.Mensaje;
 import javafx.concurrent.Task;
@@ -80,9 +83,10 @@ public class VentaController {
     private TextField txtVuelto;
 
     @FXML
-    private TextField txtListaProd;
+    private AutoCompleteTextField<Arinda1> txtListaProd;
 
     private ClienteDao clienteDao;
+    private Arinda1Dao arinda1Dao;
 
     @FXML
     void buscarCliente(ActionEvent event) {
@@ -166,6 +170,22 @@ public class VentaController {
                 change.getControlNewText().matches("\\d*") ? change : null));
 
         this.txtNumDoc.requestFocus();
+    }
+
+    private void setupAutoComplete() {
+        // Configurar el proveedor de sugerencias
+        txtListaProd.setSuggestionProvider(texto ->
+                arinda1Dao.buscarProducto("01", texto)
+        );
+
+        // Manejar la selección de producto
+        txtListaProd.setOnAction(e -> {
+            Arinda1 arinda1 = txtListaProd.getSelectedItem();
+            if (arinda1 != null) {
+                System.out.println("Producto seleccionado: " + arinda1.getDescripcion());
+                // Aquí puedes agregar el producto a la tabla o realizar otras acciones
+            }
+        });
     }
 
 }

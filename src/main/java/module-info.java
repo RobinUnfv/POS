@@ -12,5 +12,6 @@ module com.robin.pos {
     opens com.robin.pos to javafx.fxml;
     exports com.robin.pos;
     exports com.robin.pos.controller;
+    exports com.robin.pos.util to javafx.fxml;
     opens com.robin.pos.controller to javafx.fxml;
 }
