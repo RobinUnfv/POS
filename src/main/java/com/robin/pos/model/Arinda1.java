@@ -25,4 +25,9 @@ public class Arinda1 {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+    @Override
+    public String toString() {
+        return codigo + " - " + descripcion;
+    }
 }

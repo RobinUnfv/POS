@@ -10,6 +10,7 @@ import com.robin.pos.util.Mensaje;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -18,9 +19,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
+import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.ResourceBundle;
 
-public class VentaController {
+public class VentaController implements Initializable {
 
     @FXML
     private Button agregarProductoButton;
@@ -83,7 +87,8 @@ public class VentaController {
     private TextField txtVuelto;
 
     @FXML
-    private AutoCompleteTextField<Arinda1> txtListaProd;
+    private AutoCompleteTextField txtListaProd;
+    private Task<List<Arinda1>> busquedaTask;
 
     private ClienteDao clienteDao;
     private Arinda1Dao arinda1Dao;
@@ -172,20 +177,60 @@ public class VentaController {
         this.txtNumDoc.requestFocus();
     }
 
-    private void setupAutoComplete() {
-        // Configurar el proveedor de sugerencias
-        txtListaProd.setSuggestionProvider(texto ->
-                arinda1Dao.buscarProducto("01", texto)
-        );
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Configurar el AutoCompleteTextField
+        configurarAutoComplete();
+    }
 
-        // Manejar la selección de producto
-        txtListaProd.setOnAction(e -> {
-            Arinda1 arinda1 = txtListaProd.getSelectedItem();
-            if (arinda1 != null) {
-                System.out.println("Producto seleccionado: " + arinda1.getDescripcion());
-                // Aquí puedes agregar el producto a la tabla o realizar otras acciones
+    private void configurarAutoComplete() {
+        // Listener para buscar productos mientras escribe
+        txtListaProd.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null && newVal.length() >= 2) {
+                buscarProductosAsync(newVal);
             }
         });
+
+        // Callback cuando se selecciona un producto
+        // txtListaProd.setOnProductoSeleccionado(this::cargarDatosProducto);
+        txtListaProd.setOnProductoSeleccionado(producto -> cargarDatosProducto((Arinda1) producto));
+
+    }
+
+    private void buscarProductosAsync(String criterio) {
+        // Cancelar búsqueda anterior si existe
+        if (busquedaTask != null && busquedaTask.isRunning()) {
+            busquedaTask.cancel();
+        }
+
+        // Crear nueva tarea de búsqueda
+        busquedaTask = new Task<List<Arinda1>>() {
+            @Override
+            protected List<Arinda1> call() {
+                arinda1Dao = new Arinda1Dao();
+                return arinda1Dao.buscarProducto("01", criterio); //dao.buscarProductos(criterio);
+            }
+        };
+
+        busquedaTask.setOnSucceeded(e -> {
+            List<Arinda1> productos = busquedaTask.getValue();
+            txtListaProd.mostrarSugerencias(productos);
+        });
+
+        busquedaTask.setOnFailed(e -> {
+            System.err.println("Error en búsqueda: " + busquedaTask.getException().getMessage());
+        });
+
+        // Ejecutar en hilo separado
+        Thread thread = new Thread(busquedaTask);
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    private void cargarDatosProducto(Arinda1 producto) {
+        if (producto != null) {
+            System.out.println(producto.getCodigo() + " - " + producto.getDescripcion());
+        }
     }
 
 }

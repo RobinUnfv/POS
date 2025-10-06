@@ -1,158 +1,128 @@
 package com.robin.pos.util;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import com.robin.pos.model.Arinda1;
+
+import javafx.geometry.Side;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Popup;
-import javafx.util.Duration;
+import javafx.scene.layout.VBox;
 
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 
 public class AutoCompleteTextField<T> extends TextField {
 
-    private final Popup popup;
-    private final ListView<T> listView;
-    private final ObservableList<T> data;
-    private final ObjectProperty<Function<String, ObservableList<T>>> suggestionProvider;
-    private Timeline delayTimeline;
+    private ContextMenu suggestionMenu;
+    private List<Arinda1> productos;
+    private Arinda1 productoSeleccionado;
+    private Consumer<Arinda1> onProductoSeleccionado;
 
     public AutoCompleteTextField() {
         super();
+        this.suggestionMenu = new ContextMenu();
+        this.productos = new ArrayList<>();
 
-        this.data = FXCollections.observableArrayList();
-        this.suggestionProvider = new SimpleObjectProperty<>();
-
-        // Configurar el popup
-        this.popup = new Popup();
-        this.popup.setAutoHide(true);
-        this.popup.setHideOnEscape(true);
-
-        // Configurar el ListView
-        this.listView = new ListView<>(data);
-        this.listView.setPrefWidth(300);
-        this.listView.setPrefHeight(200);
-
-        popup.getContent().add(listView);
-
-        // Configurar el delay para las búsquedas
-        this.delayTimeline = new Timeline(new KeyFrame(Duration.millis(300)));
-
-        // Configurar eventos
         setupEventHandlers();
+        setPromptText("Buscar producto por código o descripción...");
     }
 
     private void setupEventHandlers() {
-        // Evento para mostrar sugerencias cuando se escribe
-        textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null || newValue.isEmpty()) {
-                hidePopup();
-                return;
-            }
-
-            if (suggestionProvider.get() != null) {
-                // Cancelar búsqueda anterior
-                delayTimeline.stop();
-
-                // Programar nueva búsqueda después del delay
-                delayTimeline.getKeyFrames().setAll(new KeyFrame(Duration.millis(300), e -> {
-                    ObservableList<T> suggestions = suggestionProvider.get().apply(newValue);
-                    data.setAll(suggestions);
-
-                    if (!suggestions.isEmpty()) {
-                        showPopup();
-                    } else {
-                        hidePopup();
-                    }
-                }));
-                delayTimeline.play();
+        // Listener para detectar cuando el usuario deja de escribir
+        textProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal == null || newVal.isEmpty()) {
+                suggestionMenu.hide();
+                productoSeleccionado = null;
             }
         });
 
-        // Eventos del teclado
-        setOnKeyPressed(this::handleKeyPressed);
+        // Manejar teclas especiales
+        addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.DOWN && suggestionMenu.isShowing()) {
+                suggestionMenu.getSkin().getNode().lookup(".menu-item").requestFocus();
+                event.consume();
+            } else if (event.getCode() == KeyCode.ESCAPE) {
+                suggestionMenu.hide();
+            }
+        });
 
-        // Evento cuando se selecciona un item
-        listView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 1) {
-                selectItem();
+        // Ocultar menú cuando pierde el foco
+        focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+                suggestionMenu.hide();
             }
         });
     }
 
-    private void handleKeyPressed(KeyEvent event) {
-        if (event.getCode() == KeyCode.DOWN) {
-            if (!popup.isShowing()) {
-                showPopup();
-            }
-            listView.requestFocus();
-            if (!listView.getItems().isEmpty()) {
-                listView.getSelectionModel().select(0);
-            }
-        } else if (event.getCode() == KeyCode.ENTER) {
-            if (popup.isShowing() && !listView.getSelectionModel().isEmpty()) {
-                selectItem();
-            }
-        } else if (event.getCode() == KeyCode.ESCAPE) {
-            hidePopup();
+    public void mostrarSugerencias(List<Arinda1> productosEncontrados) {
+        productos.clear();
+        suggestionMenu.getItems().clear();
+
+        if (productosEncontrados == null || productosEncontrados.isEmpty()) {
+            suggestionMenu.hide();
+            return;
+        }
+
+        productos.addAll(productosEncontrados);
+
+        for (Arinda1 producto : productosEncontrados) {
+            VBox itemBox = new VBox(2);
+            itemBox.setStyle("-fx-padding: 5px;");
+
+            Label lblCodigo = new Label(producto.getCodigo());
+            lblCodigo.setStyle("-fx-font-weight: bold; -fx-font-size: 12px;");
+
+            Label lblDescripcion = new Label(producto.getDescripcion());
+            lblDescripcion.setStyle("-fx-font-size: 11px; -fx-text-fill: #555;");
+
+            itemBox.getChildren().addAll(lblCodigo, lblDescripcion);
+
+            CustomMenuItem item = new CustomMenuItem(itemBox, true);
+            item.setOnAction(e -> seleccionarProducto(producto));
+
+            suggestionMenu.getItems().add(item);
+        }
+
+        if (!suggestionMenu.isShowing()) {
+            suggestionMenu.show(this, Side.BOTTOM, 0, 0);
         }
     }
 
-    private void showPopup() {
-        if (data.isEmpty()) return;
+    private void seleccionarProducto(Arinda1 producto) {
+        this.productoSeleccionado = producto;
+        setText(producto.toString());
+        positionCaret(getText().length());
+        suggestionMenu.hide();
 
-        if (!popup.isShowing()) {
-            popup.show(this,
-                    this.getScene().getWindow().getX() + this.localToScene(0, 0).getX() + this.getScene().getX(),
-                    this.getScene().getWindow().getY() + this.localToScene(0, this.getHeight()).getY() + this.getScene().getY()
-            );
+        // Notificar al listener si existe
+        if (onProductoSeleccionado != null) {
+            onProductoSeleccionado.accept(producto);
         }
     }
 
-    private void hidePopup() {
-        popup.hide();
+    public Arinda1 getProductoSeleccionado() {
+        return productoSeleccionado;
     }
 
-    private void selectItem() {
-        T selectedItem = listView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            setText(selectedItem.toString());
-            hidePopup();
-
-            // Disparar evento de selección
-            fireEvent(new ActionEvent());
+    public void setProducto(Arinda1 producto) {
+        this.productoSeleccionado = producto;
+        if (producto != null) {
+            setText(producto.toString());
         }
     }
 
-    // Propiedades
-
-    public Function<String, ObservableList<T>> getSuggestionProvider() {
-        return suggestionProvider.get();
+    public void setOnProductoSeleccionado(Consumer<Arinda1> callback) {
+        this.onProductoSeleccionado = callback;
     }
 
-    public void setSuggestionProvider(Function<String, ObservableList<T>> suggestionProvider) {
-        this.suggestionProvider.set(suggestionProvider);
+    @Override
+    public void clear() {
+        super.clear();
+        productoSeleccionado = null;
+        productos.clear();
+        suggestionMenu.hide();
     }
 
-    public ObjectProperty<Function<String, ObservableList<T>>> suggestionProviderProperty() {
-        return suggestionProvider;
-    }
-
-    public T getSelectedItem() {
-        return listView.getSelectionModel().getSelectedItem();
-    }
-
-    // Método para limpiar la selección
-    public void clearSelection() {
-        listView.getSelectionModel().clearSelection();
-        hidePopup();
-    }
 }

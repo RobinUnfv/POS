@@ -18,14 +18,15 @@ import java.util.logging.Logger;
 
 public class Arinda1Dao {
 
-    public ObservableList<Arinda1> buscarProducto(String noCia, String descripcion) {
-        ObservableList<Arinda1> listArinda1 = FXCollections.observableArrayList();
+    public List<Arinda1> buscarProducto(String noCia, String descripcion) {
+        List<Arinda1> listArinda1 = new ArrayList<>();;
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT NO_ARTI, DESCRIPCION ");
+        sql.append("SELECT NO_ARTI AS CODIGO, DESCRIPCION ");
         sql.append("FROM INVE.ARINDA1 ");
         sql.append("WHERE NO_CIA = ? ");
-        sql.append("AND DESCRIPCION LIKE UPPER(?) ");
+        sql.append("AND DESCRIPCION LIKE ? ");
+        sql.append("AND ROWNUM <= 10 ");
         sql.append("ORDER BY DESCRIPCION");
 
         Connection cx = null;
@@ -33,14 +34,15 @@ public class Arinda1Dao {
         try {
             cx = ConexionBD.oracle();
             PreparedStatement ps = cx.prepareStatement(sql.toString());
+            String descrip = "%" + descripcion.toUpperCase() + "%";
             ps.setString(1, noCia);
-            ps.setString(2, descripcion);
+            ps.setString(2, descrip );
 
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                Arinda1 arinda1 = new Arinda1(rs.getString("NO_ARTI"),
-                        rs.getString("DESCRIPCION"));
+            while (rs.next()) {
+                Arinda1 arinda1 = new Arinda1(rs.getString("CODIGO"),
+                                              rs.getString("DESCRIPCION"));
                 listArinda1.add(arinda1);
             }
             ConexionBD.cerrarCxOracle(cx);
