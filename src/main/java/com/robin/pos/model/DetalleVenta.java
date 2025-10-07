@@ -5,12 +5,9 @@ import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
 
 public class DetalleVenta {
+
     private final StringProperty item = new SimpleStringProperty();
     private Arinda1 arinda1;
-    /*
-    private final StringProperty codigo = new SimpleStringProperty();
-    private final StringProperty descripcion = new SimpleStringProperty();
-    */
     private final IntegerProperty cantidad = new SimpleIntegerProperty();
     private final DoubleProperty precio = new SimpleDoubleProperty();
     private final DoubleProperty igv = new SimpleDoubleProperty();
@@ -34,7 +31,6 @@ public class DetalleVenta {
     public Arinda1 getArinda1() {
         return arinda1;
     }
-
     public void setArinda1(Arinda1 arinda1) {
         this.arinda1 = arinda1;
     }
@@ -50,27 +46,6 @@ public class DetalleVenta {
         return igv;
     }
 
-
-    /*
-        public String getCodigo() {
-            return codigo.get();
-        }
-        public StringProperty codigoProperty() {
-            return codigo;
-        }
-        public void setCodigo(String codigo) {
-            this.codigo.set(codigo);
-        }
-
-        public String getDescripcion() {
-            return descripcion.get();
-        }
-        public StringProperty descripcionProperty() {
-            return descripcion;
-        }
-        public void setDescripcion(String descripcion) {
-            this.descripcion.set(descripcion);}
-        */
     public int getCantidad() {
         return cantidad.get();}
     public IntegerProperty cantidadProperty() {
