@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import com.robin.pos.util.AutoCompleteTextField?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="558.0" prefWidth="1312.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.VentaController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="558.0" prefWidth="1312.0" xmlns="http://javafx.com/javafx/21.0.8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.VentaController">
     <center>
         <HBox prefHeight="558.0" prefWidth="1260.0" BorderPane.alignment="CENTER">
             <children>
@@ -194,12 +194,15 @@
                         <!-- Tabla de productos -->
                         <TableView fx:id="tProducto" prefHeight="307.0" prefWidth="680.0">
                             <columns>
-                        <TableColumn prefWidth="32.0" text="Item" />
+                                <TableColumn prefWidth="32.0" text="Item" />
                                 <TableColumn prefWidth="403.1999969482422" text="Descripción" />
                                 <TableColumn prefWidth="77.59991455078125" text="Cantidad" />
                                 <TableColumn prefWidth="112.79998779296875" text="Precio" />
                                 <TableColumn prefWidth="100.800048828125" text="Total" />
                             </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
                         </TableView>
                   <HBox alignment="CENTER_RIGHT" prefHeight="149.0" prefWidth="680.0">
                      <children>

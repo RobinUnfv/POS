@@ -4,23 +4,20 @@ import com.robin.pos.dao.Arinda1Dao;
 import com.robin.pos.dao.ClienteDao;
 import com.robin.pos.model.Arinda1;
 import com.robin.pos.model.Cliente;
+import com.robin.pos.model.DetalleVenta;
 import com.robin.pos.util.AutoCompleteTextField;
-import com.robin.pos.util.ConexionBD;
 import com.robin.pos.util.Mensaje;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -66,7 +63,10 @@ public class VentaController implements Initializable {
     private Label lblTotal;
 
     @FXML
-    private TableView<?> tProducto;
+    private TableView<DetalleVenta> tProducto;
+
+    @FXML
+    private TableColumn<DetalleVenta, String> colProducto;
 
     @FXML
     private TextArea txtDireccion;
@@ -92,6 +92,8 @@ public class VentaController implements Initializable {
 
     private ClienteDao clienteDao;
     private Arinda1Dao arinda1Dao;
+
+    ObservableList<DetalleVenta> listaDetalleVentas = FXCollections.observableArrayList();
 
     @FXML
     void buscarCliente(ActionEvent event) {
@@ -191,8 +193,6 @@ public class VentaController implements Initializable {
             }
         });
 
-        // Callback cuando se selecciona un producto
-        // txtListaProd.setOnProductoSeleccionado(this::cargarDatosProducto);
         txtListaProd.setOnProductoSeleccionado(producto -> cargarDatosProducto((Arinda1) producto));
 
     }
@@ -229,7 +229,7 @@ public class VentaController implements Initializable {
 
     private void cargarDatosProducto(Arinda1 producto) {
         if (producto != null) {
-            System.out.println(producto.getCodigo() + " - " + producto.getDescripcion());
+            System.out.println(producto.getCodigo() + " + " + producto.getDescripcion());
         }
     }
 

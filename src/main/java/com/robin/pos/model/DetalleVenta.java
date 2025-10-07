@@ -1,14 +1,25 @@
 package com.robin.pos.model;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.*;
 
-public class Producto {
+public class DetalleVenta {
     private final StringProperty item = new SimpleStringProperty();
+    private Arinda1 arinda1;
+    /*
     private final StringProperty codigo = new SimpleStringProperty();
     private final StringProperty descripcion = new SimpleStringProperty();
+    */
     private final IntegerProperty cantidad = new SimpleIntegerProperty();
     private final DoubleProperty precio = new SimpleDoubleProperty();
+    private final DoubleProperty igv = new SimpleDoubleProperty();
     private final DoubleProperty total = new SimpleDoubleProperty();
+
+    public DetalleVenta() {
+        NumberBinding multiplicacion = Bindings.multiply(this.precioProperty(), this.cantidadProperty());
+        this.totalProperty().bind(multiplicacion);
+    }
 
     public String getItem() {
         return item.get();
@@ -20,25 +31,46 @@ public class Producto {
         this.item.set(item);
     }
 
-    public String getCodigo() {
-        return codigo.get();
-    }
-    public StringProperty codigoProperty() {
-        return codigo;
-    }
-    public void setCodigo(String codigo) {
-        this.codigo.set(codigo);
+    public Arinda1 getArinda1() {
+        return arinda1;
     }
 
-    public String getDescripcion() {
-        return descripcion.get();
+    public void setArinda1(Arinda1 arinda1) {
+        this.arinda1 = arinda1;
     }
-    public StringProperty descripcionProperty() {
-        return descripcion;
-    }
-    public void setDescripcion(String descripcion) {
-        this.descripcion.set(descripcion);}
 
+    public DoubleProperty getIgv() {
+        return igv;
+    }
+    public void setIgv(Double igv) {
+        this.igv.set(igv);
+    }
+
+    public DoubleProperty igvProperty() {
+        return igv;
+    }
+
+
+    /*
+        public String getCodigo() {
+            return codigo.get();
+        }
+        public StringProperty codigoProperty() {
+            return codigo;
+        }
+        public void setCodigo(String codigo) {
+            this.codigo.set(codigo);
+        }
+
+        public String getDescripcion() {
+            return descripcion.get();
+        }
+        public StringProperty descripcionProperty() {
+            return descripcion;
+        }
+        public void setDescripcion(String descripcion) {
+            this.descripcion.set(descripcion);}
+        */
     public int getCantidad() {
         return cantidad.get();}
     public IntegerProperty cantidadProperty() {
