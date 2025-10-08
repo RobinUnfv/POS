@@ -104,7 +104,19 @@ public class VentaController implements Initializable {
     private TextField txtVuelto;
 
     @FXML
-    private AutoCompleteTextField txtListaProd;
+    private TextField txtCodBarra;
+
+    @FXML
+    private TextField txtDesArinda1;
+
+    @FXML
+    private TableView<?> tArinda1;
+
+    @FXML
+    private Label lblProducto;
+
+//    @FXML
+//    private AutoCompleteTextField txtListaProd;
 
     private Task<List<Arinda1>> busquedaTask;
 
@@ -116,7 +128,7 @@ public class VentaController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Configurar el AutoCompleteTextField
-        configurarAutoComplete();
+        // configurarAutoComplete();
         // Configurar la tabla de ventas
         configurarTablaVenta();
 
@@ -230,17 +242,17 @@ public class VentaController implements Initializable {
         this.txtNumDoc.requestFocus();
     }
 
-    private void configurarAutoComplete() {
-        // Listener para buscar productos mientras escribe
-        txtListaProd.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null && newVal.length() >= 2) {
-                buscarProductosAsync(newVal);
-            }
-        });
-
-        txtListaProd.setOnProductoSeleccionado(producto -> cargarDatosProducto((Arinda1) producto));
-
-    }
+//    private void configurarAutoComplete() {
+//
+//        txtListaProd.textProperty().addListener((obs, oldVal, newVal) -> {
+//            if (newVal != null && newVal.length() >= 2) {
+//                buscarProductosAsync(newVal);
+//            }
+//        });
+//
+//        txtListaProd.setOnProductoSeleccionado(producto -> cargarDatosProducto((Arinda1) producto));
+//
+//    }
 
     private void buscarProductosAsync(String criterio) {
         // Cancelar búsqueda anterior si existe
@@ -259,7 +271,7 @@ public class VentaController implements Initializable {
 
         busquedaTask.setOnSucceeded(e -> {
             List<Arinda1> productos = busquedaTask.getValue();
-            txtListaProd.mostrarSugerencias(productos);
+            // txtListaProd.mostrarSugerencias(productos);
         });
 
         busquedaTask.setOnFailed(e -> {
