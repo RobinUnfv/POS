@@ -5,10 +5,7 @@ import com.robin.pos.dao.ClienteDao;
 import com.robin.pos.model.Arinda1;
 import com.robin.pos.model.Cliente;
 import com.robin.pos.model.DetalleVenta;
-import com.robin.pos.util.AutoCompleteTextField;
-import com.robin.pos.util.DoubleCell;
-import com.robin.pos.util.Mensaje;
-import com.robin.pos.util.Metodos;
+import com.robin.pos.util.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -22,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.util.List;
@@ -135,13 +133,15 @@ public class VentaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Configurar la tabla de ventas
+        configurarTablaVenta();
+
         // MOSTRAR PRODUCTOS
         this.cargarProductosMostrar();
 
         // Configurar el AutoCompleteTextField
         // configurarAutoComplete();
-        // Configurar la tabla de ventas
-        configurarTablaVenta();
+
 
     }
 
@@ -162,11 +162,28 @@ public class VentaController implements Initializable {
             public void handle(TableColumn.CellEditEvent<DetalleVenta, Double> e) {
                 if (!Objects.equals(e.getNewValue(), e.getOldValue())) {
                     ((DetalleVenta) e.getTableView().getItems().get(e.getTablePosition().getRow())).setCantidad(e.getNewValue());
-                    // calcular();
-                    //Metodos.changeSizeOnColumn(colTotal, tablaPedidos, e.getTablePosition().getRow());
+                      calcularTotales();
+                      Metodos.changeSizeOnColumn(colTotal, tVenta, e.getTablePosition().getRow());
                 }
             }
         });
+
+        this.colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
+        colPrecio.setCellFactory(tc -> new CurrencyCell<>());
+        colPrecio.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<DetalleVenta, Double>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<DetalleVenta, Double> e) {
+                if (!Objects.equals(e.getNewValue(), e.getOldValue())) {
+                    ((DetalleVenta) e.getTableView().getItems().get(e.getTablePosition().getRow())).setPrecio(e.getNewValue());
+                    calcularTotales();
+                    Metodos.changeSizeOnColumn(colPrecio, tVenta, e.getTablePosition().getRow());
+                }
+            }
+        });
+
+        this.colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+        colTotal.setCellFactory(tc -> new CurrencyCell<>());
+        colTotal.setEditable(false);
     }
 
     @FXML
@@ -336,10 +353,54 @@ public class VentaController implements Initializable {
         tArinda1.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tArinda1.getSelectionModel().selectFirst();
 
-
         colProducto.setCellValueFactory( param -> param.getValue().descripcionProperty() );
         Metodos.changeSizeOnColumn(colProducto, tArinda1, -1);
 
+    }
+
+    @FXML
+    private void tArinda1KeyPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ESCAPE) {
+            txtDesArinda1.requestFocus();
+            tArinda1.getSelectionModel().clearSelection();
+        } else if (event.getCode() == KeyCode.ENTER) {
+            agregarDetalleVenta(tArinda1.getSelectionModel().getSelectedItem());
+        }
+    }
+
+    @FXML
+    private void tArinda1MouseClicked(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            Arinda1 pr = tArinda1.getSelectionModel().getSelectedItem();
+            agregarDetalleVenta(pr);
+        }
+    }
+
+    private void agregarDetalleVenta(Arinda1 arinda1) {
+        this.listaDetalleVentas.stream().
+                filter( p -> p.getArinda1().getCodigo().equals(arinda1.getCodigo()) ).
+                findFirst().map( (t) -> {
+                    t.setCantidad(t.getCantidad()+1);
+                    Metodos.changeSizeOnColumn(this.colTotal, this.tVenta, -1);
+                    this.txtCodBarra.setText(null);
+                    return t;
+                } ).orElseGet( () -> {
+                    DetalleVenta dv = new DetalleVenta();
+                    dv.setArinda1(arinda1);
+//                    dv.setCantidad(1.0);
+//                    dv.setPrecio(0.0);
+//                    dv.setIgv(0.0);
+                    Metodos.changeSizeOnColumn(this.colProducto, this.tVenta, -1);
+                    this.txtCodBarra.setText(null);
+                    return dv;
+                } );
+        calcularTotales();
+    }
+
+    private void calcularTotales() {
+        double total = listaDetalleVentas.stream().mapToDouble( p -> p.getCantidad() * p.getPrecio() ).sum();
+        double igv = total * 0.18;
+        lblTotal.setText(String.format("S/ %.2f", total));
     }
 
 }
