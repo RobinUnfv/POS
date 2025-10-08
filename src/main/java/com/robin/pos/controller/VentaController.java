@@ -11,6 +11,8 @@ import com.robin.pos.util.Mensaje;
 import com.robin.pos.util.Metodos;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,6 +27,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 public class VentaController implements Initializable {
 
@@ -110,10 +113,15 @@ public class VentaController implements Initializable {
     private TextField txtDesArinda1;
 
     @FXML
-    private TableView<?> tArinda1;
+    private TableView<Arinda1> tArinda1;
 
     @FXML
     private Label lblProducto;
+
+    @FXML
+    private TableColumn<Arinda1, String> colProducto;
+
+    FilteredList<Arinda1> filtro;
 
 //    @FXML
 //    private AutoCompleteTextField txtListaProd;
@@ -127,6 +135,9 @@ public class VentaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // MOSTRAR PRODUCTOS
+        this.cargarProductosMostrar();
+
         // Configurar el AutoCompleteTextField
         // configurarAutoComplete();
         // Configurar la tabla de ventas
@@ -288,6 +299,47 @@ public class VentaController implements Initializable {
         if (producto != null) {
             System.out.println(producto.getCodigo() + " + " + producto.getDescripcion());
         }
+    }
+
+    @FXML
+    private void buscarArinda1(KeyEvent evt) {
+        switch (evt.getCode()) {
+            case DOWN:
+                tArinda1.requestFocus();
+                tArinda1.getSelectionModel().select(0, colProducto);
+                break;
+            case ESCAPE:
+                this.txtCodBarra.requestFocus();
+                break;
+            default:
+                txtDesArinda1.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                    filtro.setPredicate((Predicate<? super Arinda1>) param -> {
+                        if (newValue == null || newValue.isEmpty()) {
+                            return true;
+                        }
+                        return (param.getDescripcion().contains(newValue.toUpperCase()));
+                    });
+                });
+                SortedList<Arinda1> sorterData = new SortedList<>(filtro);
+                sorterData.comparatorProperty().bind(tArinda1.comparatorProperty());
+                tArinda1.setItems(sorterData);
+        }
+    }
+
+    private void cargarProductosMostrar() {
+        arinda1Dao = new Arinda1Dao();
+        List<Arinda1> listaArinda1 = arinda1Dao.buscarProducto("01");
+        ObservableList<Arinda1> listaObservable = FXCollections.observableArrayList(listaArinda1);
+        filtro = new FilteredList<>(listaObservable, e -> true);
+        tArinda1.setItems(filtro);
+        tArinda1.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        tArinda1.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        tArinda1.getSelectionModel().selectFirst();
+
+
+        colProducto.setCellValueFactory( param -> param.getValue().descripcionProperty() );
+        Metodos.changeSizeOnColumn(colProducto, tArinda1, -1);
+
     }
 
 }

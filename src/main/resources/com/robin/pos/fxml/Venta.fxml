@@ -260,10 +260,9 @@
                     <padding>
                         <Insets bottom="5" left="5" right="5" top="5" />
                     </padding>
-               <Label fx:id="lblProducto" prefHeight="17.0" prefWidth="272.0" text="Producto" />
-               <TextField fx:id="txtDesArinda1" promptText="Buscar producto..." />
-
-                    <TableView fx:id="tArinda1" style="-fx-background-color: white; -fx-border-color: #333;" VBox.vgrow="ALWAYS">
+                    <Label fx:id="lblProducto" prefHeight="17.0" prefWidth="272.0" text="Producto" />
+                    <TextField fx:id="txtDesArinda1" onKeyPressed="#buscarArinda1" promptText="Buscar producto..." />
+                    <TableView fx:id="tArinda1"  VBox.vgrow="ALWAYS">
                         <columns>
                             <TableColumn fx:id="colProducto" prefWidth="100.0" text="Productos" />
                         </columns>

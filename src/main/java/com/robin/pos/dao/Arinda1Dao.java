@@ -18,6 +18,44 @@ import java.util.logging.Logger;
 
 public class Arinda1Dao {
 
+    public List<Arinda1> buscarProducto(String noCia) {
+        List<Arinda1> listArinda1 = new ArrayList<>();;
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT NO_ARTI AS CODIGO, DESCRIPCION ");
+        sql.append("FROM INVE.ARINDA1 ");
+        sql.append("WHERE NO_CIA = ? ");
+        sql.append("AND VIGENTE = ? ");
+        sql.append("ORDER BY DESCRIPCION");
+
+        Connection cx = null;
+
+        try {
+            cx = ConexionBD.oracle();
+            PreparedStatement ps = cx.prepareStatement(sql.toString());
+            ps.setString(1, noCia);
+            ps.setString(2, "S");
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Arinda1 arinda1 = new Arinda1();
+                arinda1.setCodigo(rs.getString("CODIGO"));
+                arinda1.setDescripcion(rs.getString("DESCRIPCION"));
+
+                listArinda1.add(arinda1);
+            }
+            ConexionBD.cerrarCxOracle(cx);
+        } catch (SQLException ex) {
+            Logger.getLogger(ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
+            Mensaje.error(null, "Consultar numero documento","Error en la consulta de cliente.");
+            ConexionBD.cerrarCxOracle(cx);
+        } finally {
+            ConexionBD.cerrarCxOracle(cx);
+        }
+        return listArinda1;
+    }
+
     public List<Arinda1> buscarProducto(String noCia, String descripcion) {
         List<Arinda1> listArinda1 = new ArrayList<>();;
 
