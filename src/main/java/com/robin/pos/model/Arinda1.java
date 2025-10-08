@@ -1,33 +1,34 @@
 package com.robin.pos.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class Arinda1 {
+    /*
     private String codigo;
     private String descripcion;
+    */
+    private final StringProperty codigo = new SimpleStringProperty();
+    private final StringProperty descripcion = new SimpleStringProperty();
 
-    public Arinda1() {
-    }
-    public Arinda1(String codigo, String descripcion) {
-        this.codigo = codigo;
-        this.descripcion = descripcion;
-    }
     public String getCodigo() {
+        return codigo.get();
+    }
+    public StringProperty codigoProperty() {
         return codigo;
     }
-
     public void setCodigo(String codigo) {
-        this.codigo = codigo;
+        this.codigo.set(codigo);
     }
 
     public String getDescripcion() {
+        return descripcion.get();
+    }
+    public StringProperty descripcionProperty() {
         return descripcion;
     }
-
     public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+        this.descripcion.set(descripcion);
     }
 
-    @Override
-    public String toString() {
-        return codigo + " - " + descripcion;
-    }
 }

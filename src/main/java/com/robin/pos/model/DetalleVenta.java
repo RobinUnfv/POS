@@ -8,7 +8,7 @@ public class DetalleVenta {
 
     private final StringProperty item = new SimpleStringProperty();
     private Arinda1 arinda1;
-    private final IntegerProperty cantidad = new SimpleIntegerProperty();
+    private final DoubleProperty cantidad = new SimpleDoubleProperty();
     private final DoubleProperty precio = new SimpleDoubleProperty();
     private final DoubleProperty igv = new SimpleDoubleProperty();
     private final DoubleProperty total = new SimpleDoubleProperty();
@@ -46,11 +46,11 @@ public class DetalleVenta {
         return igv;
     }
 
-    public int getCantidad() {
+    public double getCantidad() {
         return cantidad.get();}
-    public IntegerProperty cantidadProperty() {
+    public DoubleProperty cantidadProperty() {
         return cantidad;}
-    public void setCantidad(int cantidad) {
+    public void setCantidad(Double cantidad) {
         this.cantidad.set(cantidad);}
 
     public double getPrecio() {

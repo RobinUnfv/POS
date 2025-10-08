@@ -41,8 +41,10 @@ public class Arinda1Dao {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                Arinda1 arinda1 = new Arinda1(rs.getString("CODIGO"),
-                                              rs.getString("DESCRIPCION"));
+                Arinda1 arinda1 = new Arinda1();
+                arinda1.setCodigo(rs.getString("CODIGO"));
+                arinda1.setDescripcion(rs.getString("DESCRIPCION"));
+
                 listArinda1.add(arinda1);
             }
             ConexionBD.cerrarCxOracle(cx);

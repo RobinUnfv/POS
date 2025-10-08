@@ -6,19 +6,24 @@ import com.robin.pos.model.Arinda1;
 import com.robin.pos.model.Cliente;
 import com.robin.pos.model.DetalleVenta;
 import com.robin.pos.util.AutoCompleteTextField;
+import com.robin.pos.util.DoubleCell;
 import com.robin.pos.util.Mensaje;
+import com.robin.pos.util.Metodos;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class VentaController implements Initializable {
@@ -63,10 +68,22 @@ public class VentaController implements Initializable {
     private Label lblTotal;
 
     @FXML
-    private TableView<DetalleVenta> tProducto;
+    private TableView<DetalleVenta> tVenta;
 
     @FXML
-    private TableColumn<DetalleVenta, String> colProducto;
+    private TableColumn<DetalleVenta, Integer> colItem;
+
+    @FXML
+    private TableColumn<DetalleVenta, String> colDescripcion;
+
+    @FXML
+    private TableColumn<DetalleVenta, Double> colCantidad;
+
+    @FXML
+    private TableColumn<DetalleVenta, Double> colPrecio;
+
+    @FXML
+    private TableColumn<DetalleVenta, Double> colTotal;
 
     @FXML
     private TextArea txtDireccion;
@@ -88,12 +105,46 @@ public class VentaController implements Initializable {
 
     @FXML
     private AutoCompleteTextField txtListaProd;
+
     private Task<List<Arinda1>> busquedaTask;
 
     private ClienteDao clienteDao;
     private Arinda1Dao arinda1Dao;
 
     ObservableList<DetalleVenta> listaDetalleVentas = FXCollections.observableArrayList();
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Configurar el AutoCompleteTextField
+        configurarAutoComplete();
+        // Configurar la tabla de ventas
+        configurarTablaVenta();
+
+    }
+
+    private void configurarTablaVenta() {
+        tVenta.setEditable(true);
+        tVenta.getSelectionModel().setCellSelectionEnabled(true);
+        tVenta.setItems(listaDetalleVentas);
+        tVenta.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+
+        colItem.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(tVenta.getItems().indexOf(cellData.getValue()) + 1).asObject() );
+        colDescripcion.setCellValueFactory(cellData -> cellData.getValue().getArinda1().descripcionProperty());
+        // colCantidad.setCellValueFactory(cellData -> cellData.getValue().cantidadProperty().asObject());
+        colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        colCantidad.setStyle("-fx-alignment: CENTER;");
+        colCantidad.setCellFactory(tc -> new DoubleCell<>());
+        colCantidad.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<DetalleVenta, Double>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<DetalleVenta, Double> e) {
+                if (!Objects.equals(e.getNewValue(), e.getOldValue())) {
+                    ((DetalleVenta) e.getTableView().getItems().get(e.getTablePosition().getRow())).setCantidad(e.getNewValue());
+                    // calcular();
+                    //Metodos.changeSizeOnColumn(colTotal, tablaPedidos, e.getTablePosition().getRow());
+                }
+            }
+        });
+    }
 
     @FXML
     void buscarCliente(ActionEvent event) {
@@ -177,12 +228,6 @@ public class VentaController implements Initializable {
                 change.getControlNewText().matches("\\d*") ? change : null));
 
         this.txtNumDoc.requestFocus();
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Configurar el AutoCompleteTextField
-        configurarAutoComplete();
     }
 
     private void configurarAutoComplete() {

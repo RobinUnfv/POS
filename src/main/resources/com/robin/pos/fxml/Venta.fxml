@@ -191,14 +191,14 @@
                             </children>
                         </GridPane>
 
-                        <!-- Tabla de productos -->
-                        <TableView fx:id="tProducto" prefHeight="307.0" prefWidth="680.0">
+                        <!-- Tabla de Venta -->
+                        <TableView fx:id="tVenta" prefHeight="307.0" prefWidth="680.0">
                             <columns>
-                                <TableColumn prefWidth="32.0" text="Item" />
-                                <TableColumn prefWidth="403.1999969482422" text="Descripción" />
-                                <TableColumn prefWidth="77.59991455078125" text="Cantidad" />
-                                <TableColumn prefWidth="112.79998779296875" text="Precio" />
-                                <TableColumn prefWidth="100.800048828125" text="Total" />
+                                <TableColumn fx:id="colItem" prefWidth="32.0" text="Item" />
+                                <TableColumn fx:id="colDescripcion" prefWidth="403.1999969482422" text="Descripción" />
+                                <TableColumn fx:id="colCantidad" prefWidth="77.59991455078125" text="Cantidad" />
+                                <TableColumn fx:id="colPrecio" prefWidth="112.79998779296875" text="Precio" />
+                                <TableColumn fx:id="colTotal" prefWidth="100.800048828125" text="Total" />
                             </columns>
                             <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
