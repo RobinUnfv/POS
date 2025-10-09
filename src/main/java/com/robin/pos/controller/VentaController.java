@@ -408,6 +408,10 @@ public class VentaController implements Initializable {
     private void calcularTotales() {
         double total = listaDetalleVentas.stream().mapToDouble( p -> p.getCantidad() * p.getPrecio() ).sum();
         double igv = total * 0.18;
+        double subTotal = total / 1.18;
+        lblSubTotal.setText(String.format("S/ %.2f", subTotal));
+        lblIgv.setText(String.format("S/ %.2f", igv));
+        lblTotGravada.setText(String.format("S/ %.2f", subTotal));
         lblTotal.setText(String.format("S/ %.2f", total));
     }
 
@@ -419,6 +423,26 @@ public class VentaController implements Initializable {
         } else if (evt.getCode() == KeyCode.ESCAPE) {
             this.txtDesArinda1.requestFocus();
             tVenta.getSelectionModel().clearSelection();
+        }
+    }
+
+    @FXML
+    void calcularVuelto(KeyEvent evt) {
+        if (evt.getCode() == KeyCode.ENTER) {
+            if (this.txtPago.getText().isEmpty()) {
+                this.txtVuelto.setText("0.00");
+                return;
+            }
+            double pago = Double.parseDouble(this.txtPago.getText());
+            double total = listaDetalleVentas.stream().mapToDouble( p -> p.getCantidad() * p.getPrecio() ).sum();
+            if (pago < total) {
+                Mensaje.alerta(null,"Pago","El monto ingresado es menor al total.");
+                this.txtVuelto.setText("0.00");
+                this.txtPago.requestFocus();
+                return;
+            }
+            double vuelto = pago - total;
+            this.txtVuelto.setText(String.format("S/ %.2f", vuelto));
         }
     }
 

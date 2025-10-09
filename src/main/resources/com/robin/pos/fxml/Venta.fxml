@@ -224,19 +224,19 @@
                                   </rowConstraints>
                                   <children>
                                       <Label style="-fx-font-weight: bold;" text="Pago:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                                      <TextField fx:id="txtPago" text="54800.00" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                      <TextField fx:id="txtPago" onKeyPressed="#calcularVuelto" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="0" />
       
                                       <Label style="-fx-font-weight: bold;" text="Vuelto:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                                      <TextField fx:id="txtVuelto" text="5.50" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                      <TextField fx:id="txtVuelto" editable="false" style="-fx-background-color: #f0f0f0;" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       
                                       <Label style="-fx-font-weight: bold;" text="Sub Total:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                                      <TextField fx:id="lblSubTotal" editable="false" style="-fx-background-color: #f0f0f0;" text="5.50" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                      <TextField fx:id="lblSubTotal" editable="false" style="-fx-background-color: #f0f0f0;" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       
                                       <Label style="-fx-font-weight: bold;" text="IGV:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                                      <TextField fx:id="lblIgv" editable="false" style="-fx-background-color: #f0f0f0;" text="5.50" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                      <TextField fx:id="lblIgv" editable="false" style="-fx-background-color: #f0f0f0;" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       
                                       <Label style="-fx-font-weight: bold;" text="T. Gravada:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                                      <TextField fx:id="lblTotGravada" editable="false" style="-fx-background-color: #f0f0f0;" text="5.50" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                      <TextField fx:id="lblTotGravada" editable="false" style="-fx-background-color: #f0f0f0;" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                   </children>
                            <HBox.margin>
                               <Insets right="10.0" />
