@@ -151,9 +151,12 @@ public class VentaController implements Initializable {
         tVenta.setItems(listaDetalleVentas);
         tVenta.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
-        colItem.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(tVenta.getItems().indexOf(cellData.getValue()) + 1).asObject() );
+        colItem.setCellValueFactory(new PropertyValueFactory<>("item"));
+        colItem.setStyle("-fx-alignment: CENTER;");
+        colItem.setEditable(false);
+
         colDescripcion.setCellValueFactory(cellData -> cellData.getValue().getArinda1().descripcionProperty());
-        // colCantidad.setCellValueFactory(cellData -> cellData.getValue().cantidadProperty().asObject());
+
         colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
         colCantidad.setStyle("-fx-alignment: CENTER;");
         colCantidad.setCellFactory(tc -> new DoubleCell<>());
@@ -168,7 +171,7 @@ public class VentaController implements Initializable {
             }
         });
 
-        this.colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
+        colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
         colPrecio.setCellFactory(tc -> new CurrencyCell<>());
         colPrecio.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<DetalleVenta, Double>>() {
             @Override
@@ -181,7 +184,7 @@ public class VentaController implements Initializable {
             }
         });
 
-        this.colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+        colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
         colTotal.setCellFactory(tc -> new CurrencyCell<>());
         colTotal.setEditable(false);
     }
@@ -340,6 +343,7 @@ public class VentaController implements Initializable {
                 SortedList<Arinda1> sorterData = new SortedList<>(filtro);
                 sorterData.comparatorProperty().bind(tArinda1.comparatorProperty());
                 tArinda1.setItems(sorterData);
+
         }
     }
 
@@ -386,12 +390,16 @@ public class VentaController implements Initializable {
                     return t;
                 } ).orElseGet( () -> {
                     DetalleVenta dv = new DetalleVenta();
+                    dv.setItem(this.listaDetalleVentas.size() + 1 );
                     dv.setArinda1(arinda1);
-//                    dv.setCantidad(1.0);
-//                    dv.setPrecio(0.0);
-//                    dv.setIgv(0.0);
+                    dv.setCantidad(1.0);
+                    dv.setPrecio(0.0);
+                    dv.setIgv(0.0);
                     Metodos.changeSizeOnColumn(this.colProducto, this.tVenta, -1);
+                    this.listaDetalleVentas.add(dv);
+
                     this.txtCodBarra.setText(null);
+                    Metodos.changeSizeOnColumn(colProducto, tArinda1, -1);
                     return dv;
                 } );
         calcularTotales();

@@ -6,11 +6,11 @@ import javafx.beans.property.*;
 
 public class DetalleVenta {
 
-    private final StringProperty item = new SimpleStringProperty();
+    private final IntegerProperty item = new SimpleIntegerProperty();
     private Arinda1 arinda1;
     private final DoubleProperty cantidad = new SimpleDoubleProperty();
     private final DoubleProperty precio = new SimpleDoubleProperty();
-    //private final DoubleProperty igv = new SimpleDoubleProperty();
+    private final DoubleProperty igv = new SimpleDoubleProperty();
     private final DoubleProperty total = new SimpleDoubleProperty();
 
     public DetalleVenta() {
@@ -18,13 +18,13 @@ public class DetalleVenta {
         this.totalProperty().bind(multiplicacion);
     }
 
-    public String getItem() {
+    public Integer getItem() {
         return item.get();
     }
-    public StringProperty itemProperty() {
+    public IntegerProperty itemProperty() {
         return item;
     }
-    public void setItem(String item) {
+    public void setItem(Integer item) {
         this.item.set(item);
     }
 
@@ -35,16 +35,16 @@ public class DetalleVenta {
         this.arinda1 = arinda1;
     }
 
-//    public DoubleProperty getIgv() {
-//        return igv;
-//    }
-//    public void setIgv(Double igv) {
-//        this.igv.set(igv);
-//    }
-//
-//    public DoubleProperty igvProperty() {
-//        return igv;
-//    }
+    public DoubleProperty getIgv() {
+        return igv;
+    }
+    public void setIgv(Double igv) {
+        this.igv.set(igv);
+    }
+
+    public DoubleProperty igvProperty() {
+        return igv;
+    }
 
     public double getCantidad() {
         return cantidad.get();}
