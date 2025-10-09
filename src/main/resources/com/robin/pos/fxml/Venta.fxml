@@ -194,7 +194,7 @@
                         </GridPane>
 
                         <!-- Tabla de Venta -->
-                        <TableView fx:id="tVenta" prefHeight="307.0" prefWidth="680.0">
+                        <TableView fx:id="tVenta" onKeyPressed="#tVentaKeyPressed" prefHeight="307.0" prefWidth="680.0">
                             <columns>
                                 <TableColumn fx:id="colItem" prefWidth="37.0" text="Item" />
                                 <TableColumn fx:id="colDescripcion" prefWidth="336.0" text="Descripción" />

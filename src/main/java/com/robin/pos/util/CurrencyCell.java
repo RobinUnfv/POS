@@ -24,7 +24,12 @@ public class CurrencyCell<T, S> extends TableCell<T, Double> {
 
         textField.setOnAction(e -> {
             try {
-                commitEdit(format.parse("$".concat(textField.getText())).doubleValue());
+                String value = textField.getText();
+                if (value.isEmpty()) {
+                    value = "0";
+                }
+                Number number = NumberFormat.getInstance().parse(value);
+                commitEdit(number.doubleValue());
             } catch (ParseException ex) {
                 Logger.getLogger(CurrencyCell.class.getName()).log(Level.SEVERE, null, ex);
             }

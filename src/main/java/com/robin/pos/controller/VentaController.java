@@ -411,4 +411,15 @@ public class VentaController implements Initializable {
         lblTotal.setText(String.format("S/ %.2f", total));
     }
 
+    @FXML
+    void tVentaKeyPressed(KeyEvent evt) {
+        if (evt.getCode().isDigitKey()) {
+            final TablePosition focusedCell = tVenta.focusModelProperty().get().focusedCellProperty().get();
+            tVenta.edit(focusedCell.getRow(), focusedCell.getTableColumn());
+        } else if (evt.getCode() == KeyCode.ESCAPE) {
+            this.txtDesArinda1.requestFocus();
+            tVenta.getSelectionModel().clearSelection();
+        }
+    }
+
 }
