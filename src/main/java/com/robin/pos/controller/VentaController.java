@@ -22,7 +22,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
+import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -133,6 +136,8 @@ public class VentaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        txtFechaVenta.setValue(LocalDate.now());
+
         // Configurar la tabla de ventas
         configurarTablaVenta();
 
@@ -141,7 +146,8 @@ public class VentaController implements Initializable {
 
         // Configurar el AutoCompleteTextField
         // configurarAutoComplete();
-
+        txtPago.setTextFormatter(new TextFormatter<String>(change ->
+                change.getControlNewText().matches("\\d*(\\.\\d{0,2})?") ? change : null));
 
     }
 
@@ -171,6 +177,7 @@ public class VentaController implements Initializable {
             }
         });
 
+
         colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
         colPrecio.setCellFactory(tc -> new CurrencyCell<>());
         colPrecio.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<DetalleVenta, Double>>() {
@@ -179,7 +186,8 @@ public class VentaController implements Initializable {
                 if (!Objects.equals(e.getNewValue(), e.getOldValue())) {
                     ((DetalleVenta) e.getTableView().getItems().get(e.getTablePosition().getRow())).setPrecio(e.getNewValue());
                     calcularTotales();
-                    Metodos.changeSizeOnColumn(colPrecio, tVenta, e.getTablePosition().getRow());
+//                    Metodos.changeSizeOnColumn(colPrecio, tVenta, e.getTablePosition().getRow());
+                    Metodos.changeSizeOnColumn(colTotal, tVenta, e.getTablePosition().getRow());
                 }
             }
         });
@@ -406,13 +414,16 @@ public class VentaController implements Initializable {
     }
 
     private void calcularTotales() {
+        NumberFormat formato = NumberFormat.getCurrencyInstance(new Locale("es", "PE"));
+
         double total = listaDetalleVentas.stream().mapToDouble( p -> p.getCantidad() * p.getPrecio() ).sum();
         double igv = total * 0.18;
         double subTotal = total / 1.18;
-        lblSubTotal.setText(String.format("S/ %.2f", subTotal));
-        lblIgv.setText(String.format("S/ %.2f", igv));
-        lblTotGravada.setText(String.format("S/ %.2f", subTotal));
-        lblTotal.setText(String.format("S/ %.2f", total));
+
+        lblSubTotal.setText(formato.format(subTotal));
+        lblIgv.setText(formato.format(igv));
+        lblTotGravada.setText(formato.format(subTotal));
+        lblTotal.setText(formato.format(total));
     }
 
     @FXML
@@ -429,6 +440,7 @@ public class VentaController implements Initializable {
     @FXML
     void calcularVuelto(KeyEvent evt) {
         if (evt.getCode() == KeyCode.ENTER) {
+            NumberFormat formato = NumberFormat.getCurrencyInstance(new Locale("es", "PE"));
             if (this.txtPago.getText().isEmpty()) {
                 this.txtVuelto.setText("0.00");
                 return;
@@ -442,7 +454,8 @@ public class VentaController implements Initializable {
                 return;
             }
             double vuelto = pago - total;
-            this.txtVuelto.setText(String.format("S/ %.2f", vuelto));
+            String vueltoFormato = formato.format(vuelto);
+            this.txtVuelto.setText(vueltoFormato);
         }
     }
 
