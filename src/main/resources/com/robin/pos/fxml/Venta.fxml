@@ -129,34 +129,26 @@
                                 <ComboBox fx:id="cbxMotConting" prefHeight="25.0" prefWidth="290.0" promptText="Facturación Electronica" GridPane.rowIndex="11" />
                             </children>
                         </GridPane>
-      
-                      <!-- Panel Derecho - Totales y Botones -->
-                      <VBox prefHeight="153.0" prefWidth="290.0" spacing="15.0">
-                          <children>
-      
-                              <!-- Botones de acción -->
-                              <VBox alignment="CENTER" spacing="15.0">
-                                  <children>
-                                      <Button fx:id="btnBoleta" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" text="GENERAR BOLETA">
-                                          <cursor>
-                                              <Cursor fx:constant="HAND" />
-                                          </cursor>
-                                      </Button>
-                                      <Button fx:id="btnFactura" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;" text="GENERAR FACTURA">
-                                          <cursor>
-                                              <Cursor fx:constant="HAND" />
-                                          </cursor>
-                                      </Button>
-                                  </children>
-                                  <VBox.margin>
-                                      <Insets top="20.0" />
-                                  </VBox.margin>
-                              </VBox>
-                          </children>
-                          <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                          </padding>
-                      </VBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="btnBoleta" mnemonicParsing="false" prefHeight="43.0" prefWidth="132.0" style="-fx-text-fill: black; -fx-font-size: 20px; -fx-font-weight: bold;" text="BOLETA">
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Button fx:id="btnFactura" mnemonicParsing="false" prefHeight="43.0" prefWidth="133.0" style="-fx-text-fill: black; -fx-font-size: 20px; -fx-font-weight: bold;" text="FACTURA">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
                     </children>
                     <padding>
                         <Insets left="5.0" right="5.0" />
@@ -167,34 +159,35 @@
 
                 <!-- Panel Central - Productos -->
                 <VBox prefHeight="558.0" prefWidth="694.0" spacing="10.0">
+                    <HBox alignment="CENTER_RIGHT" prefWidth="200.0">
+                        <children>
+                            <Button fx:id="btnAgregarProducto" alignment="CENTER" prefHeight="26.0" prefWidth="26.0">
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
+                        <graphic>
+                           <ImageView fitHeight="22.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../imagenes/agregar32.png" />
+                              </image>
+                           </ImageView>
+                        </graphic></Button>
+                            <Button fx:id="btnEliminarProducto" layoutX="10.0" layoutY="10.0" prefHeight="8.0" prefWidth="23.0">
+                        <HBox.margin>
+                           <Insets />
+                        </HBox.margin>
+                        <graphic>
+                           <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../imagenes/eliminar32.png" />
+                              </image>
+                           </ImageView>
+                        </graphic></Button>
+                        </children>
+                    </HBox>
                     <children>
-                        <!-- Controles de entrada de productos -->
-                        <GridPane hgap="10.0" prefHeight="55.0" prefWidth="679.0" style="-fx-background-color: #f8f8f8; -fx-padding: 10;" vgap="5.0">
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="536.8" minWidth="10.0" prefWidth="453.59996337890624" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="137.0" minWidth="0.0" prefWidth="83.20003662109372" />
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints maxHeight="15.199998855590819" minHeight="3.9999999999999982" prefHeight="8.800004959106444" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="46.39999999999999" minHeight="10.0" prefHeight="41.599995040893546" vgrow="SOMETIMES" />
-                            </rowConstraints>
-                            <children>
-
-                                <Button fx:id="agregarProductoButton" mnemonicParsing="false" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Agregar" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                    <cursor>
-                                        <Cursor fx:constant="HAND" />
-                                    </cursor>
-                                </Button>
-                        <TextField fx:id="txtCodBarra" GridPane.rowIndex="1" />
-<!--                        <AutoCompleteTextField-->
-<!--                                promptText="Escriba el producto..."-->
-<!--                                fx:id="txtListaProd" GridPane.rowIndex="1" />-->
-
-                            </children>
-                        </GridPane>
-
                         <!-- Tabla de Venta -->
-                        <TableView fx:id="tVenta" onKeyPressed="#tVentaKeyPressed" prefHeight="307.0" prefWidth="680.0">
+                        <TableView fx:id="tVenta" onKeyPressed="#tVentaKeyPressed" prefHeight="372.0" prefWidth="674.0">
                             <columns>
                                 <TableColumn fx:id="colItem" prefWidth="37.0" text="Item" />
                                 <TableColumn fx:id="colDescripcion" prefWidth="336.0" text="Descripción" />
@@ -243,7 +236,7 @@
                            </HBox.margin>
                               </GridPane>
                               <!-- Total Principal -->
-                              <VBox alignment="CENTER" prefHeight="79.0" prefWidth="265.0" style="-fx-border-color: #cccccc; -fx-border-width: 2; -fx-padding: 20;">
+                              <VBox alignment="CENTER" prefHeight="150.0" prefWidth="292.0" style="-fx-border-color: #cccccc; -fx-border-width: 2; -fx-padding: 20;">
                            <children>
                                       <Label fx:id="lblTotal" style="-fx-font-size: 33px; -fx-font-weight: bold; -fx-text-fill: #000005;" text="S/0.00" />
                            </children>
@@ -260,7 +253,7 @@
                     <padding>
                         <Insets bottom="5" left="5" right="5" top="5" />
                     </padding>
-                    <Label fx:id="lblProducto" prefHeight="17.0" prefWidth="272.0" text="Producto" />
+                    <Label fx:id="lblProducto" prefHeight="17.0" prefWidth="272.0" style="-fx-font-weight: bold;" text="Producto" />
                     <TextField fx:id="txtDesArinda1" onKeyPressed="#buscarArinda1" promptText="Buscar producto..." />
                     <TableView fx:id="tArinda1" onKeyPressed="#tArinda1KeyPressed" onMouseClicked="#tArinda1MouseClicked" VBox.vgrow="ALWAYS">
                         <columns>

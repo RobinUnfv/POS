@@ -9,12 +9,11 @@ import java.util.logging.Logger;
 public class ConexionBD {
     // DESKTOP-UAQQ6TN --> PC ROBIN
     // Mat
-    private static String host = "Mat";
+    private static String host = System.getenv("COMPUTERNAME");
     private static String puerto = "1521";
     private static String sid = "BDNX1";
     private static String usuario = "LLE";
     private static String password = "YVL";
-
 
     public static Connection oracle() {
         Connection conexion = null;
