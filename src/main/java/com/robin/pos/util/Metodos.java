@@ -6,6 +6,7 @@ import javafx.scene.text.Text;
 import javafx.scene.control.TableView;
 import java.awt.*;
 import java.text.NumberFormat;
+import java.util.Random;
 
 public class Metodos {
 
@@ -33,6 +34,17 @@ public class Metodos {
         } catch (HeadlessException ex) {
             System.err.println(ex);
         }
+    }
+
+    public static String generarTextoAleatorio(int longitud) {
+        String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(longitud);
+        for (int i = 0; i < longitud; i++) {
+            int index = random.nextInt(caracteres.length());
+            sb.append(caracteres.charAt(index));
+        }
+        return sb.toString();
     }
 
 }

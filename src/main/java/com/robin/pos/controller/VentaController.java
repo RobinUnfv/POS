@@ -107,8 +107,6 @@ public class VentaController implements Initializable {
     @FXML
     private TextField txtVuelto;
 
-    @FXML
-    private TextField txtCodBarra;
 
     @FXML
     private TextField txtDesArinda1;
@@ -121,6 +119,12 @@ public class VentaController implements Initializable {
 
     @FXML
     private TableColumn<Arinda1, String> colProducto;
+
+    @FXML
+    private Button btnAgregarProducto;
+
+    @FXML
+    private Button btnEliminarProducto;
 
     FilteredList<Arinda1> filtro;
 
@@ -162,6 +166,19 @@ public class VentaController implements Initializable {
         colItem.setEditable(false);
 
         colDescripcion.setCellValueFactory(cellData -> cellData.getValue().getArinda1().descripcionProperty());
+        colDescripcion.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<DetalleVenta, String>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<DetalleVenta, String> e) {
+                        if (!Objects.equals(e.getNewValue(), e.getOldValue())) {
+                            ((DetalleVenta) e.getTableView().getItems().get(e.getTablePosition().getRow())).getArinda1().setDescripcion(e.getNewValue());
+                            Metodos.changeSizeOnColumn(colDescripcion, tVenta, e.getTablePosition().getRow());
+                        }
+                    }
+                }
+        );
+        colItem.setEditable(true);
+
 
         colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
         colCantidad.setStyle("-fx-alignment: CENTER;");
@@ -337,7 +354,7 @@ public class VentaController implements Initializable {
                 tArinda1.getSelectionModel().select(0, colProducto);
                 break;
             case ESCAPE:
-                this.txtCodBarra.requestFocus();
+//                this.txtCodBarra.requestFocus();
                 break;
             default:
                 txtDesArinda1.textProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -394,7 +411,7 @@ public class VentaController implements Initializable {
                 findFirst().map( (t) -> {
                     t.setCantidad(t.getCantidad()+1);
                     Metodos.changeSizeOnColumn(this.colTotal, this.tVenta, -1);
-                    this.txtCodBarra.setText(null);
+//                    this.txtCodBarra.setText(null);
                     return t;
                 } ).orElseGet( () -> {
                     DetalleVenta dv = new DetalleVenta();
@@ -406,7 +423,7 @@ public class VentaController implements Initializable {
                     Metodos.changeSizeOnColumn(this.colProducto, this.tVenta, -1);
                     this.listaDetalleVentas.add(dv);
 
-                    this.txtCodBarra.setText(null);
+//                    this.txtCodBarra.setText(null);
                     Metodos.changeSizeOnColumn(colProducto, tArinda1, -1);
                     return dv;
                 } );
@@ -457,6 +474,28 @@ public class VentaController implements Initializable {
             String vueltoFormato = formato.format(vuelto);
             this.txtVuelto.setText(vueltoFormato);
         }
+    }
+
+    @FXML
+    void agregarProductoVenta(ActionEvent event) {
+        DetalleVenta dv = new DetalleVenta();
+        dv.setItem(this.listaDetalleVentas.size() + 1 );
+        Arinda1 arinda1 = new Arinda1();
+        arinda1.setCodigo(Metodos.generarTextoAleatorio(6));
+        arinda1.setDescripcion("Producto "+arinda1.getCodigo());
+        dv.setArinda1(arinda1);
+        dv.setCantidad(1.0);
+        dv.setPrecio(0.0);
+        dv.setIgv(0.0);
+        Metodos.changeSizeOnColumn(this.colProducto, this.tVenta, -1);
+        this.listaDetalleVentas.add(dv);
+
+
+    }
+
+    @FXML
+    void eliminarProductoVenta(ActionEvent event) {
+
     }
 
 }
