@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -166,6 +167,8 @@ public class VentaController implements Initializable {
         colItem.setEditable(false);
 
         colDescripcion.setCellValueFactory(cellData -> cellData.getValue().getArinda1().descripcionProperty());
+        colDescripcion.setCellFactory(TextFieldTableCell.forTableColumn());
+
         colDescripcion.setOnEditCommit(
                 new EventHandler<TableColumn.CellEditEvent<DetalleVenta, String>>() {
                     @Override
@@ -482,15 +485,14 @@ public class VentaController implements Initializable {
         dv.setItem(this.listaDetalleVentas.size() + 1 );
         Arinda1 arinda1 = new Arinda1();
         arinda1.setCodigo(Metodos.generarTextoAleatorio(6));
-        arinda1.setDescripcion("Producto "+arinda1.getCodigo());
+        arinda1.setDescripcion("");
         dv.setArinda1(arinda1);
         dv.setCantidad(1.0);
         dv.setPrecio(0.0);
         dv.setIgv(0.0);
         Metodos.changeSizeOnColumn(this.colProducto, this.tVenta, -1);
         this.listaDetalleVentas.add(dv);
-
-
+        Metodos.changeSizeOnColumn(colProducto, tArinda1, -1);
     }
 
     @FXML
