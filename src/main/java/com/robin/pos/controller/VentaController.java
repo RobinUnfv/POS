@@ -6,6 +6,7 @@ import com.robin.pos.model.Arinda1;
 import com.robin.pos.model.Cliente;
 import com.robin.pos.model.DetalleVenta;
 import com.robin.pos.util.*;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -142,6 +143,10 @@ public class VentaController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         txtFechaVenta.setValue(LocalDate.now());
+        // desactivar los botones de boleta y factura si el detalle de venta sea diferente de cero
+
+        btnBoleta.disableProperty().bind(Bindings.isEmpty(listaDetalleVentas));
+        btnFactura.disableProperty().bind(Bindings.isEmpty(listaDetalleVentas));
 
         // Configurar la tabla de ventas
         configurarTablaVenta();
