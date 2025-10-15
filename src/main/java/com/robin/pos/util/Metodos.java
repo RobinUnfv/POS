@@ -27,7 +27,7 @@ public class Metodos {
                 }
 
                 if (title.getLayoutBounds().getWidth() > ancho) {
-                    ancho = title.getLayoutBounds().getWidth() + 50;
+                    ancho = title.getLayoutBounds().getWidth() + 140;
                 }
             }
             tc.setPrefWidth(ancho);

@@ -168,20 +168,23 @@ public class VentaController implements Initializable {
 
         colDescripcion.setCellValueFactory(cellData -> cellData.getValue().getArinda1().descripcionProperty());
         colDescripcion.setCellFactory(TextFieldTableCell.forTableColumn());
-
         colDescripcion.setOnEditCommit(
                 new EventHandler<TableColumn.CellEditEvent<DetalleVenta, String>>() {
                     @Override
                     public void handle(TableColumn.CellEditEvent<DetalleVenta, String> e) {
                         if (!Objects.equals(e.getNewValue(), e.getOldValue())) {
-                            ((DetalleVenta) e.getTableView().getItems().get(e.getTablePosition().getRow())).getArinda1().setDescripcion(e.getNewValue());
-                            Metodos.changeSizeOnColumn(colDescripcion, tVenta, e.getTablePosition().getRow());
+                            ((DetalleVenta) e.getTableView().getItems().get(e.getTablePosition().getRow())).getArinda1().setDescripcion(e.getNewValue().toUpperCase().trim());
+//                            Metodos.changeSizeOnColumn(colDescripcion, tVenta, -1);
+                            TablePosition<DetalleVenta, ?> pos = e.getTablePosition();
+                            if (pos.getColumn() + 1 < tVenta.getColumns().size()) {
+                                tVenta.getSelectionModel().clearAndSelect(pos.getRow(), tVenta.getColumns().get(pos.getColumn() + 1));
+                                tVenta.edit(pos.getRow(), tVenta.getColumns().get(pos.getColumn() + 1));
+                            }
                         }
                     }
                 }
         );
-        colItem.setEditable(true);
-
+        colDescripcion.setEditable(true);
 
         colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
         colCantidad.setStyle("-fx-alignment: CENTER;");
@@ -192,7 +195,13 @@ public class VentaController implements Initializable {
                 if (!Objects.equals(e.getNewValue(), e.getOldValue())) {
                     ((DetalleVenta) e.getTableView().getItems().get(e.getTablePosition().getRow())).setCantidad(e.getNewValue());
                       calcularTotales();
-                      Metodos.changeSizeOnColumn(colTotal, tVenta, e.getTablePosition().getRow());
+//                      Metodos.changeSizeOnColumn(colTotal, tVenta, -1);
+                    // como pasar al siguiente campo
+                    TablePosition<DetalleVenta, ?> pos = e.getTablePosition();
+                    if (pos.getColumn() + 1 < tVenta.getColumns().size()) {
+                        tVenta.getSelectionModel().clearAndSelect(pos.getRow(), tVenta.getColumns().get(pos.getColumn() + 1));
+                        tVenta.edit(pos.getRow(), tVenta.getColumns().get(pos.getColumn() + 1));
+                    }
                 }
             }
         });
@@ -206,8 +215,7 @@ public class VentaController implements Initializable {
                 if (!Objects.equals(e.getNewValue(), e.getOldValue())) {
                     ((DetalleVenta) e.getTableView().getItems().get(e.getTablePosition().getRow())).setPrecio(e.getNewValue());
                     calcularTotales();
-//                    Metodos.changeSizeOnColumn(colPrecio, tVenta, e.getTablePosition().getRow());
-                    Metodos.changeSizeOnColumn(colTotal, tVenta, e.getTablePosition().getRow());
+//                    Metodos.changeSizeOnColumn(colTotal, tVenta, -1);
                 }
             }
         });
@@ -371,7 +379,6 @@ public class VentaController implements Initializable {
                 SortedList<Arinda1> sorterData = new SortedList<>(filtro);
                 sorterData.comparatorProperty().bind(tArinda1.comparatorProperty());
                 tArinda1.setItems(sorterData);
-
         }
     }
 
@@ -403,8 +410,7 @@ public class VentaController implements Initializable {
     @FXML
     private void tArinda1MouseClicked(MouseEvent event) {
         if (event.getClickCount() == 2) {
-            Arinda1 pr = tArinda1.getSelectionModel().getSelectedItem();
-            agregarDetalleVenta(pr);
+            agregarDetalleVenta(tArinda1.getSelectionModel().getSelectedItem());
         }
     }
 
@@ -413,21 +419,26 @@ public class VentaController implements Initializable {
                 filter( p -> p.getArinda1().getCodigo().equals(arinda1.getCodigo()) ).
                 findFirst().map( (t) -> {
                     t.setCantidad(t.getCantidad()+1);
-                    Metodos.changeSizeOnColumn(this.colTotal, this.tVenta, -1);
-//                    this.txtCodBarra.setText(null);
                     return t;
                 } ).orElseGet( () -> {
                     DetalleVenta dv = new DetalleVenta();
-                    dv.setItem(this.listaDetalleVentas.size() + 1 );
+                    dv.setItem( this.listaDetalleVentas.size() + 1 );
                     dv.setArinda1(arinda1);
                     dv.setCantidad(1.0);
                     dv.setPrecio(0.0);
                     dv.setIgv(0.0);
-                    Metodos.changeSizeOnColumn(this.colProducto, this.tVenta, -1);
-                    this.listaDetalleVentas.add(dv);
 
-//                    this.txtCodBarra.setText(null);
-                    Metodos.changeSizeOnColumn(colProducto, tArinda1, -1);
+
+                    this.listaDetalleVentas.add(dv);
+                    // Ajustar tamaño de la columna descripción
+                    Metodos.changeSizeOnColumn(colDescripcion, tArinda1, -1);
+                    // Ajuntar tamaño de la columna colproducto
+                    //Metodos.changeSizeOnColumn(colProducto, tArinda1, -1);
+                    // Seleccionar y editar la nueva fila
+                    tVenta.scrollTo(dv);
+                    tVenta.getSelectionModel().select(dv);
+                    tVenta.layout();
+                    tVenta.edit(tVenta.getItems().size() -1, this.colCantidad);
                     return dv;
                 } );
         calcularTotales();
@@ -448,9 +459,15 @@ public class VentaController implements Initializable {
 
     @FXML
     void tVentaKeyPressed(KeyEvent evt) {
-        if (evt.getCode().isDigitKey()) {
-            final TablePosition focusedCell = tVenta.focusModelProperty().get().focusedCellProperty().get();
-            tVenta.edit(focusedCell.getRow(), focusedCell.getTableColumn());
+         // como poder crear una nueva fila presionando insert
+        if (evt.getCode() == KeyCode.INSERT) {
+            agregarProductoVenta(new ActionEvent());
+        } else  if (evt.getCode() == KeyCode.DELETE) {
+            eliminarProductoVenta(new ActionEvent());
+
+//        if (evt.getCode() == KeyCode.) {
+//            final TablePosition focusedCell = tVenta.focusModelProperty().get().focusedCellProperty().get();
+//            tVenta.edit(focusedCell.getRow(), focusedCell.getTableColumn());
         } else if (evt.getCode() == KeyCode.ESCAPE) {
             this.txtDesArinda1.requestFocus();
             tVenta.getSelectionModel().clearSelection();
@@ -490,14 +507,28 @@ public class VentaController implements Initializable {
         dv.setCantidad(1.0);
         dv.setPrecio(0.0);
         dv.setIgv(0.0);
-        Metodos.changeSizeOnColumn(this.colProducto, this.tVenta, -1);
+
         this.listaDetalleVentas.add(dv);
-        Metodos.changeSizeOnColumn(colProducto, tArinda1, -1);
+        tVenta.scrollTo(dv);
+        tVenta.getSelectionModel().select(dv);
+        tVenta.layout();
+        tVenta.edit(tVenta.getItems().size() -1, colDescripcion);
     }
 
     @FXML
     void eliminarProductoVenta(ActionEvent event) {
-
+        if (tVenta.getSelectionModel().getSelectedItem() == null) {
+            Mensaje.alerta(null,"Eliminar item","Seleccione un producto para eliminar.");
+            return;
+        }
+        if (Mensaje.confirmacion(null,"Eliminar item","¿Está seguro de eliminar el producto seleccionado?").get() != ButtonType.CANCEL) {
+            this.listaDetalleVentas.remove(tVenta.getSelectionModel().getSelectedItem());
+            // Reenumerar items
+            for (int i = 0; i < this.listaDetalleVentas.size(); i++) {
+                this.listaDetalleVentas.get(i).setItem(i + 1);
+            }
+            calcularTotales();
+        }
     }
 
 }
