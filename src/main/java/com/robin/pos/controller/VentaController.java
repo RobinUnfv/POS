@@ -15,14 +15,20 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -33,9 +39,6 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
 public class VentaController implements Initializable {
-
-    @FXML
-    private Button agregarProductoButton;
 
     @FXML
     private Button btnBoleta;
@@ -534,6 +537,23 @@ public class VentaController implements Initializable {
             }
             calcularTotales();
         }
+    }
+
+
+    @FXML
+    void nuevoCliente(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/robin/pos/fxml/Sunat.fxml"));
+        VBox vbox = loader.load();
+        Scene scene = new Scene(vbox);
+        Stage stage = new Stage();
+//        stage.setTitle("Nuevo cliente");
+//        stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/add_user.png")));
+        stage.setScene(scene);
+//        stage.initOwner(root.getScene().getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setResizable(false);
+        stage.setIconified(false);
+        stage.showAndWait();
     }
 
 }
