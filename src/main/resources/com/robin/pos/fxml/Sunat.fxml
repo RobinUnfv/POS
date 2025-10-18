@@ -14,7 +14,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <VBox style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.SunatController">
 
@@ -37,9 +36,9 @@
         </rowConstraints>
          <children>
       
-              <Button fx:id="btnBuscar" prefHeight="33.0" prefWidth="105.0" style="-fx-background-color: while; -fx-text-fill: black; -fx-font-weight: bold; -fx-cursor: hand; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;" text="BUSCAR" GridPane.columnIndex="2" GridPane.rowIndex="1">
+              <Button fx:id="btnBuscar" graphicTextGap="0.0" onAction="#buscar" prefHeight="34.0" prefWidth="117.0" style="-fx-background-color: white; -fx-text-fill: black; -fx-font-weight: bold; -fx-cursor: hand; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;" styleClass="boton" stylesheets="@../css/sunat.css" text="BUSCAR" GridPane.columnIndex="2" GridPane.rowIndex="1">
                   <padding>
-                      <Insets bottom="8" left="20" right="20" top="8" />
+                      <Insets bottom="8.0" top="8.0" />
                   </padding>
                <graphic>
                   <ImageView fitHeight="45.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
@@ -48,14 +47,11 @@
                      </image>
                   </ImageView>
                </graphic>
-               <font>
-                  <Font size="10.0" />
-               </font>
               </Button>
       
-              <TextField fx:id="txtNumeroDocumento" prefHeight="25.0" prefWidth="193.0" promptText="Ingrese RUC" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+              <TextField fx:id="txtNumeroDocumento" onKeyPressed="#buscarDocumento" prefHeight="25.0" prefWidth="193.0" promptText="Ingrese RUC" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       
-              <ComboBox fx:id="comboTipoDocumento" prefHeight="25.0" prefWidth="95.0" promptText="RUC" GridPane.rowIndex="1">
+              <ComboBox fx:id="cbxTipoDocumento" onAction="#cambiarTipoDocumento" prefHeight="25.0" prefWidth="95.0" promptText="RUC" GridPane.rowIndex="1">
                   <items>
                       <javafx.collections.FXCollections fx:factory="observableArrayList">
                           <String fx:value="RUC" />
@@ -144,7 +140,7 @@
             <Insets top="10" />
         </padding>
 
-        <Button fx:id="btnRegistrar" prefWidth="180" style="-fx-background-color: while; -fx-text-fill: black; -fx-font-weight: bold; -fx-cursor: hand; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;" text="1. REGISTRAR">
+        <Button fx:id="btnRegistrar" prefWidth="180" style="-fx-background-color: white; -fx-text-fill: black; -fx-font-weight: bold; -fx-cursor: hand; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;" styleClass="boton" stylesheets="@../css/sunat.css" text="1. REGISTRAR">
             <padding>
                 <Insets bottom="10" left="20" right="20" top="10" />
             </padding>
@@ -157,7 +153,7 @@
          </graphic>
         </Button>
 
-        <Button fx:id="btnSalir" prefWidth="180" style="-fx-text-fill: black; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-color: white; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;" text="2. SALIR">
+        <Button fx:id="btnSalir" onAction="#salir" prefWidth="180" style="-fx-text-fill: black; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-color: white; -fx-border-color: #ddd; -fx-background-radius: 5; -fx-border-radius: 5;" styleClass="boton" stylesheets="@../css/sunat.css" text="2. SALIR">
             <padding>
                 <Insets bottom="10" left="20" right="20" top="10" />
             </padding>

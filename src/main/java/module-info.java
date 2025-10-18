@@ -8,6 +8,7 @@ module com.robin.pos {
 
     requires java.logging;
     requires java.desktop;
+    requires javafx.graphics;
 
 
     opens com.robin.pos to javafx.fxml;

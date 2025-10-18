@@ -24,6 +24,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -39,6 +40,9 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
 public class VentaController implements Initializable {
+
+    @FXML
+    private BorderPane root;
 
     @FXML
     private Button btnBoleta;
@@ -546,10 +550,10 @@ public class VentaController implements Initializable {
         VBox vbox = loader.load();
         Scene scene = new Scene(vbox);
         Stage stage = new Stage();
-//        stage.setTitle("Nuevo cliente");
+        stage.setTitle("Buscar Cliente - SUNAT");
 //        stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/add_user.png")));
         stage.setScene(scene);
-//        stage.initOwner(root.getScene().getWindow());
+        stage.initOwner(root.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setResizable(false);
         stage.setIconified(false);
