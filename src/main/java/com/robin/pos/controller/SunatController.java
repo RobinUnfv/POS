@@ -1,5 +1,7 @@
 package com.robin.pos.controller;
 
+import com.robin.pos.dao.ArccmcDao;
+import com.robin.pos.dao.ArcctdaDao;
 import com.robin.pos.model.EntidadTributaria;
 import com.robin.pos.util.Mensaje;
 import com.robin.pos.util.Metodos;
@@ -8,10 +10,7 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -53,13 +52,16 @@ public class SunatController implements Initializable {
     @FXML
     private Button btnSalir;
 
+    private EntidadTributaria entidadTributaria;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Configuración inicial
+        this.txtNumeroDocumento.requestFocus();
         this.cbxTipoDocumento.getItems().addAll("RUC", "DNI");
         this.cbxTipoDocumento.setValue("RUC");
         configuracionNumeroDocumento(this.txtNumeroDocumento,"RUC");
-        this.txtNumeroDocumento.requestFocus();
+
     }
 
     void configuracionNumeroDocumento(TextField textField, String tipoDocumento) {
@@ -179,9 +181,9 @@ public class SunatController implements Initializable {
         // Manejar cuando la tarea termina exitosamente
         task.setOnSucceeded(event -> {
             progressDialog.close();
-            EntidadTributaria entidadTributaria = task.getValue();
+            entidadTributaria = task.getValue();
             if (entidadTributaria != null) {
-                 System.out.println(entidadTributaria.toString());
+//                 System.out.println(entidadTributaria.toString());
                  this.txtNumeroRUC.setText(entidadTributaria.getNumeroDocumento());
                  this.txtEstado.setText(entidadTributaria.getEstado());
                  this.txtCondicion.setText(entidadTributaria.getCondicion());
@@ -200,10 +202,16 @@ public class SunatController implements Initializable {
             Mensaje.error(null, "Error", "Ocurrió un error al consultar el documento." );
         });
 
-
-
         new Thread(task).start();
 
+    }
+
+    @FXML
+    void registrarEntidad(ActionEvent event) {
+        if (Mensaje.confirmacion(null,"Confirmar","¿Está seguro de registrar?").get() != ButtonType.CANCEL) {
+            ArccmcDao.registrar(entidadTributaria);
+            ArcctdaDao.registrar(entidadTributaria);
+        }
     }
 
 }
