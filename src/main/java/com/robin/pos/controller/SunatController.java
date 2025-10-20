@@ -1,5 +1,11 @@
 package com.robin.pos.controller;
 
+import com.google.gson.Gson;
+import com.robin.pos.model.EntidadTributaria;
+import com.robin.pos.util.Mensaje;
+import com.robin.pos.util.Metodos;
+import com.robin.pos.util.ProgressDialog;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,7 +16,11 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
@@ -48,6 +58,9 @@ public class SunatController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Configuración inicial
+        this.cbxTipoDocumento.getItems().addAll("RUC", "DNI");
+        this.cbxTipoDocumento.setValue("RUC");
         configuracionNumeroDocumento(this.txtNumeroDocumento,"RUC");
     }
 
@@ -77,9 +90,6 @@ public class SunatController implements Initializable {
                 return null;
             };
         }
-
-
-
         textField.setTextFormatter(new TextFormatter<>(filter));
     }
 
@@ -92,13 +102,34 @@ public class SunatController implements Initializable {
 
     @FXML
     void buscar(ActionEvent event) {
+       String numeroDocumento = this.txtNumeroDocumento.getText().trim();
+       String tipoDocumento = this.cbxTipoDocumento.getValue();
 
+       if (!numeroDocumento.isEmpty()) {
+            if (tipoDocumento == "RUC") {
+                if (numeroDocumento.length() == 11) {
+                    // Lógica para buscar RUC
+                    consultarNumeroDocumento();
+                } else {
+                    // Mostrar mensaje de error: RUC debe tener 11 dígitos
+                    Mensaje.alerta(null,"RUC", "RUC debe tener 11 dígitos");
+                }
+            } else if (tipoDocumento == "DNI") {
+                if (numeroDocumento.length() == 8) {
+                    // Lógica para buscar DNI
+                    consultarNumeroDocumento();
+                } else {
+                    // Mostrar mensaje de error: DNI debe tener 8 dígitos
+                    Mensaje.alerta(null,"DNI", "DNI debe tener 8 dígitos");
+                }
+            }
+       }
     }
 
     @FXML
     private void buscarDocumento(KeyEvent evt) {
         if (evt.getCode() == KeyCode.ENTER) {
-
+            buscar(new ActionEvent());
         }
     }
 
@@ -107,6 +138,61 @@ public class SunatController implements Initializable {
       String tipoDocumento = this.cbxTipoDocumento.getValue();
       configuracionNumeroDocumento(this.txtNumeroDocumento, tipoDocumento);
       this.txtNumeroDocumento.requestFocus();
+    }
+
+    private void consultarNumeroDocumento() {
+        String numeroDocumento = this.txtNumeroDocumento.getText().trim();
+        String tipoDocumento = this.cbxTipoDocumento.getValue();
+        String links = "https://api.apis.net.pe/v1/"+tipoDocumento.toLowerCase()+"?numero="+numeroDocumento;
+        Task<EntidadTributaria> task = new Task<EntidadTributaria>() {
+
+            @Override
+            protected EntidadTributaria call() throws Exception {
+                EntidadTributaria entidadTributaria = null;
+
+                try {
+                    URL url = new URL(links);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+                    if (conn.getResponseCode() != 200) {
+//                        updateMessage("N° " + ruc + " de RUC inválido.");
+                          Mensaje.error(null,"Error", "N° " + numeroDocumento + " de " + tipoDocumento + " inválido.");
+                    } else {
+                        InputStreamReader in = new InputStreamReader(conn.getInputStream(), "UTF-8");
+                        BufferedReader br = new BufferedReader(in);
+                        entidadTributaria = Metodos.convertirJson(br.readLine());
+                        br.close();
+                        in.close();
+                        conn.disconnect();
+                    }
+                }catch (Exception e) {
+                    Mensaje.alerta("","","Error en la consulta: " + e.getMessage());
+                    throw e;
+                }
+                return entidadTributaria;
+            }
+        };
+
+        // Manejar cuando la tarea termina exitosamente
+        task.setOnSucceeded(event -> {
+            EntidadTributaria entidadTributaria = task.getValue();
+            if (entidadTributaria != null) {
+                 System.out.println(entidadTributaria.toString());
+            }
+        });
+
+        // Manejar cuando falla la tarea
+        task.setOnFailed(event -> {
+            Mensaje.error(null, "Error", "Ocurrió un error al consultar el documento." );
+        });
+
+        // Mostrar progreso
+        ProgressDialog progressDialog = new ProgressDialog();
+        progressDialog.setTitle("Consultando RUC");
+
+        new Thread(task).start();
+
     }
 
 }

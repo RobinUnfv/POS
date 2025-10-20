@@ -52,12 +52,12 @@
               <TextField fx:id="txtNumeroDocumento" onKeyPressed="#buscarDocumento" prefHeight="25.0" prefWidth="193.0" promptText="Ingrese RUC" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       
               <ComboBox fx:id="cbxTipoDocumento" onAction="#cambiarTipoDocumento" prefHeight="25.0" prefWidth="95.0" promptText="RUC" GridPane.rowIndex="1">
-                  <items>
-                      <javafx.collections.FXCollections fx:factory="observableArrayList">
-                          <String fx:value="RUC" />
-                          <String fx:value="DNI" />
-                      </javafx.collections.FXCollections>
-                  </items>
+<!--                  <items>-->
+<!--                      <javafx.collections.FXCollections fx:factory="observableArrayList">-->
+<!--                          <String fx:value="RUC" />-->
+<!--                          <String fx:value="DNI" />-->
+<!--                      </javafx.collections.FXCollections>-->
+<!--                  </items>-->
               </ComboBox>
          </children>
       </GridPane>

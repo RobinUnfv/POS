@@ -1,11 +1,14 @@
 package com.robin.pos.util;
 
+import com.google.gson.Gson;
+import com.robin.pos.model.EntidadTributaria;
 import javafx.scene.control.TableColumn;
 import javafx.scene.text.Text;
 
 import javafx.scene.control.TableView;
 import java.awt.*;
 import java.text.NumberFormat;
+import java.util.Map;
 import java.util.Random;
 
 public class Metodos {
@@ -45,6 +48,42 @@ public class Metodos {
             sb.append(caracteres.charAt(index));
         }
         return sb.toString();
+    }
+
+    private static String getStringValue(Map<String, Object> map, String key) {
+        Object value = map.get(key);
+        return value != null ? value.toString() : "";
+    }
+
+    public static EntidadTributaria convertirJson(String json) {
+        Gson gson = new Gson();
+        Map<String, Object> map = gson.fromJson(json, Map.class);
+
+        EntidadTributaria entidad = new EntidadTributaria();
+
+        // Asignar valores desde el mapa
+        entidad.setNombre(getStringValue(map, "nombre"));
+        entidad.setTipoDocumento(getStringValue(map, "tipoDocumento"));
+        entidad.setNumeroDocumento(getStringValue(map, "numeroDocumento"));
+        entidad.setEstado(getStringValue(map, "estado"));
+        entidad.setCondicion(getStringValue(map, "condicion"));
+        entidad.setDireccion(getStringValue(map, "direccion"));
+        entidad.setUbigeo(getStringValue(map, "ubigeo"));
+        entidad.setViaTipo(getStringValue(map, "viaTipo"));
+        entidad.setViaNombre(getStringValue(map, "viaNombre"));
+        entidad.setZonaCodigo(getStringValue(map, "zonaCodigo"));
+        entidad.setZonaTipo(getStringValue(map, "zonaTipo"));
+        entidad.setNumero(getStringValue(map, "numero"));
+        entidad.setInterior(getStringValue(map, "interior"));
+        entidad.setLote(getStringValue(map, "lote"));
+        entidad.setDpto(getStringValue(map, "dpto"));
+        entidad.setManzana(getStringValue(map, "manzana"));
+        entidad.setKilometro(getStringValue(map, "kilometro"));
+        entidad.setDistrito(getStringValue(map, "distrito"));
+        entidad.setProvincia(getStringValue(map, "provincia"));
+        entidad.setDepartamento(getStringValue(map, "departamento"));
+
+        return entidad;
     }
 
 }
