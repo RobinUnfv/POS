@@ -144,19 +144,23 @@ public class SunatController implements Initializable {
         String numeroDocumento = this.txtNumeroDocumento.getText().trim();
         String tipoDocumento = this.cbxTipoDocumento.getValue();
         String links = "https://api.apis.net.pe/v1/"+tipoDocumento.toLowerCase()+"?numero="+numeroDocumento;
+        // Mostrar progreso
+        ProgressDialog progressDialog = new ProgressDialog();
+        progressDialog.setTitle("Consultando "+tipoDocumento);
+        progressDialog.setMessage("Por favor, espere mientras se consulta el "+tipoDocumento+"...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
         Task<EntidadTributaria> task = new Task<EntidadTributaria>() {
 
             @Override
             protected EntidadTributaria call() throws Exception {
                 EntidadTributaria entidadTributaria = null;
-
                 try {
                     URL url = new URL(links);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
                     if (conn.getResponseCode() != 200) {
-//                        updateMessage("N° " + ruc + " de RUC inválido.");
                           Mensaje.error(null,"Error", "N° " + numeroDocumento + " de " + tipoDocumento + " inválido.");
                     } else {
                         InputStreamReader in = new InputStreamReader(conn.getInputStream(), "UTF-8");
@@ -176,6 +180,7 @@ public class SunatController implements Initializable {
 
         // Manejar cuando la tarea termina exitosamente
         task.setOnSucceeded(event -> {
+            progressDialog.close();
             EntidadTributaria entidadTributaria = task.getValue();
             if (entidadTributaria != null) {
                  System.out.println(entidadTributaria.toString());
@@ -184,12 +189,11 @@ public class SunatController implements Initializable {
 
         // Manejar cuando falla la tarea
         task.setOnFailed(event -> {
+            progressDialog.close();
             Mensaje.error(null, "Error", "Ocurrió un error al consultar el documento." );
         });
 
-        // Mostrar progreso
-        ProgressDialog progressDialog = new ProgressDialog();
-        progressDialog.setTitle("Consultando RUC");
+
 
         new Thread(task).start();
 
