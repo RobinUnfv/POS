@@ -1,6 +1,5 @@
 package com.robin.pos.controller;
 
-import com.google.gson.Gson;
 import com.robin.pos.model.EntidadTributaria;
 import com.robin.pos.util.Mensaje;
 import com.robin.pos.util.Metodos;
@@ -20,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
@@ -55,13 +53,13 @@ public class SunatController implements Initializable {
     @FXML
     private Button btnSalir;
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Configuración inicial
         this.cbxTipoDocumento.getItems().addAll("RUC", "DNI");
         this.cbxTipoDocumento.setValue("RUC");
         configuracionNumeroDocumento(this.txtNumeroDocumento,"RUC");
+        this.txtNumeroDocumento.requestFocus();
     }
 
     void configuracionNumeroDocumento(TextField textField, String tipoDocumento) {
@@ -86,7 +84,7 @@ public class SunatController implements Initializable {
                 if (newText.matches("\\d{0,8}")) {
                     return change;
                 }
-                txtNumeroDocumento.setStyle("-fx-border-color: red; -fx-border-width: 1px;");
+//                txtNumeroDocumento.setStyle("-fx-border-color: red; -fx-border-width: 1px;");
                 return null;
             };
         }
@@ -97,17 +95,16 @@ public class SunatController implements Initializable {
     void salir(ActionEvent event) {
         // logica para cerrar el modal
           btnSalir.getScene().getWindow().hide();
-//        System.out.println("=)");
     }
 
     @FXML
     void buscar(ActionEvent event) {
-       String numeroDocumento = this.txtNumeroDocumento.getText().trim();
+       String numeroDocumento = this.txtNumeroDocumento.getText();
        String tipoDocumento = this.cbxTipoDocumento.getValue();
 
-       if (!numeroDocumento.isEmpty()) {
+       if (numeroDocumento != null && !numeroDocumento.trim().isEmpty()) {
             if (tipoDocumento == "RUC") {
-                if (numeroDocumento.length() == 11) {
+                if (numeroDocumento.trim().length() == 11) {
                     // Lógica para buscar RUC
                     consultarNumeroDocumento();
                 } else {
@@ -115,7 +112,7 @@ public class SunatController implements Initializable {
                     Mensaje.alerta(null,"RUC", "RUC debe tener 11 dígitos");
                 }
             } else if (tipoDocumento == "DNI") {
-                if (numeroDocumento.length() == 8) {
+                if (numeroDocumento.trim().length() == 8) {
                     // Lógica para buscar DNI
                     consultarNumeroDocumento();
                 } else {
@@ -136,6 +133,7 @@ public class SunatController implements Initializable {
     @FXML
     void cambiarTipoDocumento(ActionEvent event) {
       String tipoDocumento = this.cbxTipoDocumento.getValue();
+      this.txtNumeroDocumento.setText(null);
       configuracionNumeroDocumento(this.txtNumeroDocumento, tipoDocumento);
       this.txtNumeroDocumento.requestFocus();
     }
@@ -184,6 +182,15 @@ public class SunatController implements Initializable {
             EntidadTributaria entidadTributaria = task.getValue();
             if (entidadTributaria != null) {
                  System.out.println(entidadTributaria.toString());
+                 this.txtNumeroRUC.setText(entidadTributaria.getNumeroDocumento());
+                 this.txtEstado.setText(entidadTributaria.getEstado());
+                 this.txtCondicion.setText(entidadTributaria.getCondicion());
+                 this.txtRazonSocial.setText(entidadTributaria.getNombre());
+                 this.txtDireccion.setText(entidadTributaria.getDireccion());
+                 this.txtDepartamento.setText(entidadTributaria.getDepartamento());
+                 this.txtProvincia.setText(entidadTributaria.getProvincia());
+                 this.txtDistrito.setText(entidadTributaria.getDistrito());
+                 this.txtUbigeo.setText(entidadTributaria.getUbigeo());
             }
         });
 
