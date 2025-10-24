@@ -36,11 +36,11 @@ public class ArccmcDao {
 
     public static int registrar(EntidadTributaria entidad) {
         int resultado = 0;
-        String query = "INSERT INTO CXC.ARCCMC(NO_CIA,NO_CLIENTE,ACTIVO,TIPO_PERSONA,EXTRANJERO,TIPO_DOCUMENTO,NU_DOCUMENTO," +
-                "RUC,NOMBRE,DIRECCION,UBIGEO,CODI_DEPA,CODI_PROV,CODI_DIST,CLASE,COD_PAIS,COD_VEN_COB,TIPO_FPAGO,COD_FPAGO," +
-                "TIPO_CLIENTE,GRUPO,MONEDA,LIMITE_CREDI_N,EXCENTO_IMP,USUARIO,IND_VAL,IND_TIENDAS,COD_CLASIF,COD_CATEG," +
-                "IND_AGEN_RET,IND_BUEN_CON,IND_SIST_DEFR,COD_CALI,IND_RENOVACION,ORIGEN,IND_PROVE,TIPO_ENTI,COD_SUC,STATUS," +
-                "CHEQUE_DIFERIDO) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO CXC.ARCCMC(NO_CIA,NO_CLIENTE,ACTIVO,TIPO_PERSONA,EXTRANJERO,TIPO_DOCUMENTO,NU_DOCUMENTO," +  //7
+                "RUC,NOMBRE,DIRECCION,UBIGEO,CODI_DEPA,CODI_PROV,CODI_DIST,CLASE,COD_PAIS,COD_VEN_COB,TIPO_FPAGO,COD_FPAGO," +  //12
+                "TIPO_CLIENTE,GRUPO,MONEDA,LIMITE_CREDI_N,EXCENTO_IMP,USUARIO,IND_VAL,IND_TIENDAS,COD_CLASIF,COD_CATEG," +  //10
+                "IND_AGEN_RET,IND_BUEN_CON,IND_SIST_DEFR,COD_CALI,IND_RENOVACION,ORIGEN,IND_PROVE,TIPO_ENTI,COD_SUC,STATUS," + //10
+                "CHEQUE_DIFERIDO) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; //1
 
         String nombre= entidad.getNombre().trim();
         if (nombre.length() > 80) {
@@ -119,7 +119,7 @@ public class ArccmcDao {
             stmt.setString(38, "001");
             stmt.setString(39, "1");
             stmt.setString(40, "N");
-            stmt.setString(41, null);
+//            stmt.setString(41, null);
 
             resultado = stmt.executeUpdate();
 

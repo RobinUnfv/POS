@@ -6,6 +6,7 @@ import com.robin.pos.model.Arinda1;
 import com.robin.pos.model.Cliente;
 import com.robin.pos.model.DetalleVenta;
 import com.robin.pos.util.*;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -548,6 +549,23 @@ public class VentaController implements Initializable {
     void nuevoCliente(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/robin/pos/fxml/Sunat.fxml"));
         VBox vbox = loader.load();
+
+        // obtener controller y registrar callback
+        com.robin.pos.controller.SunatController sunatController = loader.getController();
+        sunatController.setOnRegistro(numeroDocumento -> {
+            // Se ejecuta en UI thread por Platform.runLater por seguridad
+            Platform.runLater(() -> {
+                txtNumDoc.setText(numeroDocumento);
+                // llamar a buscarCliente para cargar datos (si desea)
+                try {
+                    buscarCliente(new ActionEvent());
+                } catch (Exception ex) {
+                    // manejar si buscarCliente lanza excepciones
+                    Mensaje.error(null, "Error", "Ocurrió un error al buscar el cliente recién registrado: " + ex.getMessage());
+                }
+            });
+        });
+
         Scene scene = new Scene(vbox);
         Stage stage = new Stage();
         stage.setTitle("Buscar Cliente - SUNAT");

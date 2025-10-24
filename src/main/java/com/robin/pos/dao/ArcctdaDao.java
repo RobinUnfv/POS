@@ -13,8 +13,8 @@ import java.util.logging.Logger;
 public class ArcctdaDao {
     public static int registrar(EntidadTributaria entidad) {
         int resultado = 0;
-        String query = "INSERT INTO CXC.ARCCTDA(NO_CIA,NO_CLIENTE,COD_TIENDA,NOMBRE,DIRECCION,CODI_DEPA,CODI_PROV," +
-                "CODI_DIST,TIPO_DIR,ACTIVO,COD_SUC,ESTAB_SUNAT) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO CXC.ARCCTDA(NO_CIA,NO_CLIENTE,COD_TIENDA,NOMBRE,DIRECCION,CODI_DEPA,CODI_PROV," +  //7
+                "CODI_DIST,TIPO_DIR,ACTIVO,COD_SUC,ESTAB_SUNAT) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";  //5
 
         String depar="";
         String prov="";

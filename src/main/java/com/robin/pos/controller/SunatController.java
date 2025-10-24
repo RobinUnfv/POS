@@ -6,6 +6,7 @@ import com.robin.pos.model.EntidadTributaria;
 import com.robin.pos.util.Mensaje;
 import com.robin.pos.util.Metodos;
 import com.robin.pos.util.ProgressDialog;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 public class SunatController implements Initializable {
@@ -53,6 +55,12 @@ public class SunatController implements Initializable {
     private Button btnSalir;
 
     private EntidadTributaria entidadTributaria;
+
+    private Consumer<String> onRegistro;
+
+    public void setOnRegistro(Consumer<String> onRegistro) {
+        this.onRegistro = onRegistro;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -225,8 +233,10 @@ public class SunatController implements Initializable {
                 if (registro > 0) {
                     registro = ArcctdaDao.registrar(entidadTributaria);
                     if (registro > 0) {
-                        Mensaje.alerta (null, "Registro exitoso", "La entidad tributaria se registró correctamente.");
-
+                        Mensaje.alerta (null, "Registro exitoso", "El cliente se registró correctamente.");
+                        // Asegurar ejecución en UI thread
+                        Platform.runLater(() -> onRegistro.accept(entidadTributaria.getNumeroDocumento()));
+                        salir(new ActionEvent());
                     }
                 }
 
