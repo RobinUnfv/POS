@@ -12,36 +12,35 @@ import java.util.logging.Logger;
 
 public class ArccmcDao {
 
-    public static void registrar(EntidadTributaria entidad) {
-//        String query = "INSERT INTO CXC.ARCCMC(NO_CIA,NO_CLIENTE,ACTIVO,TIPO_PERSONA,EXTRANJERO,TIPO_DOCUMENTO,NU_DOCUMENTO," +
-//                "RUC,NOMBRE,DIRECCION,UBIGEO,CODI_DEPA,CODI_PROV,CODI_DIST,CLASE,COD_PAIS,COD_VEN_COB,TIPO_FPAGO,COD_FPAGO," +
-//                "TIPO_CLIENTE,GRUPO,MONEDA,LIMITE_CREDI_N,EXCENTO_IMP,USUARIO,IND_VAL,IND_TIENDAS,COD_CLASIF,COD_CATEG," +
-//                "IND_AGEN_RET,IND_BUEN_CON,IND_SIST_DEFR,COD_CALI,IND_RENOVACION,ORIGEN,IND_PROVE,TIPO_ENTI,COD_SUC,STATUS," +
-//                "CHEQUE_DIFERIDO) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        String query = "MERGE INTO CXC.ARCCMC dest " +
-                "USING (SELECT ? AS NO_CIA, ? AS NO_CLIENTE FROM dual) src " +
-                "ON (dest.NO_CIA = src.NO_CIA AND dest.NO_CLIENTE = src.NO_CLIENTE) " +
-                "WHEN MATCHED THEN " +
-                "    UPDATE SET ACTIVO = ?, TIPO_PERSONA = ?, EXTRANJERO = ?, TIPO_DOCUMENTO = ?, " +
-                "               NU_DOCUMENTO = ?, RUC = ?, NOMBRE = ?, DIRECCION = ?, UBIGEO = ?, " +
-                "               CODI_DEPA = ?, CODI_PROV = ?, CODI_DIST = ?, CLASE = ?, COD_PAIS = ?, " +
-                "               COD_VEN_COB = ?, TIPO_FPAGO = ?, COD_FPAGO = ?, TIPO_CLIENTE = ?, " +
-                "               GRUPO = ?, MONEDA = ?, LIMITE_CREDI_N = ?, EXCENTO_IMP = ?, USUARIO = ?, " +
-                "               IND_VAL = ?, IND_TIENDAS = ?, COD_CLASIF = ?, COD_CATEG = ?, " +
-                "               IND_AGEN_RET = ?, IND_BUEN_CON = ?, IND_SIST_DEFR = ?, COD_CALI = ?, " +
-                "               IND_RENOVACION = ?, ORIGEN = ?, IND_PROVE = ?, TIPO_ENTI = ?, COD_SUC = ?, " +
-                "               STATUS = ?, CHEQUE_DIFERIDO = ? " +
-                "WHEN NOT MATCHED THEN " +
-                "    INSERT (NO_CIA, NO_CLIENTE, ACTIVO, TIPO_PERSONA, EXTRANJERO, TIPO_DOCUMENTO, " +
-                "            NU_DOCUMENTO, RUC, NOMBRE, DIRECCION, UBIGEO, CODI_DEPA, CODI_PROV, " +
-                "            CODI_DIST, CLASE, COD_PAIS, COD_VEN_COB, TIPO_FPAGO, COD_FPAGO, " +
-                "            TIPO_CLIENTE, GRUPO, MONEDA, LIMITE_CREDI_N, EXCENTO_IMP, USUARIO, " +
-                "            IND_VAL, IND_TIENDAS, COD_CLASIF, COD_CATEG, IND_AGEN_RET, IND_BUEN_CON, " +
-                "            IND_SIST_DEFR, COD_CALI, IND_RENOVACION, ORIGEN, IND_PROVE, TIPO_ENTI, " +
-                "            COD_SUC, STATUS, CHEQUE_DIFERIDO) " +
-                "    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
-                "            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public static int contadorRegistros(String numeroDocumento) {
+        int contador = 0;
+        String query = "SELECT COUNT(*) AS CONTADOR FROM CXC.ARCCMC WHERE NO_CIA = ? AND NO_CLIENTE = ?";
+        try {
+            Connection cx = ConexionBD.oracle();
+            PreparedStatement stmt = cx.prepareStatement(query);
+            stmt.setString(1, "01");
+            stmt.setString(2, numeroDocumento);
+            var rs = stmt.executeQuery();
+            if (rs.next()) {
+                contador = rs.getInt("CONTADOR");
+            }
+            rs.close();
+            stmt.close();
+            ConexionBD.cerrarCxOracle(cx);
+        } catch (SQLException ex) {
+            Logger.getLogger(ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
+            Mensaje.error(null, "Contador de ARCCMC","Error cuando se intenta contar los registros.");
+        }
+        return contador;
+    }
 
+    public static int registrar(EntidadTributaria entidad) {
+        int resultado = 0;
+        String query = "INSERT INTO CXC.ARCCMC(NO_CIA,NO_CLIENTE,ACTIVO,TIPO_PERSONA,EXTRANJERO,TIPO_DOCUMENTO,NU_DOCUMENTO," +
+                "RUC,NOMBRE,DIRECCION,UBIGEO,CODI_DEPA,CODI_PROV,CODI_DIST,CLASE,COD_PAIS,COD_VEN_COB,TIPO_FPAGO,COD_FPAGO," +
+                "TIPO_CLIENTE,GRUPO,MONEDA,LIMITE_CREDI_N,EXCENTO_IMP,USUARIO,IND_VAL,IND_TIENDAS,COD_CLASIF,COD_CATEG," +
+                "IND_AGEN_RET,IND_BUEN_CON,IND_SIST_DEFR,COD_CALI,IND_RENOVACION,ORIGEN,IND_PROVE,TIPO_ENTI,COD_SUC,STATUS," +
+                "CHEQUE_DIFERIDO) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         String nombre= entidad.getNombre().trim();
         if (nombre.length() > 80) {
@@ -83,7 +82,7 @@ public class ArccmcDao {
             stmt.setString(1, "01");
             stmt.setString(2, entidad.getNumeroDocumento());
             stmt.setString(3, "S");
-            stmt.setString(4, "");
+            stmt.setString(4, tipoPersona);
             stmt.setString(5, "N");
             stmt.setString(6, tipoDocumento);
             stmt.setString(7, nuDocumento);
@@ -121,12 +120,8 @@ public class ArccmcDao {
             stmt.setString(39, "1");
             stmt.setString(40, "N");
             stmt.setString(41, null);
-            int p2 = stmt.executeUpdate();
-            if (p2 > 0) {
-                System.out.println("Registro de ARCCMC exitoso.");
-            } else {
-                System.out.println("No se pudo registrar en ARCCTDA.");
-            }
+
+            resultado = stmt.executeUpdate();
 
             stmt.close();
             ConexionBD.cerrarCxOracle(cx);
@@ -134,8 +129,7 @@ public class ArccmcDao {
             Logger.getLogger(ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
             Mensaje.error(null, "Registrar ARCCMC","Error cuando se intenta registra.");
         }
-
-
+        return resultado;
     }
 
 }

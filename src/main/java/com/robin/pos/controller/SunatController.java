@@ -143,6 +143,15 @@ public class SunatController implements Initializable {
     private void consultarNumeroDocumento() {
         String numeroDocumento = this.txtNumeroDocumento.getText().trim();
         String tipoDocumento = this.cbxTipoDocumento.getValue();
+        if (ArccmcDao.contadorRegistros(numeroDocumento) == 0) {
+            realizarConsultaSunatDniRuc(tipoDocumento, numeroDocumento);
+        } else {
+            Mensaje.alerta(null, "Registro existente", "El " + tipoDocumento + " N° " + numeroDocumento + " ya se encuentra registrado.");
+        }
+
+    }
+
+    private void realizarConsultaSunatDniRuc(String tipoDocumento, String numeroDocumento) {
         String links = "https://api.apis.net.pe/v1/"+tipoDocumento.toLowerCase()+"?numero="+numeroDocumento;
         // Mostrar progreso
         ProgressDialog progressDialog = new ProgressDialog();
@@ -161,7 +170,7 @@ public class SunatController implements Initializable {
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
                     if (conn.getResponseCode() != 200) {
-                          Mensaje.error(null,"Error", "N° " + numeroDocumento + " de " + tipoDocumento + " inválido.");
+                        Mensaje.error(null,"Error", "N° " + numeroDocumento + " de " + tipoDocumento + " inválido.");
                     } else {
                         InputStreamReader in = new InputStreamReader(conn.getInputStream(), "UTF-8");
                         BufferedReader br = new BufferedReader(in);
@@ -184,15 +193,15 @@ public class SunatController implements Initializable {
             entidadTributaria = task.getValue();
             if (entidadTributaria != null) {
 //                 System.out.println(entidadTributaria.toString());
-                 this.txtNumeroRUC.setText(entidadTributaria.getNumeroDocumento());
-                 this.txtEstado.setText(entidadTributaria.getEstado());
-                 this.txtCondicion.setText(entidadTributaria.getCondicion());
-                 this.txtRazonSocial.setText(entidadTributaria.getNombre());
-                 this.txtDireccion.setText(entidadTributaria.getDireccion());
-                 this.txtDepartamento.setText(entidadTributaria.getDepartamento());
-                 this.txtProvincia.setText(entidadTributaria.getProvincia());
-                 this.txtDistrito.setText(entidadTributaria.getDistrito());
-                 this.txtUbigeo.setText(entidadTributaria.getUbigeo());
+                this.txtNumeroRUC.setText(entidadTributaria.getNumeroDocumento());
+                this.txtEstado.setText(entidadTributaria.getEstado());
+                this.txtCondicion.setText(entidadTributaria.getCondicion());
+                this.txtRazonSocial.setText(entidadTributaria.getNombre());
+                this.txtDireccion.setText(entidadTributaria.getDireccion());
+                this.txtDepartamento.setText(entidadTributaria.getDepartamento());
+                this.txtProvincia.setText(entidadTributaria.getProvincia());
+                this.txtDistrito.setText(entidadTributaria.getDistrito());
+                this.txtUbigeo.setText(entidadTributaria.getUbigeo());
             }
         });
 
@@ -203,15 +212,32 @@ public class SunatController implements Initializable {
         });
 
         new Thread(task).start();
-
     }
 
     @FXML
     void registrarEntidad(ActionEvent event) {
-        if (Mensaje.confirmacion(null,"Confirmar","¿Está seguro de registrar?").get() != ButtonType.CANCEL) {
-            ArccmcDao.registrar(entidadTributaria);
-            ArcctdaDao.registrar(entidadTributaria);
+
+        String numeroDocumento = this.txtNumeroDocumento.getText().trim();
+        String tipoDocumento = this.cbxTipoDocumento.getValue();
+        if (ArccmcDao.contadorRegistros(numeroDocumento) == 0) {
+            if (Mensaje.confirmacion(null,"Confirmar","¿Está seguro de registrar?").get() != ButtonType.CANCEL) {
+                int registro = ArccmcDao.registrar(entidadTributaria);
+                if (registro > 0) {
+                    registro = ArcctdaDao.registrar(entidadTributaria);
+                    if (registro > 0) {
+                        Mensaje.alerta (null, "Registro exitoso", "La entidad tributaria se registró correctamente.");
+
+                    }
+                }
+
+                if (registro == 0) {
+                    Mensaje.error(null, "Error de registro", "No se pudo registrar la entidad tributaria.");
+                }
+            }
+        } else {
+            Mensaje.alerta(null, "Registro existente", "El " + tipoDocumento + " N° " + numeroDocumento + " ya se encuentra registrado.");
         }
+
     }
 
 }

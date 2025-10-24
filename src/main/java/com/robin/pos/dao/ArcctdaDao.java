@@ -11,22 +11,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ArcctdaDao {
-    public static void registrar(EntidadTributaria entidad) {
-//        String query = "INSERT INTO CXC.ARCCTDA(NO_CIA,NO_CLIENTE,COD_TIENDA,NOMBRE,DIRECCION,CODI_DEPA,CODI_PROV," +
-//                "CODI_DIST,TIPO_DIR,ACTIVO,COD_SUC,ESTAB_SUNAT) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+    public static int registrar(EntidadTributaria entidad) {
+        int resultado = 0;
+        String query = "INSERT INTO CXC.ARCCTDA(NO_CIA,NO_CLIENTE,COD_TIENDA,NOMBRE,DIRECCION,CODI_DEPA,CODI_PROV," +
+                "CODI_DIST,TIPO_DIR,ACTIVO,COD_SUC,ESTAB_SUNAT) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
 
-        String query = "MERGE INTO CXC.ARCCTDA dest " +
-                "USING (SELECT ? AS NO_CIA, ? AS NO_CLIENTE, ? AS COD_TIENDA FROM dual) src " +
-                "ON (dest.NO_CIA = src.NO_CIA AND dest.NO_CLIENTE = src.NO_CLIENTE AND dest.COD_TIENDA = src.COD_TIENDA) " +
-                "WHEN MATCHED THEN " +
-                "    UPDATE SET NOMBRE = ?, DIRECCION = ?, CODI_DEPA = ?, CODI_PROV = ?, " +
-                "               CODI_DIST = ?, TIPO_DIR = ?, ACTIVO = ?, COD_SUC = ?, ESTAB_SUNAT = ? " +
-                "WHEN NOT MATCHED THEN " +
-                "    INSERT (NO_CIA, NO_CLIENTE, COD_TIENDA, NOMBRE, DIRECCION, CODI_DEPA, " +
-                "            CODI_PROV, CODI_DIST, TIPO_DIR, ACTIVO, COD_SUC, ESTAB_SUNAT) " +
-                "    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        String nombre="";
         String depar="";
         String prov="";
         String dist="";
@@ -68,12 +57,8 @@ public class ArcctdaDao {
             stmt2.setString(10, "S");
             stmt2.setString(11, "001");
             stmt2.setString(12, "0000");
-            int p2 = stmt2.executeUpdate();
-            if (p2 > 0) {
-                System.out.println("Registro de ARCCTDA exitoso.");
-            } else {
-                System.out.println("No se pudo registrar en ARCCTDA.");
-            }
+
+            resultado = stmt2.executeUpdate();
 
             stmt2.close();
             ConexionBD.cerrarCxOracle(cx);
@@ -81,5 +66,7 @@ public class ArcctdaDao {
             Logger.getLogger(ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
             Mensaje.error(null, "Registrar ARCCTDA","Error cuando se intenta registra.");
         }
+        return resultado;
     }
+
 }
