@@ -136,6 +136,9 @@ public class VentaController implements Initializable {
     @FXML
     private Button btnEliminarProducto;
 
+    @FXML
+    private Label lblNumDoc;
+
     FilteredList<Arinda1> filtro;
 
 //    @FXML
@@ -150,6 +153,11 @@ public class VentaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.lblNumDoc.setText("N° Doc:");
+        this.txtNumDoc.setText("99999999998");
+        this.cbxDocIdentidad.getItems().addAll("CE", "DNI", "RUC", "OTR");
+        this.cbxDocIdentidad.setValue("OTR");
+
         txtFechaVenta.setValue(LocalDate.now());
         // desactivar los botones de boleta y factura si el detalle de venta sea diferente de cero
 
@@ -274,7 +282,6 @@ public class VentaController implements Initializable {
                 this.limpiarCliente();
                 return;
             }
-
             this.mostrarCliente(cliente);
         }
     }
@@ -294,45 +301,32 @@ public class VentaController implements Initializable {
     void escogerTipoDocumento(ActionEvent event) {
         this.limpiarCliente();
         this.txtNumDoc.setText("");
-
-        if (this.cbxDocIdentidad.getSelectionModel().getSelectedItem().equals("DNI")) {
+        String tipoDoc = this.cbxDocIdentidad.getSelectionModel().getSelectedItem();
+        if (tipoDoc.equals("DNI")) {
             this.txtNumDoc.setPromptText("DNI");
-            this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
-                    change.getControlNewText().length() <= 8 ? change : null));
-        } else if (this.cbxDocIdentidad.getSelectionModel().getSelectedItem().equals("RUC")) {
+            Metodos.configuracionNumeroDocumento(this.txtNumDoc, "DNI");
+            this.lblNumDoc.setText("DNI:");
+
+        } else if (tipoDoc.equals("RUC")) {
             this.txtNumDoc.setPromptText("RUC");
-            this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
-                    change.getControlNewText().length() <= 11 ? change : null));
-
-        } else if (this.cbxDocIdentidad.getSelectionModel().getSelectedItem().equals("OTR")) {
+            Metodos.configuracionNumeroDocumento(this.txtNumDoc, "RUC");
+            this.lblNumDoc.setText("RUC:");
+        } else if (tipoDoc.equals("OTR")) {
             this.txtNumDoc.setPromptText("OTROS");
-            this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
-                    change.getControlNewText().length() <= 11 ? change : null));
             this.txtNumDoc.setText("99999999998");
-
-        } else {
+            this.lblNumDoc.setText("N° Doc:");
+            this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
+                    change.getControlNewText().length() <= 15 ? change : null));
+        }
+       else {
             this.txtNumDoc.setPromptText("Número Documento");
+            this.lblNumDoc.setText("N° Doc:");
             this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
                     change.getControlNewText().length() <= 15 ? change : null));
         }
 
-        this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
-                change.getControlNewText().matches("\\d*") ? change : null));
-
         this.txtNumDoc.requestFocus();
     }
-
-//    private void configurarAutoComplete() {
-//
-//        txtListaProd.textProperty().addListener((obs, oldVal, newVal) -> {
-//            if (newVal != null && newVal.length() >= 2) {
-//                buscarProductosAsync(newVal);
-//            }
-//        });
-//
-//        txtListaProd.setOnProductoSeleccionado(producto -> cargarDatosProducto((Arinda1) producto));
-//
-//    }
 
     private void buscarProductosAsync(String criterio) {
         // Cancelar búsqueda anterior si existe
@@ -441,7 +435,6 @@ public class VentaController implements Initializable {
                     dv.setPrecio(0.0);
                     dv.setIgv(0.0);
 
-
                     this.listaDetalleVentas.add(dv);
                     // Ajustar tamaño de la columna descripción
                     Metodos.changeSizeOnColumn(colDescripcion, tArinda1, -1);
@@ -477,10 +470,6 @@ public class VentaController implements Initializable {
             agregarProductoVenta(new ActionEvent());
         } else  if (evt.getCode() == KeyCode.DELETE) {
             eliminarProductoVenta(new ActionEvent());
-
-//        if (evt.getCode() == KeyCode.) {
-//            final TablePosition focusedCell = tVenta.focusModelProperty().get().focusedCellProperty().get();
-//            tVenta.edit(focusedCell.getRow(), focusedCell.getTableColumn());
         } else if (evt.getCode() == KeyCode.ESCAPE) {
             this.txtDesArinda1.requestFocus();
             tVenta.getSelectionModel().clearSelection();
@@ -549,9 +538,8 @@ public class VentaController implements Initializable {
     void nuevoCliente(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/robin/pos/fxml/Sunat.fxml"));
         VBox vbox = loader.load();
-
         // obtener controller y registrar callback
-        com.robin.pos.controller.SunatController sunatController = loader.getController();
+        SunatController sunatController = loader.getController();
         sunatController.setOnRegistro(numeroDocumento -> {
             // Se ejecuta en UI thread por Platform.runLater por seguridad
             Platform.runLater(() -> {
@@ -569,7 +557,6 @@ public class VentaController implements Initializable {
         Scene scene = new Scene(vbox);
         Stage stage = new Stage();
         stage.setTitle("Buscar Cliente - SUNAT");
-//        stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/add_user.png")));
         stage.setScene(scene);
         stage.initOwner(root.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);

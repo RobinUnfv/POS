@@ -7,6 +7,7 @@ import com.robin.pos.util.Mensaje;
 import com.robin.pos.util.Metodos;
 import com.robin.pos.util.ProgressDialog;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -65,40 +66,12 @@ public class SunatController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Configuración inicial
-        this.txtNumeroDocumento.requestFocus();
         this.cbxTipoDocumento.getItems().addAll("RUC", "DNI");
         this.cbxTipoDocumento.setValue("RUC");
-        configuracionNumeroDocumento(this.txtNumeroDocumento,"RUC");
+        Metodos.configuracionNumeroDocumento(this.txtNumeroDocumento,"RUC");
+        this.txtNumeroDocumento.requestFocus();
+        this.btnRegistrar.disableProperty().bind(Bindings.isEmpty(txtNumeroRUC.textProperty()));
 
-    }
-
-    void configuracionNumeroDocumento(TextField textField, String tipoDocumento) {
-        UnaryOperator<TextFormatter.Change> filter;
-        if (tipoDocumento == "RUC") {
-             filter = change -> {
-                String newText = change.getControlNewText();
-
-                // Permite solo dígitos y máximo 11 caracteres
-                if (newText.matches("\\d{0,11}")) {
-//                    txtNumeroDocumento.setStyle("-fx-border-color: green; -fx-border-width: 1px; -fx-background-radius: 5; -fx-border-radius: 5;");
-                    return change;
-                }
-
-                return null; // Rechaza el cambio si no cumple
-            };
-        } else {
-            filter = change -> {
-                String newText = change.getControlNewText();
-
-                // Permite solo dígitos y máximo 8 caracteres
-                if (newText.matches("\\d{0,8}")) {
-                    return change;
-                }
-//                txtNumeroDocumento.setStyle("-fx-border-color: red; -fx-border-width: 1px;");
-                return null;
-            };
-        }
-        textField.setTextFormatter(new TextFormatter<>(filter));
     }
 
     @FXML
@@ -113,7 +86,7 @@ public class SunatController implements Initializable {
        String tipoDocumento = this.cbxTipoDocumento.getValue();
 
        if (numeroDocumento != null && !numeroDocumento.trim().isEmpty()) {
-            if (tipoDocumento == "RUC") {
+            if (tipoDocumento.equals("RUC")) {
                 if (numeroDocumento.trim().length() == 11) {
                     // Lógica para buscar RUC
                     consultarNumeroDocumento();
@@ -121,7 +94,7 @@ public class SunatController implements Initializable {
                     // Mostrar mensaje de error: RUC debe tener 11 dígitos
                     Mensaje.alerta(null,"RUC", "RUC debe tener 11 dígitos");
                 }
-            } else if (tipoDocumento == "DNI") {
+            } else if (tipoDocumento.equals("DNI")) {
                 if (numeroDocumento.trim().length() == 8) {
                     // Lógica para buscar DNI
                     consultarNumeroDocumento();
@@ -144,7 +117,7 @@ public class SunatController implements Initializable {
     void cambiarTipoDocumento(ActionEvent event) {
       String tipoDocumento = this.cbxTipoDocumento.getValue();
       this.txtNumeroDocumento.setText(null);
-      configuracionNumeroDocumento(this.txtNumeroDocumento, tipoDocumento);
+      Metodos.configuracionNumeroDocumento(this.txtNumeroDocumento, tipoDocumento);
       this.txtNumeroDocumento.requestFocus();
     }
 
@@ -212,19 +185,16 @@ public class SunatController implements Initializable {
                 this.txtUbigeo.setText(entidadTributaria.getUbigeo());
             }
         });
-
         // Manejar cuando falla la tarea
         task.setOnFailed(event -> {
             progressDialog.close();
             Mensaje.error(null, "Error", "Ocurrió un error al consultar el documento." );
         });
-
         new Thread(task).start();
     }
 
     @FXML
     void registrarEntidad(ActionEvent event) {
-
         String numeroDocumento = this.txtNumeroDocumento.getText().trim();
         String tipoDocumento = this.cbxTipoDocumento.getValue();
         if (ArccmcDao.contadorRegistros(numeroDocumento) == 0) {
@@ -247,7 +217,6 @@ public class SunatController implements Initializable {
         } else {
             Mensaje.alerta(null, "Registro existente", "El " + tipoDocumento + " N° " + numeroDocumento + " ya se encuentra registrado.");
         }
-
     }
 
 }

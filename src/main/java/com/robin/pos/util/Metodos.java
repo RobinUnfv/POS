@@ -3,6 +3,8 @@ package com.robin.pos.util;
 import com.google.gson.Gson;
 import com.robin.pos.model.EntidadTributaria;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.text.Text;
 
 import javafx.scene.control.TableView;
@@ -10,6 +12,7 @@ import java.awt.*;
 import java.text.NumberFormat;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.UnaryOperator;
 
 public class Metodos {
 
@@ -84,6 +87,32 @@ public class Metodos {
         entidad.setDepartamento(getStringValue(map, "departamento"));
 
         return entidad;
+    }
+
+    public static void configuracionNumeroDocumento(TextField textField, String tipoDocumento) {
+        UnaryOperator<TextFormatter.Change> filter;
+        if (tipoDocumento.equals("RUC")) {
+            filter = change -> {
+                String newText = change.getControlNewText();
+                // Permite solo dígitos y máximo 11 caracteres
+                if (newText.matches("\\d{0,11}")) {
+//                    txtNumeroDocumento.setStyle("-fx-border-color: green; -fx-border-width: 1px; -fx-background-radius: 5; -fx-border-radius: 5;");
+                    return change;
+                }
+                return null; // Rechaza el cambio si no cumple
+            };
+        } else {
+            filter = change -> {
+                String newText = change.getControlNewText();
+                // Permite solo dígitos y máximo 8 caracteres
+                if (newText.matches("\\d{0,8}")) {
+                    return change;
+                }
+//                txtNumeroDocumento.setStyle("-fx-border-color: red; -fx-border-width: 1px;");
+                return null;
+            };
+        }
+        textField.setTextFormatter(new TextFormatter<>(filter));
     }
 
 }
