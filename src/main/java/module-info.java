@@ -12,7 +12,6 @@ module com.robin.pos {
     requires com.google.gson;
 //    requires com.robin.pos;
 
-
     opens com.robin.pos to javafx.fxml;
     exports com.robin.pos;
     exports com.robin.pos.controller;

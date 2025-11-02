@@ -58,7 +58,7 @@ public class DashboardController {
             //VentaController ventaController = loader.getController();
             // LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEE dd MMM hh:mm:ss a"))
 
-            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/carritoCompras16.png").toString());
+            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/carritoCompras32.png").toString());
             icono.setFitWidth(16);
             icono.setFitHeight(16);
             tabVenta = new Tab("Venta", ap);
