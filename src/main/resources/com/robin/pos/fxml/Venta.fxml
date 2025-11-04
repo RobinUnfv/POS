@@ -254,7 +254,6 @@
                     <padding>
                         <Insets bottom="5" left="5" right="5" top="5" />
                     </padding>
-                    <Label fx:id="lblProducto" prefHeight="17.0" prefWidth="272.0" style="-fx-font-weight: bold;" text="Producto" />
                     <TextField fx:id="txtDesArinda1" onKeyPressed="#buscarArinda1" promptText="Buscar producto..." />
                     <TableView fx:id="tArinda1" onKeyPressed="#tArinda1KeyPressed" onMouseClicked="#tArinda1MouseClicked" VBox.vgrow="ALWAYS">
                         <columns>
