@@ -43,6 +43,7 @@ public class DashboardController {
     private TabPane tabPane;
 
     private Tab tabVenta;
+    private Tab tabCliente;
 
     @FXML
     void ingresarDashboard(ActionEvent event) {
@@ -73,8 +74,23 @@ public class DashboardController {
     }
 
     @FXML
-    void ingresarCliente(ActionEvent event) {
+    void ingresarCliente(ActionEvent event) throws IOException  {
         this.cambiarColorBtnSeleccionado((Button) event.getSource());
+        if (tabCliente == null) {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/ListaCliente.fxml"));
+            BorderPane ap = loader.load();
+
+            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/listaClientes.png").toString());
+            icono.setFitWidth(16);
+            icono.setFitHeight(16);
+            tabCliente = new Tab("Cliente", ap);
+            tabCliente.setGraphic(icono);
+            tabCliente.setClosable(true);
+            tabCliente.setOnClosed(e -> tabCliente = null);
+
+            this.tabPane.getTabs().add(tabCliente);
+        }
+        this.tabPane.getSelectionModel().select(tabCliente);
     }
 
     @FXML
