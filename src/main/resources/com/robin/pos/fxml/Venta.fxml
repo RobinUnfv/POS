@@ -27,7 +27,7 @@
         <HBox prefHeight="558.0" prefWidth="1260.0" BorderPane.alignment="CENTER">
             <children>
                 <!-- Panel Izquierdo - DATOS VENTAS -->
-                <VBox prefHeight="663.0" prefWidth="300.0">
+                <VBox prefHeight="558.0" prefWidth="279.0">
                     <children>
 
                         <!-- RUC / DNI con botones -->
@@ -43,7 +43,7 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Label fx:id="lblNumDoc" prefHeight="17.0" prefWidth="82.0" text="RUC / DNI" GridPane.columnIndex="1">
+                                <Label fx:id="lblNumDoc" prefHeight="18.0" prefWidth="137.0" text="RUC / DNI" GridPane.columnIndex="1">
                                     <GridPane.margin>
                                         <Insets left="5.0" />
                                     </GridPane.margin>
@@ -113,8 +113,8 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Label prefHeight="17.0" prefWidth="189.0" text="Razón Social / Nombre" />
-                                <TextField fx:id="txtRazSocNom" promptText="Razon Social / Nombre" text="CLIENTES VARIOS" GridPane.rowIndex="1" />
+                                <Label fx:id="lblRazSocNom" prefHeight="18.0" prefWidth="286.0" text="Razón Social / Nombre" />
+                                <TextArea fx:id="txtRazSocNom" promptText="Razon Social / Nombre" text="CLIENTES VARIOS" GridPane.rowIndex="1" />
                                 <Label prefHeight="17.0" prefWidth="189.0" text="Dirección" GridPane.rowIndex="2" />
                                 <TextArea fx:id="txtDireccion" prefHeight="45.0" prefWidth="290.0" promptText="Direccion" GridPane.rowIndex="3" />
                                 <Label prefHeight="17.0" prefWidth="189.0" text="Fecha" GridPane.rowIndex="4" />
@@ -157,7 +157,7 @@
 
                 <!-- Panel Central - Productos -->
                 <VBox prefHeight="558.0" prefWidth="694.0" spacing="10.0">
-                    <HBox alignment="CENTER_RIGHT" prefWidth="200.0">
+                    <HBox fx:id="hbxTBotones" alignment="CENTER_RIGHT" prefWidth="200.0">
                         <children>
                             <Button fx:id="btnAgregarProducto" alignment="CENTER" onAction="#agregarProductoVenta" prefHeight="26.0" prefWidth="26.0">
                         <cursor>

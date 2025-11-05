@@ -112,7 +112,7 @@ public class VentaController implements Initializable {
     private TextField txtPago;
 
     @FXML
-    private TextField txtRazSocNom;
+    private TextArea txtRazSocNom;
 
     @FXML
     private TextField txtVuelto;
@@ -139,7 +139,11 @@ public class VentaController implements Initializable {
     @FXML
     private Label lblNumDoc;
 
+    @FXML
+    private Label lblRazSocNom;
+
     FilteredList<Arinda1> filtro;
+
 
 //    @FXML
 //    private AutoCompleteTextField txtListaProd;
@@ -154,6 +158,7 @@ public class VentaController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.lblNumDoc.setText("N° Doc:");
+        this.lblRazSocNom.setText("Nombres:");
         this.txtNumDoc.setText("99999999998");
         this.cbxDocIdentidad.getItems().addAll("CE", "DNI", "RUC", "OTR");
         this.cbxDocIdentidad.setValue("OTR");
@@ -306,21 +311,25 @@ public class VentaController implements Initializable {
             this.txtNumDoc.setPromptText("DNI");
             Metodos.configuracionNumeroDocumento(this.txtNumDoc, "DNI");
             this.lblNumDoc.setText("DNI:");
+            this.lblNumDoc.setText("Apellido y Nombre:");
 
         } else if (tipoDoc.equals("RUC")) {
             this.txtNumDoc.setPromptText("RUC");
             Metodos.configuracionNumeroDocumento(this.txtNumDoc, "RUC");
             this.lblNumDoc.setText("RUC:");
+            this.lblNumDoc.setText("Razón Social:");
         } else if (tipoDoc.equals("OTR")) {
             this.txtNumDoc.setPromptText("OTROS");
             this.txtNumDoc.setText("99999999998");
             this.lblNumDoc.setText("N° Doc:");
+            this.lblNumDoc.setText("Nombres:");
             this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
                     change.getControlNewText().length() <= 15 ? change : null));
         }
        else {
             this.txtNumDoc.setPromptText("Número Documento");
             this.lblNumDoc.setText("N° Doc:");
+            this.lblNumDoc.setText("Nombres:");
             this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
                     change.getControlNewText().length() <= 15 ? change : null));
         }
