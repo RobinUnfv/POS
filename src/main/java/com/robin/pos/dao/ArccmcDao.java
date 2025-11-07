@@ -1,12 +1,17 @@
 package com.robin.pos.dao;
 
+import com.robin.pos.model.Arccmc;
+import com.robin.pos.model.Arinda1;
 import com.robin.pos.model.EntidadTributaria;
 import com.robin.pos.util.ConexionBD;
 import com.robin.pos.util.Mensaje;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -130,6 +135,45 @@ public class ArccmcDao {
             Mensaje.error(null, "Registrar ARCCMC","Error cuando se intenta registra.");
         }
         return resultado;
+    }
+
+    public List<Arccmc> listar(String noCia) {
+        List<Arccmc> listArccmc = new ArrayList<>();
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT NO_CLIENTE, NOMBRE, TIPO_CLIENTE, TIPO_PERSONA, ACTIVO ");
+        query.append("FROM CXC.ARCCMC ");
+        query.append("WHERE NO_CIA = ? ");
+        query.append("ORDER BY NOMBRE ASC");
+
+        Connection cx = null;
+
+        try {
+            cx = ConexionBD.oracle();
+            PreparedStatement ps = cx.prepareStatement(query.toString());
+            ps.setString(1, noCia);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Arccmc arccmc = new Arccmc();
+                arccmc.setNoCliente(rs.getString("NO_CLIENTE"));
+                arccmc.setNombre(rs.getString("NOMBRE"));
+                arccmc.setTipoCliente(rs.getString("TIPO_CLIENTE"));
+                arccmc.setActivo(rs.getString("ACTIVO"));
+
+                listArccmc.add(arccmc);
+            }
+            ConexionBD.cerrarCxOracle(cx);
+        } catch (SQLException ex) {
+            Logger.getLogger(ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
+            Mensaje.error(null, "Lista clientes","Error en la consulta de cliente.");
+            ConexionBD.cerrarCxOracle(cx);
+        } finally {
+            ConexionBD.cerrarCxOracle(cx);
+        }
+
+        return listArccmc;
+
     }
 
 }

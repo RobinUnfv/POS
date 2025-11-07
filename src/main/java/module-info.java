@@ -10,6 +10,7 @@ module com.robin.pos {
     requires java.desktop;
     requires javafx.graphics;
     requires com.google.gson;
+
 //    requires com.robin.pos;
 
     opens com.robin.pos to javafx.fxml;
