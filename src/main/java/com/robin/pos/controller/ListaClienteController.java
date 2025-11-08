@@ -29,10 +29,16 @@ public class ListaClienteController implements Initializable {
     private TableColumn<?, ?> colCodigo;
 
     @FXML
-    private TableColumn<?, ?> colEstado;
+    private TableColumn<?, ?> colNombre;
 
     @FXML
-    private TableColumn<?, ?> colNombre;
+    private TableColumn<?, ?> colTipCliente;
+
+    @FXML
+    private TableColumn<?, ?> colTipPersona;
+
+    @FXML
+    private TableColumn<?, ?> colEstado;
 
     @FXML
     private HBox hbxCabecera;

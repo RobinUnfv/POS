@@ -159,8 +159,9 @@ public class ArccmcDao {
                 arccmc.setNoCliente(rs.getString("NO_CLIENTE"));
                 arccmc.setNombre(rs.getString("NOMBRE"));
                 arccmc.setTipoCliente(rs.getString("TIPO_CLIENTE"));
+                arccmc.setTipoPersona(rs.getString("TIPO_PERSONA"));
                 arccmc.setActivo(rs.getString("ACTIVO"));
-
+//                System.out.println(arccmc);
                 listArccmc.add(arccmc);
             }
             ConexionBD.cerrarCxOracle(cx);

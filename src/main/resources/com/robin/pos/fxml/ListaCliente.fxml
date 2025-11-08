@@ -71,9 +71,11 @@
                <children>
                   <TableView fx:id="tListaCliente" prefHeight="358.0" prefWidth="747.0">
                     <columns>
-                      <TableColumn fx:id="colCodigo" prefWidth="137.0" text="Codigo" />
-                      <TableColumn fx:id="colNombre" prefWidth="520.0" text="Nombre" />
-                        <TableColumn fx:id="colEstado" minWidth="0.0" prefWidth="88.0" text="Estado" />
+                      <TableColumn fx:id="colCodigo" prefWidth="87.0" text="Codigo" />
+                      <TableColumn fx:id="colNombre" prefWidth="482.0" text="Nombre" />
+                        <TableColumn fx:id="colTipCliente" minWidth="0.0" prefWidth="59.0" text="Tip. Cli." />
+                        <TableColumn fx:id="colTipPersona" minWidth="0.0" prefWidth="72.0" text="Tip. Per." />
+                        <TableColumn fx:id="colEstado" minWidth="0.0" prefWidth="45.0" text="Estado" />
                     </columns>
                   </TableView>
                </children>
