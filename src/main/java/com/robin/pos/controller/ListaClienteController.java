@@ -2,12 +2,16 @@ package com.robin.pos.controller;
 
 import com.robin.pos.dao.ArccmcDao;
 import com.robin.pos.model.Arccmc;
+import com.robin.pos.model.Arinda1;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
@@ -16,6 +20,7 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 public class ListaClienteController implements Initializable {
 
@@ -26,19 +31,19 @@ public class ListaClienteController implements Initializable {
     private ImageView btnNuevo;
 
     @FXML
-    private TableColumn<?, ?> colCodigo;
+    private TableColumn<Arccmc, String> colCodigo;
 
     @FXML
-    private TableColumn<?, ?> colNombre;
+    private TableColumn<Arccmc, String> colNombre;
 
     @FXML
-    private TableColumn<?, ?> colTipCliente;
+    private TableColumn<Arccmc, String> colTipCliente;
 
     @FXML
-    private TableColumn<?, ?> colTipPersona;
+    private TableColumn<Arccmc, String> colTipPersona;
 
     @FXML
-    private TableColumn<?, ?> colEstado;
+    private TableColumn<Arccmc, String> colEstado;
 
     @FXML
     private HBox hbxCabecera;
@@ -58,13 +63,36 @@ public class ListaClienteController implements Initializable {
     @FXML
     private VBox vbxPrincipal;
 
+    FilteredList<Arccmc> filtro;
+
     private ObservableList<Arccmc> listaClientes = FXCollections.observableArrayList();
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        colCodigo.setCellValueFactory(new PropertyValueFactory<>("noCliente"));
+        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colTipCliente.setCellValueFactory(new PropertyValueFactory<>("tipoCliente"));
+        colTipPersona.setCellValueFactory(new PropertyValueFactory<>("tipoPersona"));
+        colEstado.setCellValueFactory(new PropertyValueFactory<>("activo"));
+
+        filtro = new FilteredList<>(listaClientes, e -> true);
+        SortedList<Arccmc> sorterData = new SortedList<>(filtro);
+        sorterData.comparatorProperty().bind(this.tListaCliente.comparatorProperty());
+        tListaCliente.setItems(sorterData);
+
+        // Listener de búsqueda: una sola vez, con comprobación nula
+        this.txtBuscarCliente.textProperty().addListener((obs, oldValue, newValue) -> {
+            final String texto = (newValue == null) ? "" : newValue.trim().toUpperCase();
+            filtro.setPredicate(param -> {
+                if (texto.isEmpty()) return true;
+                String nombre = param.getNombre();
+                if (nombre == null) return false; // evita NPE cuando nombre es null
+                return nombre.toUpperCase().contains(texto);
+            });
+        });
         this.cargarClientes();
-        tListaCliente.setItems(listaClientes);
+
     }
 
     @FXML
@@ -103,6 +131,21 @@ public class ListaClienteController implements Initializable {
         Thread hilo = new Thread(listTask);
         hilo.start();
 
+    }
+
+    @FXML
+    void buscarCliente(KeyEvent event) {
+       switch (event.getCode()) {
+           case DOWN:
+               tListaCliente.requestFocus();
+               tListaCliente.getSelectionModel().select(0, colNombre);
+               break;
+           case ESCAPE:
+               this.btnEditar.requestFocus();
+               break;
+           default:
+               break;
+       }
     }
 
 }

@@ -28,7 +28,7 @@
                   <Insets left="10.0" right="260.0" />
                </HBox.margin>
             </Label>
-            <TextField fx:id="txtBuscarCliente" prefHeight="25.0" prefWidth="208.0" promptText="Buscar Cliente...">
+            <TextField fx:id="txtBuscarCliente" onKeyPressed="#buscarCliente" prefHeight="25.0" prefWidth="208.0" promptText="Buscar Cliente...">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
