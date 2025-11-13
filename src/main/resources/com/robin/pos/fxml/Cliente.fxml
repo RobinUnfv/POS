@@ -1,6 +1,166 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-
-<VBox fx:id="vbxPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="472.0" prefWidth="470.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" />
+<VBox fx:id="vbxPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="470.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <VBox fx:id="vbxCuerpo" prefHeight="417.0" prefWidth="460.0" styleClass="borderPanel" stylesheets="@../css/panel.css">
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+            <children>
+                <GridPane fx:id="gpDocumento" prefHeight="47.0" prefWidth="448.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="177.0" minWidth="10.0" prefWidth="157.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="149.0" minWidth="10.0" prefWidth="149.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="193.0" minWidth="10.0" prefWidth="142.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="26.0" minHeight="6.0" prefHeight="17.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="47.0" minHeight="0.0" prefHeight="36.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Text fx:id="lblTipDoc" strokeType="OUTSIDE" strokeWidth="0.0" text="Tipo Documento" wrappingWidth="120.845703125" />
+                        <ComboBox fx:id="cbxTipDoc" prefWidth="150.0" GridPane.rowIndex="1" />
+                        <Text fx:id="lblTipNum" strokeType="OUTSIDE" strokeWidth="0.0" text="Num. Documento" wrappingWidth="124.271484375" GridPane.columnIndex="2" />
+                        <TextField fx:id="txtNumDoc" promptText="Num. Documento" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                    </children>
+                </GridPane>
+                <GridPane fx:id="gpDos">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="192.0" minWidth="10.0" prefWidth="192.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="40.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="216.0" minWidth="10.0" prefWidth="216.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="25.0" minHeight="10.0" prefHeight="19.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="46.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+               <children>
+                  <Label fx:id="lblTipPersona" text="Tipo Persona" />
+                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="borderPanel" stylesheets="@../css/panel.css" GridPane.rowIndex="1">
+                     <children>
+                        <RadioButton fx:id="rbnJuridico" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" text="Juridico">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </RadioButton>
+                        <RadioButton fx:id="rbnNatural" mnemonicParsing="false" prefHeight="17.0" prefWidth="91.0" text="Natural">
+                           <opaqueInsets>
+                              <Insets left="10.0" />
+                           </opaqueInsets>
+                        </RadioButton>
+                     </children>
+                  </HBox>
+                  <Label fx:id="lblNacionalidad" prefHeight="17.0" prefWidth="87.0" text="Nacionalidad" GridPane.columnIndex="2" />
+                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="borderPanel" stylesheets="@../css/panel.css" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <children>
+                        <RadioButton fx:id="rbnNacional" mnemonicParsing="false" prefHeight="17.0" prefWidth="87.0" text="Nacional">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </RadioButton>
+                        <RadioButton fx:id="rbnExtranjero" mnemonicParsing="false" prefHeight="17.0" prefWidth="91.0" text="Extranjero">
+                           <opaqueInsets>
+                              <Insets left="10.0" />
+                           </opaqueInsets>
+                        </RadioButton>
+                     </children>
+                  </HBox>
+               </children>
+                </GridPane>
+            <GridPane fx:id="gpTres" prefHeight="118.0" prefWidth="448.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="192.0" minWidth="10.0" prefWidth="192.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="41.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="215.0" minWidth="10.0" prefWidth="215.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="43.0" minHeight="4.0" prefHeight="26.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="61.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="50.0" minHeight="4.0" prefHeight="29.0" />
+              </rowConstraints>
+               <children>
+                  <Label prefHeight="17.0" prefWidth="115.0" text="Apellido Parterno" />
+                  <Label prefHeight="17.0" prefWidth="115.0" text="Apellido Materno" GridPane.columnIndex="2" />
+                  <TextField GridPane.rowIndex="1" />
+                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Label prefHeight="5.0" prefWidth="115.0" text="Primer Nombre" GridPane.rowIndex="2" />
+                  <Label prefHeight="1.0" prefWidth="115.0" text="Segundo Nombre" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <TextField prefHeight="22.0" prefWidth="192.0" GridPane.rowIndex="3" />
+                  <TextField GridPane.columnIndex="2" GridPane.rowIndex="3" />
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </GridPane>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label prefHeight="17.0" prefWidth="187.0" text="Razón Social" />
+                  <TextField GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
+            <GridPane prefWidth="448.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label prefHeight="17.0" prefWidth="187.0" text="Dirección" />
+                  <TextField GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label prefHeight="17.0" prefWidth="126.0" text="Departamento" />
+                  <Label prefHeight="17.0" prefWidth="130.0" text="Provincia" GridPane.columnIndex="1" />
+                  <Label prefHeight="17.0" prefWidth="75.0" text="Distrito" GridPane.columnIndex="2" />
+                  <ComboBox fx:id="cbxTipDoc1" prefWidth="150.0" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="cbxTipDoc2" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="cbxTipDoc3" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
+            </children>
+        </VBox>
+        <HBox fx:id="hbxPie" alignment="CENTER" prefHeight="55.0" prefWidth="460.0" styleClass="borderPanel" stylesheets="@../css/panel.css">
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" />
+            </VBox.margin>
+         <children>
+            <Button mnemonicParsing="false" prefHeight="54.0" prefWidth="207.0" text="REGISTRAR" />
+            <Button mnemonicParsing="false" prefHeight="54.0" prefWidth="207.0" text="SALIR" />
+         </children>
+        </HBox>
+    </children>
+</VBox>
