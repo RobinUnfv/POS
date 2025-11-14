@@ -8,15 +8,22 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -63,6 +70,9 @@ public class ListaClienteController implements Initializable {
     @FXML
     private VBox vbxPrincipal;
 
+    @FXML
+    private BorderPane root;
+
     FilteredList<Arccmc> filtro;
 
     private ObservableList<Arccmc> listaClientes = FXCollections.observableArrayList();
@@ -96,8 +106,20 @@ public class ListaClienteController implements Initializable {
     }
 
     @FXML
-    void crearCliente(KeyEvent event) {
+    void crearCliente(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/robin/pos/fxml/Cliente.fxml"));
+        VBox vbox = loader.load();
 
+        Scene scene = new Scene(vbox);
+        Stage stage = new Stage();
+
+        stage.setTitle("Nuevo Cliente");
+        stage.setScene(scene);
+        stage.initOwner(root.getScene().getWindow());
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setResizable(false);
+        stage.setIconified(false);
+        stage.showAndWait();
     }
 
     @FXML

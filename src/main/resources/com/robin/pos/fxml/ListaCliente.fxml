@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -13,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="759.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.ListaClienteController">
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="759.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.ListaClienteController">
    <top>
       <HBox fx:id="hbxCabecera" alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="759.0" BorderPane.alignment="CENTER_RIGHT">
          <children>
@@ -44,17 +45,21 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="btnNuevo" accessibleHelp="Nuevo" accessibleText="Nuevo" fitHeight="25.0" fitWidth="25.0" nodeOrientation="RIGHT_TO_LEFT" onKeyPressed="#crearCliente" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../imagenes/newFile32.png" />
-               </image>
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
+            <Button fx:id="btnNuevoCliente" alignment="CENTER" contentDisplay="CENTER" ellipsisString="" mnemonicParsing="false" onAction="#crearCliente" prefHeight="36.0" prefWidth="25.0" styleClass="btnSinBorder" stylesheets="@../css/sunat.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
-            </ImageView>
+               <graphic>
+                  <ImageView fx:id="btnNuevo" accessibleHelp="Nuevo" accessibleText="Nuevo" fitHeight="28.0" fitWidth="28.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../imagenes/newFile32.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
+               </graphic>
+            </Button>
          </children>
          <BorderPane.margin>
             <Insets top="5.0" />
@@ -71,11 +76,11 @@
                <children>
                   <TableView fx:id="tListaCliente" prefHeight="358.0" prefWidth="747.0">
                     <columns>
-                      <TableColumn fx:id="colCodigo" prefWidth="87.0" text="Codigo" />
-                      <TableColumn fx:id="colNombre" prefWidth="482.0" text="Nombre" />
-                        <TableColumn fx:id="colTipCliente" minWidth="0.0" prefWidth="59.0" text="Tip. Cli." />
-                        <TableColumn fx:id="colTipPersona" minWidth="0.0" prefWidth="72.0" text="Tip. Per." />
-                        <TableColumn fx:id="colEstado" minWidth="0.0" prefWidth="45.0" text="Estado" />
+                      <TableColumn fx:id="colCodigo" prefWidth="96.0" text="Codigo" />
+                      <TableColumn fx:id="colNombre" prefWidth="485.0" text="Nombre" />
+                        <TableColumn fx:id="colTipCliente" minWidth="0.0" prefWidth="50.0" text="Tip. Cli." />
+                        <TableColumn fx:id="colTipPersona" minWidth="0.0" prefWidth="53.0" text="Tip. Per." />
+                        <TableColumn fx:id="colEstado" minWidth="0.0" prefWidth="61.0" text="Estado" />
                     </columns>
                   </TableView>
                </children>
