@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="vbxPrincipal" fx:controller="com.robin.pos.controller.ClienteController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="470.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="vbxPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="470.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.ClienteController">
     <children>
         <VBox fx:id="vbxCuerpo" prefHeight="417.0" prefWidth="460.0" styleClass="borderPanel" stylesheets="@../css/panel.css">
             <VBox.margin>
