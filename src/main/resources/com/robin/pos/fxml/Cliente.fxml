@@ -196,7 +196,7 @@
                      </image>
                   </ImageView>
                </graphic></Button>
-            <Button fx:id="btnSalir" mnemonicParsing="false" prefHeight="54.0" prefWidth="207.0" text="SALIR">
+            <Button fx:id="btnSalir" mnemonicParsing="false" onAction="#cerrarModal" prefHeight="54.0" prefWidth="207.0" text="SALIR">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

@@ -1,6 +1,7 @@
 package com.robin.pos.controller;
 
 import com.robin.pos.util.Metodos;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -114,6 +115,8 @@ public class ClienteController implements Initializable {
             // si además necesita reconfigurar el formato del número:
             Metodos.configuracionNumeroDocumento(this.txtNumDoc, newVal != null ? newVal : "RUC");
         });
+
+        updateVisibilityByTipoDoc("RUC");
     }
 
     private void configurarTipoDocumento() {
@@ -132,6 +135,11 @@ public class ClienteController implements Initializable {
         rbnNacional.setToggleGroup(tipoDocGroup);
         rbnExtranjero.setToggleGroup(tipoDocGroup);
 
+        rbnNacional.setUserData("N");
+        rbnExtranjero.setUserData("E");
+        rbnJuridico.setUserData("J");
+        rbnNatural.setUserData("P");
+
         // Seleccionar uno por defecto
         rbnJuridico.setSelected(true);
         rbnNacional.setSelected(true);
@@ -144,9 +152,10 @@ public class ClienteController implements Initializable {
 
         // Mostrar/ocultar campos según el tipo de documento
         lblNacionalidad.setVisible(isDNI || isCE);
+        /*
         rbnNacional.setVisible(isDNI || isCE);
         rbnExtranjero.setVisible(isDNI || isCE);
-
+        */
         // Si es RUC ocultar campos de persona natural (gpTres) y mostrar Razon Social (gpCuatro)
         gpTres.setVisible(!isRUC);
         gpTres.setManaged(!isRUC);
@@ -166,11 +175,22 @@ public class ClienteController implements Initializable {
         // Ajustar etiquetas
         if (isRUC) {
             lblTipNum.setText("Número RUC:");
+            rbnJuridico.setSelected(true);
+            rbnNacional.setSelected(true);
         } else if (isDNI) {
             lblTipNum.setText("Número DNI:");
+            rbnNatural.setSelected(true);
+            rbnNacional.setSelected(true);
         } else if (isCE) {
             lblTipNum.setText("Número CE:");
+            rbnNatural.setSelected(true);
+            rbnExtranjero.setSelected(true);
         }
+    }
+
+    @FXML
+    void cerrarModal(ActionEvent event) {
+       this.btnSalir.getScene().getWindow().hide();
     }
 
 
