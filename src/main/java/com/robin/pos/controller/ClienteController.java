@@ -1,5 +1,7 @@
 package com.robin.pos.controller;
 
+import com.robin.pos.dao.ArccdpDao;
+import com.robin.pos.model.Arccdp;
 import com.robin.pos.util.Metodos;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,8 +11,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.StringConverter;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ClienteController implements Initializable {
@@ -22,7 +26,7 @@ public class ClienteController implements Initializable {
     private Button btnSalir;
 
     @FXML
-    private ComboBox<?> cbxDepartamento;
+    private ComboBox<Arccdp> cbxDepartamento;
 
     @FXML
     private ComboBox<?> cbxDistrito;
@@ -117,6 +121,7 @@ public class ClienteController implements Initializable {
         });
 
         updateVisibilityByTipoDoc("RUC");
+        cargarDepartamentos("01");
     }
 
     private void configurarTipoDocumento() {
@@ -191,6 +196,39 @@ public class ClienteController implements Initializable {
     @FXML
     void cerrarModal(ActionEvent event) {
        this.btnSalir.getScene().getWindow().hide();
+    }
+
+    private void cargarDepartamentos(String noCia) {
+        ArccdpDao dao = new ArccdpDao();
+        List<Arccdp> lstDepartamentos = dao.listarDepartamentos(noCia);
+        if (lstDepartamentos != null ) {
+            this.cbxDepartamento.getItems().setAll(lstDepartamentos);
+        }
+
+        this.cbxDepartamento.setConverter( new StringConverter<Arccdp>() {
+
+            @Override
+            public String toString(Arccdp arccdp) {
+                return arccdp == null ? "" : arccdp.getDesDepa();
+            }
+
+            @Override
+            public Arccdp fromString(String string) {
+                return cbxDepartamento.getItems().stream()
+                        .filter(d -> d.getDesDepa().equals(string))
+                        .findFirst().orElse(null);
+            }
+
+        } );
+
+        this.cbxDepartamento.setCellFactory( lst -> new ListCell<Arccdp>() {
+            @Override
+            protected void updateItem(Arccdp item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getDesDepa());
+            }
+        });
+
     }
 
 
