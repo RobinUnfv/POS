@@ -1,7 +1,10 @@
 package com.robin.pos.controller;
 
 import com.robin.pos.dao.ArccdpDao;
+import com.robin.pos.dao.ArccprDao;
 import com.robin.pos.model.Arccdp;
+import com.robin.pos.model.Arccpr;
+import com.robin.pos.util.Mensaje;
 import com.robin.pos.util.Metodos;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,7 +35,7 @@ public class ClienteController implements Initializable {
     private ComboBox<?> cbxDistrito;
 
     @FXML
-    private ComboBox<?> cbxProvincia;
+    private ComboBox<Arccpr> cbxProvincia;
 
     @FXML
     private ComboBox<String> cbxTipDoc;
@@ -228,6 +231,53 @@ public class ClienteController implements Initializable {
                 setText(empty || item == null ? "" : item.getDesDepa());
             }
         });
+
+    }
+
+    @FXML
+    void buscarProvincias(ActionEvent event) {
+        Arccdp departamento = this.cbxDepartamento.getValue();
+//        System.out.println("DEPARTAMENTO SELECCIONADO: " + departamento.getDesDepa());
+        if (departamento == null) {
+            Mensaje.error(null, "Error Departamento","Debe seleccionar un departamento.");
+            return;
+        }
+        String codDepa = departamento.getCodDepa();
+        ArccprDao arccprDao = new ArccprDao();
+        List<Arccpr> lstProvincias = arccprDao.listaProvincias("01", codDepa);
+
+        if (lstProvincias != null) {
+            this.cbxProvincia.getItems().setAll(lstProvincias);
+        } else {
+            this.cbxProvincia.getItems().clear();
+        }
+
+        this.cbxProvincia.setConverter(new StringConverter<Arccpr>() {
+            @Override
+            public String toString(Arccpr p) {
+                return p == null ? "" : p.getDescProv();
+            }
+
+            @Override
+            public Arccpr fromString(String string) {
+                return cbxProvincia.getItems().stream()
+                        .filter(p -> p.getDescProv().equals(string))
+                        .findFirst().orElse(null);
+            }
+        });
+
+        this.cbxProvincia.setCellFactory(list -> new ListCell<Arccpr>() {
+            @Override
+            protected void updateItem(Arccpr item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getDescProv()); // ajustar getter si hace falta
+            }
+        });
+
+        if (!this.cbxProvincia.getItems().isEmpty()) {
+            this.cbxProvincia.getSelectionModel().selectFirst();
+        }
+
 
     }
 

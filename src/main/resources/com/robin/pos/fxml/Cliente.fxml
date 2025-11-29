@@ -164,7 +164,7 @@
                   <Label prefHeight="17.0" prefWidth="126.0" text="Departamento" />
                   <Label prefHeight="17.0" prefWidth="130.0" text="Provincia" GridPane.columnIndex="1" />
                   <Label prefHeight="17.0" prefWidth="75.0" text="Distrito" GridPane.columnIndex="2" />
-                  <ComboBox fx:id="cbxDepartamento" prefWidth="150.0" GridPane.rowIndex="1">
+                  <ComboBox fx:id="cbxDepartamento" onAction="#buscarProvincias" prefWidth="150.0" GridPane.rowIndex="1">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></ComboBox>
