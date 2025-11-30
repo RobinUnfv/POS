@@ -1,7 +1,9 @@
 package com.robin.pos.controller;
 
+import com.robin.pos.dao.ArccdiDao;
 import com.robin.pos.dao.ArccdpDao;
 import com.robin.pos.dao.ArccprDao;
+import com.robin.pos.model.Arccdi;
 import com.robin.pos.model.Arccdp;
 import com.robin.pos.model.Arccpr;
 import com.robin.pos.util.Mensaje;
@@ -32,7 +34,7 @@ public class ClienteController implements Initializable {
     private ComboBox<Arccdp> cbxDepartamento;
 
     @FXML
-    private ComboBox<?> cbxDistrito;
+    private ComboBox<Arccdi> cbxDistrito;
 
     @FXML
     private ComboBox<Arccpr> cbxProvincia;
@@ -237,7 +239,7 @@ public class ClienteController implements Initializable {
     @FXML
     void buscarProvincias(ActionEvent event) {
         Arccdp departamento = this.cbxDepartamento.getValue();
-//        System.out.println("DEPARTAMENTO SELECCIONADO: " + departamento.getDesDepa());
+
         if (departamento == null) {
             Mensaje.error(null, "Error Departamento","Debe seleccionar un departamento.");
             return;
@@ -278,6 +280,57 @@ public class ClienteController implements Initializable {
             this.cbxProvincia.getSelectionModel().selectFirst();
         }
 
+    }
+
+    @FXML
+    void buscarDistrito(ActionEvent event) {
+        Arccdp departamento = this.cbxDepartamento.getValue();
+
+        if (departamento == null) {
+            Mensaje.error(null, "Error Departamento","Debe seleccionar un departamento.");
+            return;
+        }
+
+        Arccpr provincia = this.cbxProvincia.getValue();
+        if(provincia == null) {
+            Mensaje.error(null, "Error Provincia","Debe seleccionar una provincia.");
+            return;
+        }
+        String codDepa = departamento.getCodDepa();
+        String codProv = provincia.getCodiProv();
+        ArccdiDao arccdiDao = new ArccdiDao();
+        List<Arccdi> lstDistritos = arccdiDao.listaDistrito("01", codDepa, codProv);
+        if (lstDistritos != null) {
+            this.cbxDistrito.getItems().setAll(lstDistritos);
+        } else {
+            this.cbxDistrito.getItems().clear();
+        }
+
+        this.cbxDistrito.setConverter(new StringConverter<Arccdi>() {
+            @Override
+            public String toString(Arccdi d) {
+                return d == null ? "" : d.getDescDist();
+            }
+
+            @Override
+            public Arccdi fromString(String string) {
+                return cbxDistrito.getItems().stream()
+                        .filter(d -> d.getDescDist().equals(string))
+                        .findFirst().orElse(null);
+            }
+        });
+
+        this.cbxDistrito.setCellFactory(list -> new ListCell<Arccdi>() {
+            @Override
+            protected void updateItem(Arccdi item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getDescDist()); // ajustar getter si hace falta
+            }
+        });
+
+        if (!this.cbxDistrito.getItems().isEmpty()) {
+            this.cbxDistrito.getSelectionModel().selectFirst();
+        }
 
     }
 

@@ -168,7 +168,7 @@
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></ComboBox>
-                  <ComboBox fx:id="cbxProvincia" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <ComboBox fx:id="cbxProvincia" onAction="#buscarDistrito" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor></ComboBox>
