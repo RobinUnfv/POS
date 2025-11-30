@@ -8,6 +8,7 @@ import com.robin.pos.model.Arccdp;
 import com.robin.pos.model.Arccpr;
 import com.robin.pos.util.Mensaje;
 import com.robin.pos.util.Metodos;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -120,6 +121,7 @@ public class ClienteController implements Initializable {
         configurarRadioButon();
 
         this.cbxTipDoc.valueProperty().addListener((obs, oldVal, newVal) -> {
+            this.txtNumDoc.setText("");
             updateVisibilityByTipoDoc(newVal);
             // si además necesita reconfigurar el formato del número:
             Metodos.configuracionNumeroDocumento(this.txtNumDoc, newVal != null ? newVal : "RUC");
@@ -133,7 +135,10 @@ public class ClienteController implements Initializable {
         this.cbxTipDoc.getItems().addAll("RUC", "DNI","CE");
         this.cbxTipDoc.setValue("RUC");
         Metodos.configuracionNumeroDocumento(this.txtNumDoc ,"RUC");
-        this.txtNumDoc.requestFocus();
+        Platform.runLater(() -> {
+
+            this.txtNumDoc.requestFocus();
+        });
     }
 
     private void configurarRadioButon() {
@@ -332,6 +337,97 @@ public class ClienteController implements Initializable {
             this.cbxDistrito.getSelectionModel().selectFirst();
         }
 
+    }
+
+    @FXML
+    void guardarCliente(ActionEvent event) {
+       String numDoc = this.txtNumDoc.getText().trim();
+       if (numDoc.isEmpty()) {
+           Mensaje.error(null, "Error Número Documento","Debe ingresar un número de documento.");
+           Platform.runLater(() -> {
+               this.txtNumDoc.requestFocus();
+               //this.txtNumDoc.selectAll();
+           });
+           return;
+       }
+       this.validarCamposRuc();
+
+    }
+
+    private void validarCamposRuc() {
+        String tipoDoc = this.cbxTipDoc.getValue();
+        if (tipoDoc.equals("RUC")) {
+            String numDoc = this.txtNumDoc.getText().trim();
+            if (numDoc.length() != 11) {
+                Mensaje.alerta(null, "Error Número RUC","El número de RUC debe tener 11 dígitos.");
+                Platform.runLater(() -> {
+                    this.txtNumDoc.requestFocus();
+                    //this.txtNumDoc.selectAll();
+                });
+                return;
+            }
+
+            String razonSocial = this.txtRazSocial.getText().trim();
+            if (razonSocial.isEmpty()) {
+                Mensaje.error(null, "Error Razón Social","Debe ingresar la razón social.");
+                Platform.runLater(() -> {
+                    this.txtRazSocial.requestFocus();
+                    //this.txtNumDoc.selectAll();
+                });
+                return;
+            }
+
+            String direc = this.txtDirec.getText().trim();
+            if (direc.isEmpty()) {
+                Mensaje.alerta(null, "Error Dirección","Debe ingresar la dirección.");
+                Platform.runLater(() -> {
+                    this.txtDirec.requestFocus();
+                    //this.txtNumDoc.selectAll();
+                });
+                return;
+            }
+
+            Arccdp arccdp = this.cbxDepartamento.getValue();
+            if (arccdp == null) {
+                Mensaje.alerta(null, "Error Departamento", "Debe seleccionar un departamento.");
+                return;
+            }
+            Arccpr arccpr = this.cbxProvincia.getValue();
+            if (arccpr == null) {
+                Mensaje.alerta(null, "Error Provincia", "Debe seleccionar una provincia.");
+                Platform.runLater(() -> {
+                    this.cbxProvincia.requestFocus();
+                    //this.txtNumDoc.selectAll();
+                });
+                return;
+            }
+            Arccdi arccdi = this.cbxDistrito.getValue();
+            if (arccdi == null) {
+                Mensaje.alerta(null, "Error Distrito", "Debe seleccionar un distrito.");
+                Platform.runLater(() -> {
+                    this.cbxDistrito.requestFocus();
+                    //this.txtNumDoc.selectAll();
+                });
+                return;
+            }
+
+        }
+    }
+
+    private void limpiarFormulario() {
+        this.txtNumDoc.clear();
+        this.txtRazSocial.clear();
+        this.txtApePat.clear();
+        this.txtApeMat.clear();
+        this.txtPriNom.clear();
+        this.txtSegNom.clear();
+        this.txtDirec.clear();
+        this.cbxDepartamento.getSelectionModel().clearSelection();
+        this.cbxProvincia.getItems().clear();
+        this.cbxDistrito.getItems().clear();
+        this.cbxTipDoc.setValue("RUC");
+        Metodos.configuracionNumeroDocumento(this.txtNumDoc ,"RUC");
+        this.txtNumDoc.requestFocus();
     }
 
 

@@ -185,7 +185,7 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" />
             </VBox.margin>
          <children>
-            <Button fx:id="btnRegistrar" mnemonicParsing="false" prefHeight="54.0" prefWidth="207.0" text="REGISTRAR">
+            <Button fx:id="btnRegistrar" mnemonicParsing="false" onAction="#guardarCliente" prefHeight="54.0" prefWidth="207.0" text="REGISTRAR">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
