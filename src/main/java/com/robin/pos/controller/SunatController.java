@@ -118,7 +118,11 @@ public class SunatController implements Initializable {
       String tipoDocumento = this.cbxTipoDocumento.getValue();
       this.txtNumeroDocumento.setText(null);
       Metodos.configuracionNumeroDocumento(this.txtNumeroDocumento, tipoDocumento);
-      this.txtNumeroDocumento.requestFocus();
+        Platform.runLater(() -> {
+            this.txtNumeroDocumento.requestFocus();
+            //this.txtNumDoc.selectAll();
+        });
+
     }
 
     private void consultarNumeroDocumento() {

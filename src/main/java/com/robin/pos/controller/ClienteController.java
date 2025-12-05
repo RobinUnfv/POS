@@ -350,7 +350,9 @@ public class ClienteController implements Initializable {
            });
            return;
        }
+
        this.validarCamposRuc();
+       this.validarDni();
 
     }
 
@@ -406,6 +408,50 @@ public class ClienteController implements Initializable {
                 Mensaje.alerta(null, "Error Distrito", "Debe seleccionar un distrito.");
                 Platform.runLater(() -> {
                     this.cbxDistrito.requestFocus();
+                    //this.txtNumDoc.selectAll();
+                });
+                return;
+            }
+
+        }
+    }
+
+    private void validarDni() {
+        String tipoDoc = this.cbxTipDoc.getValue();
+        if (tipoDoc.equals("DNI")) {
+
+            if (txtNumDoc.getText().trim().length() != 8) {
+                Mensaje.alerta(null, "Error Número DNI", "El número de DNI debe tener 8 dígitos.");
+                Platform.runLater(() -> {
+                    this.txtNumDoc.requestFocus();
+                    //this.txtNumDoc.selectAll();
+                });
+                return;
+            }
+
+            if (txtApePat.getText().trim().isEmpty()) {
+                Mensaje.alerta(null, "Error Apellido Paterno", "Debe ingresar el apellido paterno.");
+                Platform.runLater(() -> {
+                    this.txtApePat.requestFocus();
+                    //this.txtNumDoc.selectAll();
+                });
+                return;
+            }
+
+            if (txtApeMat.getText().trim().isEmpty()) {
+
+            Mensaje.alerta(null, "Error Apellido Materno", "Debe ingresar el apellido materno.");
+            Platform.runLater(() -> {
+                this.txtApeMat.requestFocus();
+                //this.txtNumDoc.selectAll();
+            });
+            return;
+            }
+
+            if (txtPriNom.getText().trim().isEmpty()) {
+                Mensaje.alerta(null, "Error Primer Nombre", "Debe ingresar el primer nombre.");
+                Platform.runLater(() -> {
+                    this.txtPriNom.requestFocus();
                     //this.txtNumDoc.selectAll();
                 });
                 return;
