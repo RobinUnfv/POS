@@ -63,9 +63,18 @@ public class ArccmcDao {
             tipoPersona = "N";
             tipoDocumento = "DNI";
             nuDocumento = entidad.getNumeroDocumento();
-            depar = "15";
-            prov = "01";
-            dist = "01";
+            ubigeo = entidad.getUbigeo().trim();
+
+            if ( ubigeo.isEmpty() ) {
+                depar = "15";
+                prov = "01";
+                dist = "01";
+            } else {
+                depar = ubigeo.substring(0, 2);
+                prov = ubigeo.substring(2, 4);
+                dist = ubigeo.substring(4, 6);
+            }
+
             ubigeo = depar + prov + dist;
 
         } else if (tipoPersona.equals("6")) {

@@ -24,11 +24,27 @@ public class ArcctdaDao {
 
         // NATURAL: depa= '15', prov='01', dist='01'
         if(entidad.getTipoDocumento().equals("1")) {
-            depar = "15";
-            prov = "01";
-            dist = "01";
-            ubigeo = depar + prov + dist;
-            direccion = "******";
+            ubigeo = entidad.getUbigeo().trim();
+            if ( ubigeo.isEmpty() ) {
+                depar = "15";
+                prov = "01";
+                dist = "01";
+            } else {
+                depar = ubigeo.substring(0, 2);
+                prov = ubigeo.substring(2, 4);
+                dist = ubigeo.substring(4, 6);
+            }
+
+            if (entidad.getDireccion().isEmpty()) {
+                direccion = entidad.getDireccion().trim();
+                if (direccion.length() > 150) {
+                    direccion = direccion.substring(0, 150).trim();
+                }
+            } else {
+                direccion = "******";
+            }
+
+
         } else if (entidad.getTipoDocumento().equals("6")) {
             direccion = entidad.getDireccion().trim();
             ubigeo = entidad.getUbigeo().trim();

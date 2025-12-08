@@ -1,11 +1,10 @@
 package com.robin.pos.controller;
 
-import com.robin.pos.dao.ArccdiDao;
-import com.robin.pos.dao.ArccdpDao;
-import com.robin.pos.dao.ArccprDao;
+import com.robin.pos.dao.*;
 import com.robin.pos.model.Arccdi;
 import com.robin.pos.model.Arccdp;
 import com.robin.pos.model.Arccpr;
+import com.robin.pos.model.EntidadTributaria;
 import com.robin.pos.util.Mensaje;
 import com.robin.pos.util.Metodos;
 import javafx.application.Platform;
@@ -341,12 +340,12 @@ public class ClienteController implements Initializable {
 
     @FXML
     void guardarCliente(ActionEvent event) {
+
        String numDoc = this.txtNumDoc.getText().trim();
        if (numDoc.isEmpty()) {
            Mensaje.error(null, "Error Número Documento","Debe ingresar un número de documento.");
            Platform.runLater(() -> {
                this.txtNumDoc.requestFocus();
-               //this.txtNumDoc.selectAll();
            });
            return;
        }
@@ -354,6 +353,49 @@ public class ClienteController implements Initializable {
        this.validarCamposRuc();
        this.validarDni();
 
+        if (Mensaje.confirmacion(null,"Confirmar","¿Está seguro de registrar?").get() != ButtonType.CANCEL) {
+            EntidadTributaria entidadTributaria = this.obtenerDatosCliente();
+            int registro = ArccmcDao.registrar(entidadTributaria);
+            if (registro > 0) {
+                registro = ArcctdaDao.registrar(entidadTributaria);
+                Mensaje.alerta (null, "Registro exitoso", "El cliente se registró correctamente.");
+                this.btnSalir.getScene().getWindow().hide();
+            }
+        }
+
+    }
+
+    private EntidadTributaria obtenerDatosCliente() {
+        EntidadTributaria entidad = new EntidadTributaria();
+        String tipoDoc = this.cbxTipDoc.getValue();
+        entidad.setTipoDocumento(tipoDoc);
+        entidad.setNumeroDocumento(this.txtNumDoc.getText().trim());
+
+        if (tipoDoc.equals("RUC")) {
+            entidad.setNombre(this.txtRazSocial.getText().trim());
+            entidad.setTipoDocumento("6");
+        } else if (tipoDoc.equals("DNI")) {
+            entidad.setTipoDocumento("1");
+            String nombreCompleto = String.format("%s %s %s %s",
+                    this.txtApePat.getText().trim(),
+                    this.txtApeMat.getText().trim(),
+                    this.txtPriNom.getText().trim(),
+                    this.txtSegNom.getText().trim()).trim();
+            entidad.setNombre(nombreCompleto);
+        }
+
+        entidad.setDireccion(this.txtDirec.getText().trim());
+        String ubigeo = "";
+        Arccdp arccdp = this.cbxDepartamento.getValue();
+        if (arccdp != null) {
+            Arccpr arccpr = this.cbxProvincia.getValue();
+            Arccdi arccdi = this.cbxDistrito.getValue();
+            if (arccpr != null && arccdi != null) {
+                ubigeo = arccdp.getCodDepa() + arccpr.getCodiProv() + arccdi.getCodiDist();
+            }
+        }
+        entidad.setUbigeo(ubigeo);
+        return entidad;
     }
 
     private void validarCamposRuc() {
@@ -475,6 +517,5 @@ public class ClienteController implements Initializable {
         Metodos.configuracionNumeroDocumento(this.txtNumDoc ,"RUC");
         this.txtNumDoc.requestFocus();
     }
-
 
 }
