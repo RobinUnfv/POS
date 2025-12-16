@@ -1,0 +1,8 @@
+.borderPanel {
+    -fx-border-color: #CCC8C8;
+    -fx-border-width: 1;
+	-fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-margin: 5px;
+}

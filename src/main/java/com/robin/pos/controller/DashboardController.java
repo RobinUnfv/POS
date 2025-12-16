@@ -1,10 +1,13 @@
 package com.robin.pos.controller;
 
 import com.robin.pos.MainApp;
+import com.robin.pos.util.Mensaje;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -41,6 +44,9 @@ public class DashboardController {
 
     @FXML
     private TabPane tabPane;
+    
+    @FXML
+    private Button btnSalir;
 
     private Tab tabVenta;
     private Tab tabCliente;
@@ -102,6 +108,15 @@ public class DashboardController {
     void ingresarReporte(ActionEvent event) {
         this.cambiarColorBtnSeleccionado((Button) event.getSource());
     }
+    
+    @FXML
+    void salirSistema(ActionEvent event) {
+    	this.cambiarColorBtnSeleccionado((Button) event.getSource());
+    	if (Mensaje.confirmacion(null,"Confirmar","¿Está seguro de salir?").get() != ButtonType.CANCEL) {
+    		
+    	}
+    	
+    }
 
     private void cambiarColorBtnSeleccionado(Button btnSeleccionado) {
         String colorDefecto = "-fx-background-color:  transparent; -fx-text-fill: black; -fx-border-width: 0 ; -fx-font-size: 14px;";
@@ -116,5 +131,9 @@ public class DashboardController {
         // Aplicar el estilo al botón seleccionado
         btnSeleccionado.setStyle(colorSeleccionado);
     }
+    
+ 
+    
+    
 
 }
