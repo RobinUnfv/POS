@@ -1,0 +1,14 @@
+.btnEliminarAgregar {
+  -fx-background-color:  transparent;
+}
+
+.btnEliminarAgregar: hover {
+    -fx-background-color: #F0EBEB;
+    -fx-font-size: 15px;
+}
+
+.btnEliminarAgregar: pressed {
+    -fx-background-color: #E1F5E1;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+}

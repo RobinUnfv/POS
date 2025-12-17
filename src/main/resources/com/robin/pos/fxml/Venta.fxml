@@ -159,7 +159,7 @@
                 <VBox prefHeight="558.0" prefWidth="694.0" spacing="10.0">
                     <HBox fx:id="hbxTBotones" alignment="CENTER_RIGHT" prefWidth="200.0">
                         <children>
-                            <Button fx:id="btnAgregarProducto" alignment="CENTER" onAction="#agregarProductoVenta" prefHeight="26.0" prefWidth="26.0">
+                            <Button fx:id="btnAgregarProducto" alignment="CENTER" onAction="#agregarProductoVenta" prefHeight="26.0" prefWidth="26.0" styleClass="btnEliminarAgregar" stylesheets="@../css/venta.css">
                         <cursor>
                            <Cursor fx:constant="HAND" />
                         </cursor>
@@ -170,7 +170,7 @@
                               </image>
                            </ImageView>
                         </graphic></Button>
-                            <Button fx:id="btnEliminarProducto" layoutX="10.0" layoutY="10.0" onAction="#eliminarProductoVenta" prefHeight="8.0" prefWidth="23.0">
+                            <Button fx:id="btnEliminarProducto" layoutX="10.0" layoutY="10.0" onAction="#eliminarProductoVenta" prefHeight="8.0" prefWidth="23.0" styleClass="btnEliminarAgregar" stylesheets="@../css/venta.css">
                         <HBox.margin>
                            <Insets />
                         </HBox.margin>
