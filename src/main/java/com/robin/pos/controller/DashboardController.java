@@ -111,9 +111,9 @@ public class DashboardController {
     
     @FXML
     void salirSistema(ActionEvent event) {
-    	this.cambiarColorBtnSeleccionado((Button) event.getSource());
+    	//this.cambiarColorBtnSeleccionado((Button) event.getSource());
     	if (Mensaje.confirmacion(null,"Confirmar","¿Está seguro de salir?").get() != ButtonType.CANCEL) {
-    		
+    		this.btnSalir.getScene().getWindow().hide();
     	}
     	
     }
