@@ -6,18 +6,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DoubleCell<T, S> extends TableCell<T, Double> {
+public class DoubleCell<T> extends TableCell<T, Double> {
 
     private final TextField textField;
 
     private final NumberFormat numberFormat = NumberFormat.getNumberInstance();
-    private final DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
 
     public DoubleCell() {
@@ -27,7 +25,12 @@ public class DoubleCell<T, S> extends TableCell<T, Double> {
 
         textField.setOnAction(e ->{
             try {
-                commitEdit(numberFormat.parse(textField.getText()).doubleValue());
+                String txt = textField.getText();
+                if (txt == null || txt.trim().isEmpty()) {
+                    commitEdit(null);
+                } else {
+                    commitEdit(numberFormat.parse(txt).doubleValue());
+                }
             } catch (ParseException ex) {
                 Logger.getLogger(DoubleCell.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -45,14 +48,19 @@ public class DoubleCell<T, S> extends TableCell<T, Double> {
     @Override
     protected void updateItem(Double item, boolean empty) {
         super.updateItem(item, empty);
+        // Proteger contra null y celda vacía
         if (empty) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else if (isEditing()) {
-            textField.setText(item.toString());
+            // Si está en edición, mostrar el texto en el TextField (formateado si es Number)
+            Object raw = getItem();
+            textField.setText(formatNumber(raw) == null ? "" : formatNumber(raw));
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         } else {
-            setText(numberFormat.format(item));
+            // Mostrar formato numérico si hay valor
+            Object raw = getItem();
+            setText(formatNumber(raw));
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         }
     }
@@ -60,7 +68,9 @@ public class DoubleCell<T, S> extends TableCell<T, Double> {
     @Override
     public void startEdit() {
         super.startEdit();
-        textField.setText(numberFormat.format(getItem()));
+        // Evitar formatear null o valores no numéricos
+        Object raw = getItem();
+        textField.setText(formatNumber(raw) == null ? "" : formatNumber(raw));
         setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         textField.requestFocus();
         textField.selectAll();
@@ -69,15 +79,29 @@ public class DoubleCell<T, S> extends TableCell<T, Double> {
     @Override
     public void cancelEdit() {
         super.cancelEdit();
-        setText(numberFormat.format(getItem()));
+        // Manejar null o valores no numéricos al cancelar edición
+        Object raw = getItem();
+        setText(formatNumber(raw));
         setContentDisplay(ContentDisplay.TEXT_ONLY);
     }
 
     @Override
     public void commitEdit(Double newValue) {
+        // Asegurarse de no provocar formateo de null y delegar
         super.commitEdit(newValue);
         setContentDisplay(ContentDisplay.TEXT_ONLY);
-        getTableView().requestFocus();
+        if (getTableView() != null) {
+            getTableView().requestFocus();
+        }
+    }
+
+    private String formatNumber(Object obj) {
+        if (obj == null) return null;
+        if (obj instanceof Number) {
+            return numberFormat.format(((Number) obj).doubleValue());
+        }
+        // Si no es Number, devolver su toString() para evitar IllegalArgumentException
+        return obj.toString();
     }
 
 }

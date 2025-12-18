@@ -6,6 +6,8 @@ import com.robin.pos.model.Arinda1;
 import com.robin.pos.model.Cliente;
 import com.robin.pos.model.DetalleVenta;
 import com.robin.pos.util.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -18,6 +20,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -26,9 +29,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
@@ -44,9 +50,6 @@ public class VentaController implements Initializable {
 
     @FXML
     private BorderPane root;
-
-    @FXML
-    private Button btnBoleta;
 
     @FXML
     private Button btnBuscarCliente;
@@ -117,7 +120,6 @@ public class VentaController implements Initializable {
     @FXML
     private TextField txtVuelto;
 
-
     @FXML
     private TextField txtDesArinda1;
 
@@ -144,19 +146,18 @@ public class VentaController implements Initializable {
 
     FilteredList<Arinda1> filtro;
 
-
-//    @FXML
-//    private AutoCompleteTextField txtListaProd;
-
     private Task<List<Arinda1>> busquedaTask;
-
     private ClienteDao clienteDao;
     private Arinda1Dao arinda1Dao;
+    private NumberFormat formatoMoneda;
 
     ObservableList<DetalleVenta> listaDetalleVentas = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Inicializar formato de moneda
+        formatoMoneda = NumberFormat.getCurrencyInstance(new Locale("es", "PE"));
+
         this.lblNumDoc.setText("N° Doc:");
         this.lblRazSocNom.setText("Nombres:");
         this.txtNumDoc.setText("99999999998");
@@ -164,10 +165,6 @@ public class VentaController implements Initializable {
         this.cbxDocIdentidad.setValue("OTR");
 
         txtFechaVenta.setValue(LocalDate.now());
-        // desactivar los botones de boleta y factura si el detalle de venta sea diferente de cero
-
-        btnBoleta.disableProperty().bind(Bindings.isEmpty(listaDetalleVentas));
-        btnFactura.disableProperty().bind(Bindings.isEmpty(listaDetalleVentas));
 
         // Configurar la tabla de ventas
         configurarTablaVenta();
@@ -175,100 +172,230 @@ public class VentaController implements Initializable {
         // MOSTRAR PRODUCTOS
         this.cargarProductosMostrar();
 
-        // Configurar el AutoCompleteTextField
-        // configurarAutoComplete();
+        // Configurar el formatter para el campo de pago
         txtPago.setTextFormatter(new TextFormatter<String>(change ->
                 change.getControlNewText().matches("\\d*(\\.\\d{0,2})?") ? change : null));
-
     }
 
     private void configurarTablaVenta() {
         tVenta.setEditable(true);
         tVenta.getSelectionModel().setCellSelectionEnabled(true);
         tVenta.setItems(listaDetalleVentas);
-        tVenta.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
+        // ===============================================
+        // IMPORTANTE: Usar CONSTRAINED_RESIZE_POLICY
+        // para que las columnas mantengan proporciones
+        // ===============================================
+        tVenta.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // Deshabilitar reordenamiento y sorting
+        tVenta.setSortPolicy(tv -> false);
+
+        // Configurar altura de fila
+        tVenta.setFixedCellSize(32);
+
+        // ===============================================
+        // COLUMNA ITEM
+        // ===============================================
         colItem.setCellValueFactory(new PropertyValueFactory<>("item"));
         colItem.setStyle("-fx-alignment: CENTER;");
         colItem.setEditable(false);
+        colItem.setResizable(false);
+        colItem.setReorderable(false);
+        colItem.setSortable(false);
+        colItem.setMinWidth(50);
+        colItem.setMaxWidth(50);
 
-        colDescripcion.setCellValueFactory(cellData -> cellData.getValue().getArinda1().descripcionProperty());
-        colDescripcion.setCellFactory(TextFieldTableCell.forTableColumn());
-        colDescripcion.setOnEditCommit(
-                new EventHandler<TableColumn.CellEditEvent<DetalleVenta, String>>() {
-                    @Override
-                    public void handle(TableColumn.CellEditEvent<DetalleVenta, String> e) {
-                        if (!Objects.equals(e.getNewValue(), e.getOldValue())) {
-                            ((DetalleVenta) e.getTableView().getItems().get(e.getTablePosition().getRow())).getArinda1().setDescripcion(e.getNewValue().toUpperCase().trim());
-//                            Metodos.changeSizeOnColumn(colDescripcion, tVenta, -1);
-                            TablePosition<DetalleVenta, ?> pos = e.getTablePosition();
-                            if (pos.getColumn() + 1 < tVenta.getColumns().size()) {
-                                tVenta.getSelectionModel().clearAndSelect(pos.getRow(), tVenta.getColumns().get(pos.getColumn() + 1));
-                                tVenta.edit(pos.getRow(), tVenta.getColumns().get(pos.getColumn() + 1));
-                            }
+        // ===============================================
+        // COLUMNA DESCRIPCIÓN (LA CLAVE)
+        // ===============================================
+        colDescripcion.setCellValueFactory(cellData ->
+                cellData.getValue().getArinda1().descripcionProperty()
+        );
+
+        // Configurar CellFactory con wrap text
+        colDescripcion.setCellFactory(column -> {
+            TableCell<DetalleVenta, String> cell = new TableCell<DetalleVenta, String>() {
+                private Text text = new Text();
+
+                {
+                    // Configurar el Text para wrap automático
+                    text.wrappingWidthProperty().bind(
+                            colDescripcion.widthProperty().subtract(20)
+                    );
+                    text.setStyle("-fx-font-size: 13px;");
+                }
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null) {
+                        setGraphic(null);
+                        setText(null);
+                        setTooltip(null);
+                    } else {
+                        // Mostrar con wrap
+                        text.setText(item);
+                        setGraphic(text);
+
+                        // Agregar tooltip si el texto es largo
+                        if (item.length() > 30) {
+                            Tooltip tooltip = new Tooltip(item);
+                            tooltip.setWrapText(true);
+                            tooltip.setMaxWidth(400);
+                            setTooltip(tooltip);
                         }
                     }
                 }
-        );
+
+                @Override
+                public void startEdit() {
+                    super.startEdit();
+                    if (isEmpty()) return;
+
+                    TextField textField = new TextField(getItem());
+                    textField.setOnAction(event -> {
+                        commitEdit(textField.getText());
+                    });
+                    textField.setOnKeyPressed(event -> {
+                        if (event.getCode() == KeyCode.ESCAPE) {
+                            cancelEdit();
+                        }
+                    });
+                    setGraphic(textField);
+                    setText(null);
+                    textField.selectAll();
+                    textField.requestFocus();
+                }
+
+                @Override
+                public void cancelEdit() {
+                    super.cancelEdit();
+                    text.setText(getItem());
+                    setGraphic(text);
+                    setText(null);
+                }
+            };
+
+            cell.setAlignment(Pos.CENTER_LEFT);
+            return cell;
+        });
+
+        colDescripcion.setOnEditCommit(event -> {
+            if (!Objects.equals(event.getNewValue(), event.getOldValue())) {
+                DetalleVenta item = event.getTableView().getItems()
+                        .get(event.getTablePosition().getRow());
+                item.getArinda1().setDescripcion(
+                        event.getNewValue().toUpperCase().trim()
+                );
+
+                // Navegar a la siguiente columna
+                TablePosition<DetalleVenta, ?> pos = event.getTablePosition();
+                if (pos.getColumn() + 1 < tVenta.getColumns().size()) {
+                    tVenta.getSelectionModel().clearAndSelect(
+                            pos.getRow(),
+                            tVenta.getColumns().get(pos.getColumn() + 1)
+                    );
+                    tVenta.edit(
+                            pos.getRow(),
+                            tVenta.getColumns().get(pos.getColumn() + 1)
+                    );
+                }
+
+                // Refrescar la tabla para actualizar el wrap
+                tVenta.refresh();
+            }
+        });
+
         colDescripcion.setEditable(true);
+        colDescripcion.setReorderable(false);
+        colDescripcion.setSortable(false);
+        colDescripcion.setMinWidth(200);
+        // NO establecer maxWidth para que se expanda
 
+        // ===============================================
+        // COLUMNA CANTIDAD
+        // ===============================================
         colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
-        colCantidad.setStyle("-fx-alignment: CENTER;");
+        colCantidad.setStyle("-fx-alignment: CENTER-RIGHT;");
         colCantidad.setCellFactory(tc -> new DoubleCell<>());
-        colCantidad.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<DetalleVenta, Double>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<DetalleVenta, Double> e) {
-                if (!Objects.equals(e.getNewValue(), e.getOldValue())) {
-                    ((DetalleVenta) e.getTableView().getItems().get(e.getTablePosition().getRow())).setCantidad(e.getNewValue());
-                      calcularTotales();
-//                      Metodos.changeSizeOnColumn(colTotal, tVenta, -1);
-                    // como pasar al siguiente campo
-                    TablePosition<DetalleVenta, ?> pos = e.getTablePosition();
-                    if (pos.getColumn() + 1 < tVenta.getColumns().size()) {
-                        tVenta.getSelectionModel().clearAndSelect(pos.getRow(), tVenta.getColumns().get(pos.getColumn() + 1));
-                        tVenta.edit(pos.getRow(), tVenta.getColumns().get(pos.getColumn() + 1));
-                    }
+        colCantidad.setOnEditCommit(event -> {
+            if (!Objects.equals(event.getNewValue(), event.getOldValue())) {
+                DetalleVenta item = event.getTableView().getItems()
+                        .get(event.getTablePosition().getRow());
+                item.setCantidad(event.getNewValue());
+                calcularTotales();
+
+                // Navegar a la siguiente columna
+                TablePosition<DetalleVenta, ?> pos = event.getTablePosition();
+                if (pos.getColumn() + 1 < tVenta.getColumns().size()) {
+                    tVenta.getSelectionModel().clearAndSelect(
+                            pos.getRow(),
+                            tVenta.getColumns().get(pos.getColumn() + 1)
+                    );
+                    tVenta.edit(
+                            pos.getRow(),
+                            tVenta.getColumns().get(pos.getColumn() + 1)
+                    );
                 }
             }
         });
+        colCantidad.setReorderable(false);
+        colCantidad.setSortable(false);
+        colCantidad.setMinWidth(70);
+        colCantidad.setMaxWidth(100);
 
-
+        // ===============================================
+        // COLUMNA PRECIO
+        // ===============================================
         colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
+        colPrecio.setStyle("-fx-alignment: CENTER-RIGHT;");
         colPrecio.setCellFactory(tc -> new CurrencyCell<>());
-        colPrecio.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<DetalleVenta, Double>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<DetalleVenta, Double> e) {
-                if (!Objects.equals(e.getNewValue(), e.getOldValue())) {
-                    ((DetalleVenta) e.getTableView().getItems().get(e.getTablePosition().getRow())).setPrecio(e.getNewValue());
-                    calcularTotales();
-//                    Metodos.changeSizeOnColumn(colTotal, tVenta, -1);
-                }
+        colPrecio.setOnEditCommit(event -> {
+            if (!Objects.equals(event.getNewValue(), event.getOldValue())) {
+                DetalleVenta item = event.getTableView().getItems()
+                        .get(event.getTablePosition().getRow());
+                item.setPrecio(event.getNewValue());
+                calcularTotales();
+                tVenta.refresh();
             }
         });
+        colPrecio.setReorderable(false);
+        colPrecio.setSortable(false);
+        colPrecio.setMinWidth(100);
+        colPrecio.setMaxWidth(120);
 
+        // ===============================================
+        // COLUMNA TOTAL
+        // ===============================================
         colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+        colTotal.setStyle("-fx-alignment: CENTER-RIGHT; -fx-font-weight: bold;");
         colTotal.setCellFactory(tc -> new CurrencyCell<>());
         colTotal.setEditable(false);
+        colTotal.setReorderable(false);
+        colTotal.setSortable(false);
+        colTotal.setMinWidth(100);
+        colTotal.setMaxWidth(130);
     }
 
     @FXML
     void buscarCliente(ActionEvent event) {
+        if (this.txtNumDoc.getText().isEmpty()) {
+            Mensaje.alerta(null,"Número Documento","Ingrese el Número de documento");
+            return;
+        }
 
-       if (this.txtNumDoc.getText().isEmpty()) {
-           Mensaje.alerta(null,"Número Documento","Ingrese el Número de documento");
-           return;
-       }
+        clienteDao = new ClienteDao();
+        Cliente cliente = clienteDao.buscarPorNumId("01",txtNumDoc.getText());
 
-       clienteDao = new ClienteDao();
-       Cliente cliente = clienteDao.buscarPorNumId("01",txtNumDoc.getText());
-
-       if (cliente ==  null) {
+        if (cliente ==  null) {
             Mensaje.error(null,"Consulta cliente","El número de documento "+this.txtNumDoc.getText()+" no valido.");
             this.limpiarCliente();
             return;
-       }
+        }
 
-       this.mostrarCliente(cliente);
+        this.mostrarCliente(cliente);
     }
 
     @FXML
@@ -307,70 +434,33 @@ public class VentaController implements Initializable {
         this.limpiarCliente();
         this.txtNumDoc.setText("");
         String tipoDoc = this.cbxDocIdentidad.getSelectionModel().getSelectedItem();
+
         if (tipoDoc.equals("DNI")) {
             this.txtNumDoc.setPromptText("DNI");
             Metodos.configuracionNumeroDocumento(this.txtNumDoc, "DNI");
             this.lblNumDoc.setText("DNI:");
-            this.lblNumDoc.setText("Apellido y Nombre:");
-
+            this.lblRazSocNom.setText("Apellido y Nombre:");
         } else if (tipoDoc.equals("RUC")) {
             this.txtNumDoc.setPromptText("RUC");
             Metodos.configuracionNumeroDocumento(this.txtNumDoc, "RUC");
             this.lblNumDoc.setText("RUC:");
-            this.lblNumDoc.setText("Razón Social:");
+            this.lblRazSocNom.setText("Razón Social:");
         } else if (tipoDoc.equals("OTR")) {
             this.txtNumDoc.setPromptText("OTROS");
             this.txtNumDoc.setText("99999999998");
             this.lblNumDoc.setText("N° Doc:");
-            this.lblNumDoc.setText("Nombres:");
+            this.lblRazSocNom.setText("Nombres:");
             this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
                     change.getControlNewText().length() <= 15 ? change : null));
-        }
-       else {
+        } else {
             this.txtNumDoc.setPromptText("Número Documento");
             this.lblNumDoc.setText("N° Doc:");
-            this.lblNumDoc.setText("Nombres:");
+            this.lblRazSocNom.setText("Nombres:");
             this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
                     change.getControlNewText().length() <= 15 ? change : null));
         }
 
         this.txtNumDoc.requestFocus();
-    }
-
-    private void buscarProductosAsync(String criterio) {
-        // Cancelar búsqueda anterior si existe
-        if (busquedaTask != null && busquedaTask.isRunning()) {
-            busquedaTask.cancel();
-        }
-
-        // Crear nueva tarea de búsqueda
-        busquedaTask = new Task<List<Arinda1>>() {
-            @Override
-            protected List<Arinda1> call() {
-                arinda1Dao = new Arinda1Dao();
-                return arinda1Dao.buscarProducto("01", criterio); //dao.buscarProductos(criterio);
-            }
-        };
-
-        busquedaTask.setOnSucceeded(e -> {
-            List<Arinda1> productos = busquedaTask.getValue();
-            // txtListaProd.mostrarSugerencias(productos);
-        });
-
-        busquedaTask.setOnFailed(e -> {
-            System.err.println("Error en búsqueda: " + busquedaTask.getException().getMessage());
-        });
-
-        // Ejecutar en hilo separado
-        Thread thread = new Thread(busquedaTask);
-        thread.setDaemon(true);
-        thread.start();
-    }
-
-    private void cargarDatosProducto(Arinda1 producto) {
-        if (producto != null) {
-            System.out.println(producto.getCodigo() + " + " + producto.getDescripcion());
-        }
     }
 
     @FXML
@@ -381,7 +471,6 @@ public class VentaController implements Initializable {
                 tArinda1.getSelectionModel().select(0, colProducto);
                 break;
             case ESCAPE:
-//                this.txtCodBarra.requestFocus();
                 break;
             default:
                 txtDesArinda1.textProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -404,13 +493,12 @@ public class VentaController implements Initializable {
         ObservableList<Arinda1> listaObservable = FXCollections.observableArrayList(listaArinda1);
         filtro = new FilteredList<>(listaObservable, e -> true);
         tArinda1.setItems(filtro);
-        tArinda1.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        tArinda1.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tArinda1.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tArinda1.getSelectionModel().selectFirst();
 
-        colProducto.setCellValueFactory( param -> param.getValue().descripcionProperty() );
-        Metodos.changeSizeOnColumn(colProducto, tArinda1, -1);
-
+        colProducto.setCellValueFactory(param -> param.getValue().descripcionProperty());
+        // NO usar changeSizeOnColumn aquí
     }
 
     @FXML
@@ -431,53 +519,102 @@ public class VentaController implements Initializable {
     }
 
     private void agregarDetalleVenta(Arinda1 arinda1) {
-        this.listaDetalleVentas.stream().
-                filter( p -> p.getArinda1().getCodigo().equals(arinda1.getCodigo()) ).
-                findFirst().map( (t) -> {
-                    t.setCantidad(t.getCantidad()+1);
-                    return t;
-                } ).orElseGet( () -> {
-                    DetalleVenta dv = new DetalleVenta();
-                    dv.setItem( this.listaDetalleVentas.size() + 1 );
-                    dv.setArinda1(arinda1);
-                    dv.setCantidad(1.0);
-                    dv.setPrecio(0.0);
-                    dv.setIgv(0.0);
+        if (arinda1 == null) {
+            return;
+        }
 
-                    this.listaDetalleVentas.add(dv);
-                    // Ajustar tamaño de la columna descripción
-                    Metodos.changeSizeOnColumn(colDescripcion, tArinda1, -1);
-                    // Ajuntar tamaño de la columna colproducto
-                    //Metodos.changeSizeOnColumn(colProducto, tArinda1, -1);
-                    // Seleccionar y editar la nueva fila
-                    tVenta.scrollTo(dv);
-                    tVenta.getSelectionModel().select(dv);
-                    tVenta.layout();
-                    tVenta.edit(tVenta.getItems().size() -1, this.colCantidad);
-                    return dv;
-                } );
+        // Buscar si el producto ya existe
+        DetalleVenta[] productoExistente = {null};
+
+        this.listaDetalleVentas.stream()
+                .filter(p -> p.getArinda1().getCodigo().equals(arinda1.getCodigo()))
+                .findFirst()
+                .ifPresentOrElse(
+                        // Si existe, incrementar cantidad
+                        existente -> {
+                            existente.setCantidad(existente.getCantidad() + 1);
+                            productoExistente[0] = existente;
+
+                            // Seleccionar y resaltar la fila existente
+                            tVenta.getSelectionModel().select(existente);
+                            tVenta.scrollTo(existente);
+
+                            // Aplicar efecto visual temporal
+                            resaltarFilaExistente(existente);
+
+                            // Editar la celda de cantidad
+                            Platform.runLater(() -> {
+                                int rowIndex = tVenta.getItems().indexOf(existente);
+                                tVenta.edit(rowIndex, colCantidad);
+                            });
+                        },
+                        // Si no existe, agregar nuevo
+                        () -> {
+                            DetalleVenta dv = new DetalleVenta();
+                            dv.setItem(this.listaDetalleVentas.size() + 1);
+                            dv.setArinda1(arinda1);
+                            dv.setCantidad(1.0);
+                            dv.setPrecio(0.0);
+                            dv.setIgv(0.0);
+
+                            this.listaDetalleVentas.add(dv);
+
+                            // Seleccionar y editar la nueva fila
+                            tVenta.scrollTo(dv);
+                            tVenta.getSelectionModel().select(dv);
+                            Platform.runLater(() -> {
+                                tVenta.edit(tVenta.getItems().size() - 1, this.colCantidad);
+                            });
+                        }
+                );
+
         calcularTotales();
+        tVenta.refresh();
+    }
+
+    /**
+     * Resalta visualmente una fila cuando se agrega un producto duplicado
+     */
+    private void resaltarFilaExistente(DetalleVenta detalleVenta) {
+        // Obtener el índice de la fila
+        int rowIndex = tVenta.getItems().indexOf(detalleVenta);
+
+        // Aplicar animación de resaltado usando Timeline
+        Timeline timeline = new Timeline();
+
+        // Crear una marca temporal para identificar la fila
+        detalleVenta.setResaltado(true);
+
+        // Después de 2 segundos, quitar el resaltado
+        timeline.getKeyFrames().add(
+                new KeyFrame(Duration.seconds(2), event -> {
+                    detalleVenta.setResaltado(false);
+                    tVenta.refresh();
+                })
+        );
+
+        timeline.play();
+        tVenta.refresh();
     }
 
     private void calcularTotales() {
-        NumberFormat formato = NumberFormat.getCurrencyInstance(new Locale("es", "PE"));
-
-        double total = listaDetalleVentas.stream().mapToDouble( p -> p.getCantidad() * p.getPrecio() ).sum();
+        double total = listaDetalleVentas.stream()
+                .mapToDouble(p -> p.getCantidad() * p.getPrecio())
+                .sum();
         double igv = total * 0.18;
         double subTotal = total / 1.18;
 
-        lblSubTotal.setText(formato.format(subTotal));
-        lblIgv.setText(formato.format(igv));
-        lblTotGravada.setText(formato.format(subTotal));
-        lblTotal.setText(formato.format(total));
+        lblSubTotal.setText(formatoMoneda.format(subTotal));
+        lblIgv.setText(formatoMoneda.format(igv));
+        lblTotGravada.setText(formatoMoneda.format(subTotal));
+        lblTotal.setText(formatoMoneda.format(total));
     }
 
     @FXML
     void tVentaKeyPressed(KeyEvent evt) {
-         // como poder crear una nueva fila presionando insert
         if (evt.getCode() == KeyCode.INSERT) {
             agregarProductoVenta(new ActionEvent());
-        } else  if (evt.getCode() == KeyCode.DELETE) {
+        } else if (evt.getCode() == KeyCode.DELETE) {
             eliminarProductoVenta(new ActionEvent());
         } else if (evt.getCode() == KeyCode.ESCAPE) {
             this.txtDesArinda1.requestFocus();
@@ -488,29 +625,38 @@ public class VentaController implements Initializable {
     @FXML
     void calcularVuelto(KeyEvent evt) {
         if (evt.getCode() == KeyCode.ENTER) {
-            NumberFormat formato = NumberFormat.getCurrencyInstance(new Locale("es", "PE"));
             if (this.txtPago.getText().isEmpty()) {
                 this.txtVuelto.setText("0.00");
                 return;
             }
-            double pago = Double.parseDouble(this.txtPago.getText());
-            double total = listaDetalleVentas.stream().mapToDouble( p -> p.getCantidad() * p.getPrecio() ).sum();
-            if (pago < total) {
-                Mensaje.alerta(null,"Pago","El monto ingresado es menor al total.");
+
+            try {
+                double pago = Double.parseDouble(this.txtPago.getText());
+                double total = listaDetalleVentas.stream()
+                        .mapToDouble(p -> p.getCantidad() * p.getPrecio())
+                        .sum();
+
+                if (pago < total) {
+                    Mensaje.alerta(null, "Pago", "El monto ingresado es menor al total.");
+                    this.txtVuelto.setText("0.00");
+                    this.txtPago.requestFocus();
+                    return;
+                }
+
+                double vuelto = pago - total;
+                this.txtVuelto.setText(formatoMoneda.format(vuelto));
+            } catch (NumberFormatException e) {
+                Mensaje.error(null, "Error", "Ingrese un monto válido");
                 this.txtVuelto.setText("0.00");
-                this.txtPago.requestFocus();
-                return;
             }
-            double vuelto = pago - total;
-            String vueltoFormato = formato.format(vuelto);
-            this.txtVuelto.setText(vueltoFormato);
         }
     }
 
     @FXML
     void agregarProductoVenta(ActionEvent event) {
         DetalleVenta dv = new DetalleVenta();
-        dv.setItem(this.listaDetalleVentas.size() + 1 );
+        dv.setItem(this.listaDetalleVentas.size() + 1);
+
         Arinda1 arinda1 = new Arinda1();
         arinda1.setCodigo(Metodos.generarTextoAleatorio(6));
         arinda1.setDescripcion("");
@@ -522,43 +668,52 @@ public class VentaController implements Initializable {
         this.listaDetalleVentas.add(dv);
         tVenta.scrollTo(dv);
         tVenta.getSelectionModel().select(dv);
-        tVenta.layout();
-        tVenta.edit(tVenta.getItems().size() -1, colDescripcion);
+        Platform.runLater(() -> {
+            tVenta.edit(tVenta.getItems().size() - 1, colDescripcion);
+        });
     }
 
     @FXML
     void eliminarProductoVenta(ActionEvent event) {
-        if (tVenta.getSelectionModel().getSelectedItem() == null) {
-            Mensaje.alerta(null,"Eliminar item","Seleccione un producto para eliminar.");
+        DetalleVenta itemSeleccionado = tVenta.getSelectionModel().getSelectedItem();
+
+        if (itemSeleccionado == null) {
+            Mensaje.alerta(null, "Eliminar item", "Seleccione un producto para eliminar.");
             return;
         }
-        if (Mensaje.confirmacion(null,"Eliminar item","¿Está seguro de eliminar el producto seleccionado?").get() != ButtonType.CANCEL) {
-            this.listaDetalleVentas.remove(tVenta.getSelectionModel().getSelectedItem());
+
+        if (Mensaje.confirmacion(null, "Eliminar item",
+                "¿Está seguro de eliminar el producto seleccionado?").get() != ButtonType.CANCEL) {
+            this.listaDetalleVentas.remove(itemSeleccionado);
+
             // Reenumerar items
             for (int i = 0; i < this.listaDetalleVentas.size(); i++) {
                 this.listaDetalleVentas.get(i).setItem(i + 1);
             }
+
             calcularTotales();
+            tVenta.refresh();
         }
     }
 
-
     @FXML
     void nuevoCliente(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/robin/pos/fxml/Sunat.fxml"));
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/com/robin/pos/fxml/Sunat.fxml")
+        );
         VBox vbox = loader.load();
-        // obtener controller y registrar callback
+
+        // Obtener controller y registrar callback
         SunatController sunatController = loader.getController();
         sunatController.setOnRegistro(numeroDocumento -> {
-            // Se ejecuta en UI thread por Platform.runLater por seguridad
             Platform.runLater(() -> {
                 txtNumDoc.setText(numeroDocumento);
-                // llamar a buscarCliente para cargar datos (si desea)
                 try {
                     buscarCliente(new ActionEvent());
                 } catch (Exception ex) {
-                    // manejar si buscarCliente lanza excepciones
-                    Mensaje.error(null, "Error", "Ocurrió un error al buscar el cliente recién registrado: " + ex.getMessage());
+                    Mensaje.error(null, "Error",
+                            "Ocurrió un error al buscar el cliente recién registrado: "
+                                    + ex.getMessage());
                 }
             });
         });
@@ -570,8 +725,6 @@ public class VentaController implements Initializable {
         stage.initOwner(root.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setResizable(false);
-        stage.setIconified(false);
         stage.showAndWait();
     }
-
 }

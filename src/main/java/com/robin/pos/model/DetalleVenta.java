@@ -13,9 +13,13 @@ public class DetalleVenta {
     private final DoubleProperty igv = new SimpleDoubleProperty();
     private final DoubleProperty total = new SimpleDoubleProperty();
 
+    private BooleanProperty resaltado = new SimpleBooleanProperty(false);
+
     public DetalleVenta() {
         NumberBinding multiplicacion = Bindings.multiply(this.precioProperty(), this.cantidadProperty());
         this.totalProperty().bind(multiplicacion);
+
+        this.resaltado.set(false);
     }
 
     public Integer getItem() {
@@ -66,4 +70,17 @@ public class DetalleVenta {
         return total;}
     public void setTotal(double total) {
         this.total.set(total);}
+
+    // Nuevos métodos para resaltado
+    public boolean isResaltado() {
+        return resaltado.get();
+    }
+
+    public BooleanProperty resaltadoProperty() {
+        return resaltado;
+    }
+
+    public void setResaltado(boolean resaltado) {
+        this.resaltado.set(resaltado);
+    }
 }
