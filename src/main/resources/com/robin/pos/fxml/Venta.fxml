@@ -204,7 +204,7 @@
                         </padding>
                         <Label prefHeight="27.0" prefWidth="148.0" styleClass="label-total-titulo" text="TOTAL A PAGAR" />
                         <Label fx:id="lblTotal" alignment="CENTER" prefHeight="54.0" prefWidth="285.0" styleClass="label-total-monto" text="S/ 0.00" />
-                  <Button fx:id="btnFactura1" maxWidth="Infinity" styleClass="btn-comprobante" text="PAGAR">
+                  <Button fx:id="btnPagar" maxWidth="Infinity" onAction="#realizarPago" styleClass="btn-comprobante" text="PAGAR">
                      <tooltip>
                         <Tooltip text="Generar Factura" />
                      </tooltip>

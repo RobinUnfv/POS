@@ -9,14 +9,12 @@ import com.robin.pos.util.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,7 +22,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -145,6 +142,9 @@ public class VentaController implements Initializable {
     private Label lblRazSocNom;
 
     FilteredList<Arinda1> filtro;
+
+    @FXML
+    private Button btnPagar;
 
     private Task<List<Arinda1>> busquedaTask;
     private ClienteDao clienteDao;
@@ -769,4 +769,45 @@ public class VentaController implements Initializable {
         stage.setResizable(false);
         stage.showAndWait();
     }
+
+    @FXML
+    void realizarPago(ActionEvent event) {
+        String numeroDoc = this.txtNumDoc.getText();
+        if (numeroDoc == null || numeroDoc.isEmpty()) {
+            Mensaje.error (null, "Validación de cliente",
+                    "El número de documento no puede estar vacío.");
+            return ;
+        }
+
+        this.validarProductos();
+    }
+
+    // Validar los productos antes de generar el comprobante de pago
+    private void validarProductos() {
+        if (listaDetalleVentas.isEmpty()) {
+            Mensaje.alerta (null, "Validación de productos",
+                    "Debe agregar al menos un producto para realizar la venta.");
+            return ;
+        }
+
+        for (DetalleVenta dv : listaDetalleVentas) {
+
+            if (dv.getArinda1().getDescripcion() == null || dv.getArinda1().getDescripcion().isEmpty()) {
+                Mensaje.error (null, "Validación de productos",
+                        "La descripción del producto no puede estar vacía.");
+                return ;
+            }
+            if (dv.getCantidad() <= 0) {
+                Mensaje.error (null, "Validación de productos",
+                        "La cantidad del producto debe ser mayor a cero.");
+                return ;
+            }
+            if (dv.getPrecio() <= 0) {
+                Mensaje.error (null, "Validación de productos",
+                        "El precio del producto debe ser mayor a cero.");
+                return ;
+            }
+        }
+    }
+
 }
