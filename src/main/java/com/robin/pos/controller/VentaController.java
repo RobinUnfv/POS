@@ -492,13 +492,55 @@ public class VentaController implements Initializable {
         List<Arinda1> listaArinda1 = arinda1Dao.buscarProducto("01");
         ObservableList<Arinda1> listaObservable = FXCollections.observableArrayList(listaArinda1);
         filtro = new FilteredList<>(listaObservable, e -> true);
+
         tArinda1.setItems(filtro);
         tArinda1.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tArinda1.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         tArinda1.getSelectionModel().selectFirst();
 
+        // Configurar altura dinámica para las filas
+        tArinda1.setFixedCellSize(Region.USE_COMPUTED_SIZE);
+
+        // ============================================
+        // CONFIGURAR COLUMNA CON WRAP TEXT
+        // ============================================
         colProducto.setCellValueFactory(param -> param.getValue().descripcionProperty());
-        // NO usar changeSizeOnColumn aquí
+
+        colProducto.setCellFactory(column -> {
+            TableCell<Arinda1, String> cell = new TableCell<Arinda1, String>() {
+                private Text text = new Text();
+
+                {
+                    // Configurar el Text para wrap automático
+                    text.wrappingWidthProperty().bind(
+                            colProducto.widthProperty().subtract(20)
+                    );
+                    text.setStyle("-fx-font-size: 13px;");
+                }
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null) {
+                        setGraphic(null);
+                        setText(null);
+                    } else {
+                        text.setText(item);
+                        setGraphic(text);
+
+                        // Ajustar altura de la celda al contenido
+                        setPrefHeight(Region.USE_COMPUTED_SIZE);
+                    }
+                }
+            };
+
+            cell.setAlignment(Pos.CENTER_LEFT);
+            return cell;
+        });
+
+        // ELIMINAR esta línea que causa problemas:
+        // Metodos.changeSizeOnColumn(colProducto, tArinda1, -1);
     }
 
     @FXML
