@@ -50,10 +50,10 @@ public class VentaController implements Initializable {
 
     @FXML
     private Button btnBuscarCliente;
-
+    /*
     @FXML
     private Button btnFactura;
-
+    */
     @FXML
     private Button btnNuevoCliente;
 
@@ -134,17 +134,27 @@ public class VentaController implements Initializable {
 
     @FXML
     private Button btnEliminarProducto;
-
+    /*
     @FXML
     private Label lblNumDoc;
-
+    */
     @FXML
     private Label lblRazSocNom;
+    @FXML
+    private Label lblGuiaRemision;
 
     FilteredList<Arinda1> filtro;
 
     @FXML
     private Button btnPagar;
+
+    @FXML
+    private ToggleButton btnBoleta;
+    @FXML
+    private ToggleButton btnFactura;
+
+    @FXML
+    private TextField txtGuiaRemision;
 
     private Task<List<Arinda1>> busquedaTask;
     private ClienteDao clienteDao;
@@ -158,7 +168,7 @@ public class VentaController implements Initializable {
         // Inicializar formato de moneda
         formatoMoneda = NumberFormat.getCurrencyInstance(new Locale("es", "PE"));
 
-        this.lblNumDoc.setText("N° Doc:");
+       // this.lblNumDoc.setText("N° Doc:");
         this.lblRazSocNom.setText("Nombres:");
         this.txtNumDoc.setText("99999999998");
         this.cbxDocIdentidad.getItems().addAll("CE", "DNI", "RUC", "OTR");
@@ -175,6 +185,8 @@ public class VentaController implements Initializable {
         // Configurar el formatter para el campo de pago
         txtPago.setTextFormatter(new TextFormatter<String>(change ->
                 change.getControlNewText().matches("\\d*(\\.\\d{0,2})?") ? change : null));
+
+        this.mostrarGuiaRemision(false);
     }
 
     private void configurarTablaVenta() {
@@ -438,23 +450,23 @@ public class VentaController implements Initializable {
         if (tipoDoc.equals("DNI")) {
             this.txtNumDoc.setPromptText("DNI");
             Metodos.configuracionNumeroDocumento(this.txtNumDoc, "DNI");
-            this.lblNumDoc.setText("DNI:");
+           // this.lblNumDoc.setText("DNI:");
             this.lblRazSocNom.setText("Apellido y Nombre:");
         } else if (tipoDoc.equals("RUC")) {
             this.txtNumDoc.setPromptText("RUC");
             Metodos.configuracionNumeroDocumento(this.txtNumDoc, "RUC");
-            this.lblNumDoc.setText("RUC:");
+           // this.lblNumDoc.setText("RUC:");
             this.lblRazSocNom.setText("Razón Social:");
         } else if (tipoDoc.equals("OTR")) {
             this.txtNumDoc.setPromptText("OTROS");
             this.txtNumDoc.setText("99999999998");
-            this.lblNumDoc.setText("N° Doc:");
+           // this.lblNumDoc.setText("N° Doc:");
             this.lblRazSocNom.setText("Nombres:");
             this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
                     change.getControlNewText().length() <= 15 ? change : null));
         } else {
             this.txtNumDoc.setPromptText("Número Documento");
-            this.lblNumDoc.setText("N° Doc:");
+           // this.lblNumDoc.setText("N° Doc:");
             this.lblRazSocNom.setText("Nombres:");
             this.txtNumDoc.setTextFormatter(new TextFormatter<String>(change ->
                     change.getControlNewText().length() <= 15 ? change : null));
@@ -809,5 +821,80 @@ public class VentaController implements Initializable {
             }
         }
     }
+
+    @FXML
+    void onBoleta(ActionEvent event) {
+        if ( this.btnBoleta.isSelected() ) {
+           // this.btnFactura.setSelected(false);
+            this.mostrarGuiaRemision(false);
+
+            // Estilo seleccionado para BOLETA
+            btnBoleta.setStyle(
+                    "-fx-background-color: #16BB60; " +
+                            "-fx-border-color: #999999; " +
+                            "-fx-border-width: 1px; " +
+                            "-fx-text-fill: #333333; " +
+                            "-fx-font-size: 11px; " +
+                            "-fx-font-weight: bold; " +
+                            "-fx-background-radius: 2px; " +
+                            "-fx-border-radius: 2px;"
+            );
+
+            // Estilo normal para FACTURA
+            btnFactura.setStyle(
+                    "-fx-background-color: white; " +
+                            "-fx-border-color: #999999; " +
+                            "-fx-border-width: 1px; " +
+                            "-fx-text-fill: #333333; " +
+                            "-fx-font-size: 11px; " +
+                            "-fx-font-weight: bold; " +
+                            "-fx-background-radius: 2px; " +
+                            "-fx-border-radius: 2px;"
+            );
+
+        }
+    }
+
+    @FXML
+    void onFactura(ActionEvent event) {
+        if (btnFactura.isSelected()) {
+                this.mostrarGuiaRemision(true);
+
+                // Estilo seleccionado para FACTURA
+                btnFactura.setStyle(
+                      "-fx-background-color: #16BB60; " +
+                             "-fx-border-color: #999999; " +
+                             "-fx-border-width: 1px; " +
+                             "-fx-text-fill: #333333; " +
+                             "-fx-font-size: 11px; " +
+                             "-fx-font-weight: bold; " +
+                             "-fx-background-radius: 2px; " +
+                             "-fx-border-radius: 2px;"
+                );
+
+                // Estilo normal para BOLETA
+                btnBoleta.setStyle(
+                      "-fx-background-color: white; " +
+                             "-fx-border-color: #999999; " +
+                             "-fx-border-width: 1px; " +
+                             "-fx-text-fill: #333333; " +
+                             "-fx-font-size: 11px; " +
+                             "-fx-font-weight: bold; " +
+                             "-fx-background-radius: 2px; " +
+                             "-fx-border-radius: 2px;"
+                );
+        }
+    }
+
+    private void mostrarGuiaRemision(Boolean mostrar) {
+        // Ocultar campo de guía de remisión
+        txtGuiaRemision.setVisible(mostrar);
+        txtGuiaRemision.setManaged(mostrar);
+        txtGuiaRemision.clear();
+
+        lblGuiaRemision.setVisible(mostrar);
+        lblGuiaRemision.setManaged(mostrar);
+    }
+
 
 }

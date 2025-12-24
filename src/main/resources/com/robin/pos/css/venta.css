@@ -124,6 +124,29 @@
 }
 
 /* Botones de comprobante */
+.btn-DocuPaga {
+      -fx-background-radius: 2px;
+      -fx-border-radius: 2px;
+      -fx-cursor: hand;
+      -fx-background-color: #FFFFFF;
+      -fx-border-color: #F0EDED;
+        -fx-border-width: 1px;
+
+      -fx-text-fill: #333333;
+      -fx-font-size: 11px;
+      -fx-font-weight: bold;
+}
+
+.btn-DocuPaga: hover {
+    -fx-background-color: #EAFCE9;
+}
+
+.btn-DocuPaga: pressed {
+    -fx-background-color: #9DF098;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 1);
+}
+
+/* Botones de comprobante */
 .btn-comprobante {
     -fx-background-color: linear-gradient(to bottom, #0d6efd 0%, #0b5ed7 100%);
     -fx-text-fill: white;
