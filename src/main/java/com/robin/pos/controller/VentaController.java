@@ -161,6 +161,8 @@ public class VentaController implements Initializable {
     private Arinda1Dao arinda1Dao;
     private NumberFormat formatoMoneda;
 
+    private String tipoComprobante;
+
     ObservableList<DetalleVenta> listaDetalleVentas = FXCollections.observableArrayList();
 
     @Override
@@ -187,6 +189,21 @@ public class VentaController implements Initializable {
                 change.getControlNewText().matches("\\d*(\\.\\d{0,2})?") ? change : null));
 
         this.mostrarGuiaRemision(false);
+        // Configurar botón de boleta como seleccionado por defecto
+        tipoComprobante = "B";
+        btnBoleta.setSelected(true);
+        btnBoleta.fire();
+        // Estilo seleccionado para BOLETA
+        btnBoleta.setStyle(
+                "-fx-background-color: #16BB60; " +
+                        "-fx-border-color: #999999; " +
+                        "-fx-border-width: 1px; " +
+                        "-fx-text-fill: #333333; " +
+                        "-fx-font-size: 11px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 2px; " +
+                        "-fx-border-radius: 2px;"
+        );
     }
 
     private void configurarTablaVenta() {
@@ -441,8 +458,42 @@ public class VentaController implements Initializable {
         txtDireccion.setText("");
     }
 
+    private void validarTipoDocumento() {
+        String tipoDoc = this.cbxDocIdentidad.getSelectionModel().getSelectedItem();
+
+        if (tipoDoc.equals("RUC") && tipoComprobante.equals("B")) {
+            Mensaje.error(null,"Validación de documento",
+                    "No se puede emitir una BOLETA con tipo de documento RUC.");
+            cbxDocIdentidad.setValue("OTR");
+            return;
+        }
+
+        if (tipoDoc.equals("OTR") && tipoComprobante.equals("F")) {
+            Mensaje.error(null,"Validación de documento",
+                    "No se puede emitir una FACTURA con tipo de documento OTROS.");
+            cbxDocIdentidad.setValue("RUC");
+            return;
+        }
+
+        if (tipoDoc.equals("CE") && tipoComprobante.equals("F")) {
+            Mensaje.error(null,"Validación de documento",
+                    "No se puede emitir una FACTURA con tipo de documento CARNET DE EXTRANJERÍA.");
+            cbxDocIdentidad.setValue("RUC");
+            return;
+        }
+
+        if (tipoDoc.equals("DNI") && tipoComprobante.equals("F")) {
+            Mensaje.error(null,"Validación de documento",
+                    "No se puede emitir una FACTURA con tipo de documento DNI.");
+            cbxDocIdentidad.setValue("RUC");
+            return;
+        }
+
+    }
+
     @FXML
     void escogerTipoDocumento(ActionEvent event) {
+        validarTipoDocumento();
         this.limpiarCliente();
         this.txtNumDoc.setText("");
         String tipoDoc = this.cbxDocIdentidad.getSelectionModel().getSelectedItem();
@@ -825,7 +876,9 @@ public class VentaController implements Initializable {
     @FXML
     void onBoleta(ActionEvent event) {
         if ( this.btnBoleta.isSelected() ) {
-           // this.btnFactura.setSelected(false);
+            tipoComprobante = "B";
+            cbxDocIdentidad.setValue("OTR");
+            validarTipoDocumento();
             this.mostrarGuiaRemision(false);
 
             // Estilo seleccionado para BOLETA
@@ -852,12 +905,16 @@ public class VentaController implements Initializable {
                             "-fx-border-radius: 2px;"
             );
 
+
         }
     }
 
     @FXML
     void onFactura(ActionEvent event) {
         if (btnFactura.isSelected()) {
+                tipoComprobante = "F";
+                cbxDocIdentidad.setValue("RUC");
+                validarTipoDocumento();
                 this.mostrarGuiaRemision(true);
 
                 // Estilo seleccionado para FACTURA
@@ -883,6 +940,9 @@ public class VentaController implements Initializable {
                              "-fx-background-radius: 2px; " +
                              "-fx-border-radius: 2px;"
                 );
+            Platform.runLater(() -> {
+                this.txtNumDoc.requestFocus();
+            });
         }
     }
 
