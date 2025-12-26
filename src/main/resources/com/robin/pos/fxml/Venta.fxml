@@ -52,7 +52,7 @@
                </HBox>
                     <Label prefHeight="18.0" prefWidth="126.0" styleClass="label-seccion" text="Tipo Documento" />
                     <HBox spacing="5">
-                       <ComboBox fx:id="cbxDocIdentidad" maxWidth="Infinity" onAction="#escogerTipoDocumento" prefHeight="30.0" prefWidth="160.0" promptText="Seleccione...">
+                       <ComboBox fx:id="cbxDocIdentidad" maxWidth="Infinity" onAction="#escogerTipoDocumento" prefHeight="30.0" prefWidth="145.0" promptText="Seleccione...">
                            <tooltip>
                                <Tooltip text="Seleccione el tipo de documento" />
                            </tooltip>
@@ -153,7 +153,7 @@
                 <!-- Panel de Cálculos y Total -->
                 <HBox alignment="CENTER_RIGHT" spacing="10">
                    <!-- Barra de herramientas -->
-                   <HBox prefHeight="218.0" prefWidth="149.0" spacing="5" styleClass="toolbar">
+                   <HBox prefHeight="176.0" prefWidth="130.0" spacing="5" styleClass="toolbar">
                        <Button fx:id="btnAgregarProducto" minWidth="26.0" onAction="#agregarProductoVenta" prefHeight="38.0" prefWidth="26.0" styleClass="btn-toolbar, btn-add">
                            <graphic>
                                <ImageView fitHeight="28.0" fitWidth="32.0" preserveRatio="true">
@@ -177,7 +177,7 @@
                        </Button>
                    </HBox>
                     <!-- Cálculos detallados -->
-                    <GridPane hgap="10" prefHeight="218.0" prefWidth="263.0" styleClass="panel-calculos" vgap="8">
+                    <GridPane hgap="10" prefHeight="218.0" prefWidth="277.0" styleClass="panel-calculos" vgap="8">
                         <padding>
                             <Insets bottom="15" left="15" right="15" top="15" />
                         </padding>

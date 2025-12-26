@@ -838,7 +838,10 @@ public class VentaController implements Initializable {
         String numeroDoc = this.txtNumDoc.getText();
         if (numeroDoc == null || numeroDoc.isEmpty()) {
             Mensaje.error (null, "Validación de cliente",
-                    "El número de documento no puede estar vacío.");
+                    "Ingrese el número de documento del cliente.");
+            Platform.runLater(() -> {
+                this.txtNumDoc.requestFocus();
+            });
             return ;
         }
 
