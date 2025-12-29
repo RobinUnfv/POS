@@ -2,6 +2,7 @@ package com.robin.pos.controller;
 
 import com.robin.pos.dao.Arinda1Dao;
 import com.robin.pos.dao.ClienteDao;
+import com.robin.pos.dao.ComprobantePagoDao;
 import com.robin.pos.model.Arinda1;
 import com.robin.pos.model.Cliente;
 import com.robin.pos.model.DetalleVenta;
@@ -164,6 +165,8 @@ public class VentaController implements Initializable {
     private String tipoComprobante;
 
     ObservableList<DetalleVenta> listaDetalleVentas = FXCollections.observableArrayList();
+
+    private ComprobantePagoDao comprobantePagoDao = new ComprobantePagoDao();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -845,35 +848,72 @@ public class VentaController implements Initializable {
             return ;
         }
 
-        this.validarProductos();
+        // Validar productos
+        if (!validarProductosParaPago()) {
+            return;
+        }
+
+        String tipoComprobanteDesc = tipoComprobante.equals("B") ? "BOLETA" : "FACTURA";
+        String msjComprobante = "Se generará la " + tipoComprobanteDesc + "\n" + "¿Desea continuar?";
+
+        if (tipoComprobanteDesc.equalsIgnoreCase("FACTURA")) {
+            String guiaRemision = this.txtGuiaRemision.getText();
+            if (guiaRemision == null || guiaRemision.isEmpty()) {
+
+                if (Mensaje.confirmacion(null, "Validación de guía de remisión",
+                        "¿Desea Ingrese el número de guía de remisión para emitir la FACTURA?").get() == ButtonType.OK) {
+
+                    Platform.runLater(() -> {
+                        this.txtGuiaRemision.requestFocus();
+                    });
+                    return ;
+
+                }
+
+            }
+        }
+
+        // Confirmar la operación
+        if (Mensaje.confirmacion(null, "Confirmar Pago",
+                msjComprobante).get() == ButtonType.CANCEL) {
+            return;
+        }
+
     }
 
-    // Validar los productos antes de generar el comprobante de pago
-    private void validarProductos() {
+    /**
+     * Valida los productos antes de generar el comprobante de pago
+     * @return true si la validación es exitosa
+     */
+    private boolean validarProductosParaPago() {
         if (listaDetalleVentas.isEmpty()) {
-            Mensaje.alerta (null, "Validación de productos",
+            Mensaje.alerta(null, "Validación de productos",
                     "Debe agregar al menos un producto para realizar la venta.");
-            return ;
+            return false;
         }
 
         for (DetalleVenta dv : listaDetalleVentas) {
-
-            if (dv.getArinda1().getDescripcion() == null || dv.getArinda1().getDescripcion().isEmpty()) {
-                Mensaje.error (null, "Validación de productos",
-                        "La descripción del producto no puede estar vacía.");
-                return ;
+            if (dv.getArinda1().getDescripcion() == null ||
+                    dv.getArinda1().getDescripcion().trim().isEmpty()) {
+                Mensaje.error(null, "Validación de productos",
+                        "La descripción del producto en el item " + dv.getItem() +
+                                " no puede estar vacía.");
+                return false;
             }
             if (dv.getCantidad() <= 0) {
-                Mensaje.error (null, "Validación de productos",
-                        "La cantidad del producto debe ser mayor a cero.");
-                return ;
+                Mensaje.error(null, "Validación de productos",
+                        "La cantidad del producto '" + dv.getArinda1().getDescripcion() +
+                                "' debe ser mayor a cero.");
+                return false;
             }
             if (dv.getPrecio() <= 0) {
-                Mensaje.error (null, "Validación de productos",
-                        "El precio del producto debe ser mayor a cero.");
-                return ;
+                Mensaje.error(null, "Validación de productos",
+                        "El precio del producto '" + dv.getArinda1().getDescripcion() +
+                                "' debe ser mayor a cero.");
+                return false;
             }
         }
+        return true;
     }
 
     @FXML

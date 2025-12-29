@@ -2,11 +2,19 @@ package com.robin.pos.dao;
 
 import com.robin.pos.model.DetalleVenta;
 import com.robin.pos.model.ParametrosComprobante;
+import com.robin.pos.model.ResultadoEmision;
+import com.robin.pos.util.ConexionBD;
+import oracle.jdbc.OracleTypes;
 
+import java.sql.CallableStatement;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ComprobantePagoDao {
@@ -258,6 +266,227 @@ public class ComprobantePagoDao {
                 .replace(">", "&gt;")
                 .replace("\"", "&quot;")
                 .replace("'", "&apos;");
+    }
+
+    /**
+     * Procesa la respuesta XML del procedimiento EMISION_COMPRO_PAGO
+     *
+     * Estructura EXITOSA:
+     * <emisionComprobantePagoResponse>
+     *   <noCia>01</noCia>
+     *   <noCliente>99999999998</noCliente>
+     *   <noOrden>9410000129</noOrden>
+     *   <noGuia>9950001311</noGuia>
+     *   <noFactu>B0010000026</noFactu>
+     *   <fecha>2025-12-26</fecha>
+     *   <resultado>OK</resultado>
+     * </emisionComprobantePagoResponse>
+     *
+     * Estructura con ERROR:
+     * <emisionComprobantePagoResponse>
+     *   <fecha>2025-12-28</fecha>
+     *   <resultado>ERROR</resultado>
+     *   <resEmisionCp>
+     *     <mensajeValidacionList>
+     *       <mensajeValidacion>
+     *         <nomProceso>EMISION_COMPRO_PAGO</nomProceso>
+     *         <codError>1</codError>
+     *         <msjError>Código de cliente no puede ser nulo.</msjError>
+     *         <fecProceso>2025-12-28</fecProceso>
+     *       </mensajeValidacion>
+     *     </mensajeValidacionList>
+     *   </resEmisionCp>
+     * </emisionComprobantePagoResponse>
+     */
+    private void procesarRespuesta(String xmlRespuesta, ResultadoEmision resultado) {
+        try {
+            // Extraer el resultado (OK o ERROR)
+            String resultadoStr = extraerValorXml(xmlRespuesta, "resultado");
+            String fecha = extraerValorXml(xmlRespuesta, "fecha");
+
+            resultado.setFecha(fecha);
+            resultado.setResultadoOracle(resultadoStr);
+
+            // Verificar si la operación fue exitosa
+            if ("OK".equalsIgnoreCase(resultadoStr)) {
+                // ========== RESPUESTA EXITOSA ==========
+                resultado.setExito(true);
+
+                // Extraer todos los valores del XML de respuesta exitosa
+                String noCia = extraerValorXml(xmlRespuesta, "noCia");
+                String noCliente = extraerValorXml(xmlRespuesta, "noCliente");
+                String noOrden = extraerValorXml(xmlRespuesta, "noOrden");
+                String noGuia = extraerValorXml(xmlRespuesta, "noGuia");
+                String noFactu = extraerValorXml(xmlRespuesta, "noFactu");
+
+                // Asignar valores al objeto resultado
+                resultado.setNoCia(noCia);
+                resultado.setNoCliente(noCliente);
+                resultado.setNoOrden(noOrden);
+                resultado.setNoGuia(noGuia);
+                resultado.setNoFactu(noFactu);
+
+                // Extraer serie y correlativo del número de factura (ej: B0010000026)
+                if (noFactu != null && noFactu.length() >= 4) {
+                    String serie = noFactu.substring(0, 4);  // B001
+                    String correlativo = noFactu.substring(4); // 0000026
+                    resultado.setSerie(serie);
+                    resultado.setCorrelativo(correlativo);
+                }
+
+                // Construir mensaje de éxito
+                StringBuilder mensaje = new StringBuilder();
+                mensaje.append("Comprobante emitido exitosamente");
+                if (noFactu != null && !noFactu.isEmpty()) {
+                    mensaje.append("\nN° Comprobante: ").append(noFactu);
+                }
+                if (noOrden != null && !noOrden.isEmpty()) {
+                    mensaje.append("\nN° Orden: ").append(noOrden);
+                }
+                if (noGuia != null && !noGuia.isEmpty()) {
+                    mensaje.append("\nN° Guía: ").append(noGuia);
+                }
+                resultado.setMensaje(mensaje.toString());
+
+            } else if ("ERROR".equalsIgnoreCase(resultadoStr)) {
+                // ========== RESPUESTA CON ERROR ==========
+                resultado.setExito(false);
+
+                // Extraer información del error desde la estructura de validación
+                String nomProceso = extraerValorXml(xmlRespuesta, "nomProceso");
+                String codError = extraerValorXml(xmlRespuesta, "codError");
+                String msjError = extraerValorXml(xmlRespuesta, "msjError");
+                String fecProceso = extraerValorXml(xmlRespuesta, "fecProceso");
+
+                // Guardar código de error
+                if (codError != null) {
+                    resultado.setCodigoError(codError);
+                }
+
+                // Construir mensaje de error detallado
+                StringBuilder mensajeError = new StringBuilder();
+
+                if (msjError != null && !msjError.isEmpty()) {
+                    mensajeError.append(msjError);
+                } else {
+                    mensajeError.append("Error en la emisión del comprobante");
+                }
+
+                // Agregar información adicional si está disponible
+                if (codError != null && !codError.isEmpty()) {
+                    mensajeError.append("\n\nCódigo de error: ").append(codError);
+                }
+                if (nomProceso != null && !nomProceso.isEmpty()) {
+                    mensajeError.append("\nProceso: ").append(nomProceso);
+                }
+                if (fecProceso != null && !fecProceso.isEmpty()) {
+                    mensajeError.append("\nFecha: ").append(fecProceso);
+                }
+
+                resultado.setMensaje(mensajeError.toString());
+
+                // Log para debug
+                LOGGER.warning("Error en emisión de comprobante - Código: " + codError +
+                        ", Mensaje: " + msjError + ", Proceso: " + nomProceso);
+
+            } else {
+                // ========== RESPUESTA DESCONOCIDA ==========
+                resultado.setExito(false);
+                resultado.setMensaje("Respuesta desconocida del servidor: " + resultadoStr);
+                LOGGER.warning("Respuesta desconocida del procedimiento: " + resultadoStr);
+            }
+
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Error al procesar respuesta XML", e);
+            resultado.setExito(false);
+            resultado.setMensaje("Error al procesar la respuesta: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Emite un comprobante de pago (Boleta o Factura) llamando al procedimiento de Oracle
+     *
+     * @param parametros Objeto con todos los parámetros necesarios para la emisión
+     * @return Respuesta XML del procedimiento con el resultado de la emisión
+     */
+    public ResultadoEmision emitirComprobante(ParametrosComprobante parametros) {
+        Connection conexion = null;
+        CallableStatement cstmt = null;
+        ResultadoEmision resultado = new ResultadoEmision();
+
+        try {
+            conexion = ConexionBD.oracle();
+            if (conexion == null) {
+                resultado.setExito(false);
+                resultado.setMensaje("No se pudo establecer conexión con la base de datos");
+                return resultado;
+            }
+
+            // Construir el XML de entrada
+            String xmlEntrada = construirXmlEntrada(parametros);
+
+            // Log del XML de entrada para debug
+            LOGGER.info("XML Entrada: " + xmlEntrada);
+
+            // Preparar la llamada al procedimiento almacenado
+            String sql = "{ call FACTU.PR_COMPROBANTE_PAGO.EMISION_COMPRO_PAGO(?, ?) }";
+            cstmt = conexion.prepareCall(sql);
+
+            // Parámetro de entrada: XML con los datos del comprobante (CLOB)
+            Clob clobEntrada = conexion.createClob();
+            clobEntrada.setString(1, xmlEntrada);
+            cstmt.setClob(1, clobEntrada);
+
+            // Parámetro de salida: XML con la respuesta (CLOB)
+            cstmt.registerOutParameter(2, OracleTypes.CLOB);
+
+            // Ejecutar el procedimiento
+            cstmt.execute();
+
+            // Obtener la respuesta
+            Clob clobSalida = cstmt.getClob(2);
+            if (clobSalida != null) {
+                String xmlSalida = clobSalida.getSubString(1, (int) clobSalida.length());
+                resultado.setXmlRespuesta(xmlSalida);
+
+                // Log del XML de salida para debug
+                LOGGER.info("XML Salida: " + xmlSalida);
+
+                // Procesar la respuesta
+                procesarRespuesta(xmlSalida, resultado);
+            } else {
+                resultado.setExito(false);
+                resultado.setMensaje("El procedimiento no devolvió respuesta");
+            }
+
+            // Liberar los CLOBs
+            clobEntrada.free();
+            if (clobSalida != null) {
+                clobSalida.free();
+            }
+
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error SQL al emitir comprobante", e);
+            resultado.setExito(false);
+            resultado.setMensaje("Error en la base de datos: " + e.getMessage());
+            resultado.setCodigoError(String.valueOf(e.getErrorCode()));
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error inesperado al emitir comprobante", e);
+            resultado.setExito(false);
+            resultado.setMensaje("Error inesperado: " + e.getMessage());
+        } finally {
+            // Cerrar recursos
+            if (cstmt != null) {
+                try {
+                    cstmt.close();
+                } catch (SQLException e) {
+                    LOGGER.log(Level.WARNING, "Error al cerrar CallableStatement", e);
+                }
+            }
+            ConexionBD.cerrarCxOracle(conexion);
+        }
+
+        return resultado;
     }
 
 }
