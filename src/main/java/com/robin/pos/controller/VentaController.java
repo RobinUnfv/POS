@@ -928,7 +928,7 @@ public class VentaController implements Initializable {
                     mensajeExito.append("N° Orden: ").append(resultado.getNoOrden()).append("\n");
                 }
                 if (resultado.getNoGuia() != null) {
-                    mensajeExito.append("N° Guía: ").append(resultado.getNoGuia()).append("\n");
+                    mensajeExito.append("N° Guía interna: ").append(resultado.getNoGuia()).append("\n");
                 }
                 if (resultado.getFecha() != null) {
                     mensajeExito.append("Fecha: ").append(resultado.getFecha());
@@ -979,16 +979,40 @@ public class VentaController implements Initializable {
         // Limpiar lista de productos
         listaDetalleVentas.clear();
 
+        // Resetear tipo de comprobante a Boleta
+        tipoComprobante = "B";
+        btnBoleta.setSelected(true);
+        btnBoleta.fire();
+
         // Resetear cliente a valores por defecto
         cbxDocIdentidad.setValue("OTR");
         txtNumDoc.setText("99999999998");
         txtRazSocNom.setText("CLIENTES VARIOS");
         txtDireccion.setText("");
 
-        // Resetear tipo de comprobante a Boleta
-        tipoComprobante = "B";
-        btnBoleta.setSelected(true);
-        btnBoleta.fire();
+        // Estilo seleccionado para BOLETA
+        btnBoleta.setStyle(
+                "-fx-background-color: #16BB60; " +
+                        "-fx-border-color: #999999; " +
+                        "-fx-border-width: 1px; " +
+                        "-fx-text-fill: #333333; " +
+                        "-fx-font-size: 11px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 2px; " +
+                        "-fx-border-radius: 2px;"
+        );
+
+        // Estilo normal para FACTURA
+        btnFactura.setStyle(
+                "-fx-background-color: white; " +
+                        "-fx-border-color: #999999; " +
+                        "-fx-border-width: 1px; " +
+                        "-fx-text-fill: #333333; " +
+                        "-fx-font-size: 11px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 2px; " +
+                        "-fx-border-radius: 2px;"
+        );
 
         // Resetear campos de pago
         txtPago.setText("0.00");
