@@ -3,9 +3,7 @@ package com.robin.pos.controller;
 import com.robin.pos.dao.Arinda1Dao;
 import com.robin.pos.dao.ClienteDao;
 import com.robin.pos.dao.ComprobantePagoDao;
-import com.robin.pos.model.Arinda1;
-import com.robin.pos.model.Cliente;
-import com.robin.pos.model.DetalleVenta;
+import com.robin.pos.model.*;
 import com.robin.pos.util.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -38,10 +36,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class VentaController implements Initializable {
@@ -875,10 +870,220 @@ public class VentaController implements Initializable {
 
         // Confirmar la operación
         if (Mensaje.confirmacion(null, "Confirmar Pago",
-                msjComprobante).get() == ButtonType.CANCEL) {
-            return;
+                msjComprobante).get() == ButtonType.OK) {
+            emitirComprobantePago();
         }
 
+    }
+
+    /**
+     * Emite el comprobante de pago llamando al procedimiento de Oracle
+     * FACTU.PR_COMPROBANTE_PAGO.EMISION_COMPRO_PAGO
+     *
+     * Respuesta esperada del procedimiento:
+     * <emisionComprobantePagoResponse>
+     *   <noCia>01</noCia>
+     *   <noCliente>99999999998</noCliente>
+     *   <noOrden>9410000129</noOrden>
+     *   <noGuia>9950001311</noGuia>
+     *   <noFactu>B0010000026</noFactu>
+     *   <fecha>2025-12-26</fecha>
+     *   <resultado>OK</resultado>
+     * </emisionComprobantePagoResponse>
+     */
+    private void emitirComprobantePago() {
+        // Mostrar diálogo de progreso
+        ProgressDialog progressDialog = new ProgressDialog();
+        progressDialog.setTitle("Generando Comprobante");
+        progressDialog.setMessage("Por favor espere mientras se genera el comprobante de pago...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
+
+        // Crear tarea en segundo plano
+        Task<ResultadoEmision> task = new Task<ResultadoEmision>() {
+            @Override
+            protected ResultadoEmision call() throws Exception {
+                // Construir parámetros del comprobante
+                ParametrosComprobante parametros = construirParametrosComprobante();
+
+                // Llamar al DAO para emitir el comprobante
+                return comprobantePagoDao.emitirComprobante(parametros);
+            }
+        };
+
+        // Manejar resultado exitoso
+        task.setOnSucceeded(event -> {
+            progressDialog.close();
+            ResultadoEmision resultado = task.getValue();
+
+            if (resultado.isExito()) {
+                // Mostrar mensaje de éxito con información del comprobante
+                StringBuilder mensajeExito = new StringBuilder();
+                mensajeExito.append("¡Comprobante emitido exitosamente!\n\n");
+
+                if (resultado.getNoFactu() != null) {
+                    mensajeExito.append("N° Comprobante: ").append(resultado.getNoFactu()).append("\n");
+                }
+                if (resultado.getNoOrden() != null) {
+                    mensajeExito.append("N° Orden: ").append(resultado.getNoOrden()).append("\n");
+                }
+                if (resultado.getNoGuia() != null) {
+                    mensajeExito.append("N° Guía: ").append(resultado.getNoGuia()).append("\n");
+                }
+                if (resultado.getFecha() != null) {
+                    mensajeExito.append("Fecha: ").append(resultado.getFecha());
+                }
+
+                Mensaje.alerta(null, "Comprobante Generado", mensajeExito.toString());
+
+                // Limpiar formulario después de la venta exitosa
+                limpiarFormularioVenta();
+
+                // TODO: Aquí puedes agregar lógica para imprimir el comprobante
+                // imprimirComprobante(resultado);
+
+            } else {
+                // Mostrar error
+                Mensaje.error(null, "Error en Comprobante",
+                        resultado.getMensaje() != null ?
+                                resultado.getMensaje() :
+                                "Error desconocido al generar el comprobante");
+
+                // Log del XML de respuesta para debug
+                if (resultado.getXmlRespuesta() != null) {
+                    System.err.println("XML Respuesta Error: " + resultado.getXmlRespuesta());
+                }
+            }
+        });
+
+        // Manejar error en la tarea
+        task.setOnFailed(event -> {
+            progressDialog.close();
+            Throwable exception = task.getException();
+            Mensaje.error(null, "Error",
+                    "Ocurrió un error al procesar el comprobante: " +
+                            (exception != null ? exception.getMessage() : "Error desconocido"));
+            if (exception != null) {
+                exception.printStackTrace();
+            }
+        });
+
+        // Ejecutar tarea en nuevo hilo
+        new Thread(task).start();
+    }
+
+    /**
+     * Limpia el formulario después de una venta exitosa
+     */
+    private void limpiarFormularioVenta() {
+        // Limpiar lista de productos
+        listaDetalleVentas.clear();
+
+        // Resetear cliente a valores por defecto
+        cbxDocIdentidad.setValue("OTR");
+        txtNumDoc.setText("99999999998");
+        txtRazSocNom.setText("CLIENTES VARIOS");
+        txtDireccion.setText("");
+
+        // Resetear tipo de comprobante a Boleta
+        tipoComprobante = "B";
+        btnBoleta.setSelected(true);
+        btnBoleta.fire();
+
+        // Resetear campos de pago
+        txtPago.setText("0.00");
+        txtVuelto.setText("0.00");
+
+        // Resetear totales
+        lblSubTotal.setText("S/ 0.00");
+        lblIgv.setText("S/ 0.00");
+        lblTotGravada.setText("S/ 0.00");
+        lblTotal.setText("S/ 0.00");
+
+        // Ocultar guía de remisión
+        mostrarGuiaRemision(false);
+
+        // Actualizar fecha
+        txtFechaVenta.setValue(LocalDate.now());
+
+        // Refrescar tabla
+        tVenta.refresh();
+
+        // Enfocar el campo de búsqueda de productos
+        Platform.runLater(() -> txtDesArinda1.requestFocus());
+    }
+
+    /**
+     * Construye el objeto de parámetros para el comprobante
+     * basándose en los datos del formulario de venta
+     */
+    private ParametrosComprobante construirParametrosComprobante() {
+        ParametrosComprobante params = new ParametrosComprobante();
+
+        // Datos del cliente
+        params.setNoCliente(txtNumDoc.getText().trim());
+        params.setNombreCliente(txtRazSocNom.getText() != null ?
+                txtRazSocNom.getText().trim() : "CLIENTE VARIOS");
+        params.setDireccionComercial(txtDireccion.getText() != null ?
+                txtDireccion.getText().trim() : "");
+
+        // Tipo de documento del cliente
+        String tipoDocCliente = cbxDocIdentidad.getValue();
+        switch (tipoDocCliente) {
+            case "RUC":
+                params.setTipoDocCli("RUC");
+                params.setRuc(txtNumDoc.getText().trim());
+                break;
+            case "DNI":
+                params.setTipoDocCli("DNI");
+                break;
+            case "CE":
+                params.setTipoDocCli("CE");
+                break;
+            default:
+                params.setTipoDocCli("OTR");
+                break;
+        }
+
+        // Tipo de comprobante (B=Boleta, F=Factura)
+        params.setTipoDocumento(tipoComprobante);
+
+        // Fecha de la venta
+        params.setFecha(txtFechaVenta.getValue() != null ?
+                txtFechaVenta.getValue() : LocalDate.now());
+
+        // Guía de remisión (solo para facturas)
+        if ("F".equals(tipoComprobante) && txtGuiaRemision.getText() != null
+                && !txtGuiaRemision.getText().trim().isEmpty()) {
+            params.setGuiaRemision(txtGuiaRemision.getText().trim());
+        }
+
+        // Calcular totales
+        double totalConIgv = listaDetalleVentas.stream()
+                .mapToDouble(dv -> dv.getCantidad() * dv.getPrecio())
+                .sum();
+        double subTotal = totalConIgv / 1.18;
+        double igv = totalConIgv - subTotal;
+
+        params.setSubTotal(subTotal);
+        params.setTotalIgv(igv);
+        params.setTotalPrecio(totalConIgv);
+        params.setPorcentajeIgv(18);
+
+        // Moneda (TODO: obtener del ComboBox cuando esté implementado)
+        params.setMoneda("SOL");
+        params.setTipoCambio(3.70); // TODO: obtener tipo de cambio actual
+
+        // Datos del vendedor/cajero (TODO: obtener del usuario logueado)
+        params.setNoVendedor("48750185"); // Código del vendedor
+        params.setUsuario("YPC");          // Usuario del sistema
+        params.setCajera("900002");        // Código de cajera
+        params.setCodCaja("C11");          // Código de caja
+
+        // Detalles de la venta
+        params.setDetalles(new ArrayList<>(listaDetalleVentas));
+
+        return params;
     }
 
     /**
