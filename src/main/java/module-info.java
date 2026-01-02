@@ -10,13 +10,19 @@ module com.robin.pos {
     requires java.desktop;
     requires javafx.graphics;
     requires com.google.gson;
+    requires net.sf.jasperreports.core;
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
 
 //    requires com.robin.pos;
 
     opens com.robin.pos to javafx.fxml;
+
     exports com.robin.pos;
     exports com.robin.pos.controller;
     exports com.robin.pos.util to javafx.fxml;
     opens com.robin.pos.controller to javafx.fxml;
-    opens com.robin.pos.model to javafx.base, javafx.fxml;
+    //opens com.robin.pos.model to javafx.base, javafx.fxml, jasperreports, org.apache.commons.beanutils;
+    opens com.robin.pos.model;
+
 }

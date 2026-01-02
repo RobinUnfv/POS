@@ -927,14 +927,19 @@ public class VentaController implements Initializable {
                 if (resultado.getNoOrden() != null) {
                     mensajeExito.append("N° Orden: ").append(resultado.getNoOrden()).append("\n");
                 }
+
                 if (resultado.getNoGuia() != null) {
                     mensajeExito.append("N° Guía interna: ").append(resultado.getNoGuia()).append("\n");
                 }
+
                 if (resultado.getFecha() != null) {
                     mensajeExito.append("Fecha: ").append(resultado.getFecha());
                 }
 
                 Mensaje.alerta(null, "Comprobante Generado", mensajeExito.toString());
+
+                // Imprimir el comprobante
+                imprimirComprobante(resultado, new ArrayList<>(listaDetalleVentas));
 
                 // Limpiar formulario después de la venta exitosa
                 limpiarFormularioVenta();
@@ -1226,6 +1231,35 @@ public class VentaController implements Initializable {
 
         lblGuiaRemision.setVisible(mostrar);
         lblGuiaRemision.setManaged(mostrar);
+    }
+
+    /**
+     * Imprime el comprobante de pago usando JasperReports
+     *
+     * @param resultado Resultado de la emisión del comprobante
+     * @param detalles Lista de detalles de la venta (copiar antes de limpiar)
+     */
+    private void imprimirComprobante(ResultadoEmision resultado, List<DetalleVenta> detalles) {
+        // Preparar datos del cliente
+        DatosCliente datosCliente = new DatosCliente();
+        datosCliente.setNombre(txtRazSocNom.getText());
+        datosCliente.setNumeroDocumento(txtNumDoc.getText());
+        datosCliente.setTipoDocumento(cbxDocIdentidad.getValue());
+        datosCliente.setDireccion(txtDireccion.getText());
+
+        // Preparar datos de la venta
+        DatosVenta datosVenta = new DatosVenta();
+        datosVenta.setFechaEmision(txtFechaVenta.getValue());
+        datosVenta.setMoneda("SOL"); // TODO: obtener del ComboBox
+        datosVenta.setCondicionPago("VENTA CONTADO"); // TODO: obtener del ComboBox
+        datosVenta.setVendedor("YPC"); // TODO: obtener del usuario logueado
+        datosVenta.setPorcentajeIgv(18);
+
+        // Mostrar el reporte
+        Platform.runLater(() -> {
+            ReporteComprobantePago reporteComprobantePago = new ReporteComprobantePago();
+            reporteComprobantePago.generarReporte(resultado, detalles, datosCliente, datosVenta);
+        });
     }
 
 
