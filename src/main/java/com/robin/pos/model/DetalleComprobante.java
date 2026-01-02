@@ -3,6 +3,7 @@ package com.robin.pos.model;
 import java.math.BigDecimal;
 
 public class DetalleComprobante {
+    private String linea;
     private String codigo;
     private String descripcion;
     private String unidad;
@@ -17,9 +18,10 @@ public class DetalleComprobante {
     }
 
     // Constructor completo
-    public DetalleComprobante(String codigo, String descripcion, String unidad,
+    public DetalleComprobante(String linea, String codigo, String descripcion, String unidad,
                               BigDecimal cantidad, BigDecimal valorUnitario,
                               BigDecimal descuento, BigDecimal igv, BigDecimal valorTotal) {
+        this.linea = linea;
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.unidad = unidad;
@@ -35,7 +37,7 @@ public class DetalleComprobante {
      */
     public static DetalleComprobante fromDetalleVenta(DetalleVenta dv, int porcentajeIgv) {
         DetalleComprobante dc = new DetalleComprobante();
-
+        dc.setLinea(String.valueOf(dv.getItem()));
         dc.setCodigo(dv.getArinda1().getCodigo());
         dc.setDescripcion(dv.getArinda1().getDescripcion());
         dc.setUnidad("NIU"); // Unidad por defecto
@@ -57,6 +59,12 @@ public class DetalleComprobante {
     }
 
     // ========== GETTERS Y SETTERS ==========
+    public String getLinea() {
+        return linea;
+    }
+    public void setLinea(String linea) {
+        this.linea = linea;
+    }
 
     public String getCodigo() {
         return codigo;

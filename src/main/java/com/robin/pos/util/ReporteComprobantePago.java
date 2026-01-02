@@ -114,9 +114,11 @@ public class ReporteComprobantePago {
         params.put("EMPRESA_ACTIVIDAD", empresaActividad);
         params.put("EMPRESA_DIRECCION", empresaDireccion);
         params.put("EMPRESA_RUC", empresaRuc);
+        /*
         params.put("EMPRESA_TELEFONOS", empresaTelefonos);
         params.put("EMPRESA_WEB", empresaWeb);
         params.put("EMPRESA_EMAIL", empresaEmail);
+        */
         params.put("BANCO_CUENTA_SOLES", bancoCuentaSoles);
         params.put("BANCO_CUENTA_DOLARES", bancoCuentaDolares);
 
@@ -138,7 +140,7 @@ public class ReporteComprobantePago {
         params.put("VENDEDOR", venta.getVendedor());
         params.put("ORDEN_COMPRA", venta.getOrdenCompra() != null ? venta.getOrdenCompra() : "");
         params.put("GUIA_REMISION", resultado.getNoGuia() != null ? resultado.getNoGuia() : "----------");
-        params.put("ENTREGA_DIRECCION", cliente.getDireccion());
+        // params.put("ENTREGA_DIRECCION", cliente.getDireccion());
 
         // Calcular totales
         BigDecimal totalConIgv = calcularTotalConIgv(detalles);
