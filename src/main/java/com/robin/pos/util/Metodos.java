@@ -115,4 +115,43 @@ public class Metodos {
         textField.setTextFormatter(new TextFormatter<>(filter));
     }
 
+    public static String getTipoComprobante(String noFactu) {
+        if (noFactu == null || noFactu.isEmpty()) {
+            return "COMPROBANTE";
+        }
+
+        char primerCaracter = noFactu.charAt(0);
+        switch (primerCaracter) {
+            case 'F':
+                return "FACTURA";
+            case 'B':
+                return "BOLETA";
+            case 'N':
+                return "NOTA DE CRÉDITO";
+            case 'D':
+                return "NOTA DE DÉBITO";
+            default:
+                return "COMPROBANTE";
+        }
+    }
+
+    public static String getTipoDocumentoCliente(String noFactu, String nocliente) {
+
+        String tipoDocumento = getTipoComprobante(noFactu);
+
+        if (tipoDocumento.equalsIgnoreCase("FACTURA")) {
+            return "RUC";
+        } else if (tipoDocumento.equalsIgnoreCase("BOLETA")) {
+            char primerCaracter = nocliente.charAt(0);
+            if (primerCaracter == '9') {
+                return "SIN DOC.";
+            } else {
+                return "DNI";
+            }
+        } else {
+            return "DOC.";
+        }
+
+    }
+
 }

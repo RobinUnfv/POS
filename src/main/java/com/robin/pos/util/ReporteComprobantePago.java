@@ -63,7 +63,8 @@ public class ReporteComprobantePago {
 
             // Mostrar el reporte en un visor
             JasperViewer viewer = new JasperViewer(jasperPrint, false);
-            viewer.setTitle("Comprobante de Pago - " + resultado.getNoFactu());
+            String tipoComprobante = Metodos.getTipoComprobante(resultado.getNoFactu());
+            viewer.setTitle(tipoComprobante+" ELECTRONICA - " + resultado.getNoFactu());
             viewer.setVisible(true);
 
         } catch (Exception e) {
@@ -107,8 +108,12 @@ public class ReporteComprobantePago {
                                                    DatosCliente cliente,
                                                    DatosVenta venta,
                                                    List<DetalleVenta> detalles) {
-        Map<String, Object> params = new HashMap<>();
 
+        Map<String, Object> params = new HashMap<>();
+        String tipoComprobante = Metodos.getTipoComprobante(resultado.getNoFactu());
+        params.put("TIPO_COMPROBANTE", tipoComprobante);
+        String tipoDocumentoCliente = Metodos.getTipoDocumentoCliente( resultado.getNoFactu(), resultado.getNoCliente() );
+        params.put("TIP_DOC_CLI", tipoDocumentoCliente);
         // Datos de la empresa
         params.put("EMPRESA_NOMBRE", empresaNombre);
         params.put("EMPRESA_ACTIVIDAD", empresaActividad);
@@ -138,7 +143,8 @@ public class ReporteComprobantePago {
         params.put("CONDICION_PAGO", venta.getCondicionPago());
         params.put("MONEDA", venta.getMoneda());
         params.put("VENDEDOR", venta.getVendedor());
-        params.put("ORDEN_COMPRA", venta.getOrdenCompra() != null ? venta.getOrdenCompra() : "");
+        // params.put("ORDEN_COMPRA", venta.getOrdenCompra() != null ? venta.getOrdenCompra() : "");
+        params.put("ORDEN_COMPRA", resultado.getNoOrden() != null ? resultado.getNoOrden() : "");
         params.put("GUIA_REMISION", resultado.getNoGuia() != null ? resultado.getNoGuia() : "----------");
         // params.put("ENTREGA_DIRECCION", cliente.getDireccion());
 

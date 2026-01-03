@@ -929,7 +929,7 @@ public class VentaController implements Initializable {
                 }
 
                 if (resultado.getNoGuia() != null) {
-                    mensajeExito.append("N° Guía interna: ").append(resultado.getNoGuia()).append("\n");
+                    mensajeExito.append("N° Guía: ").append(resultado.getNoGuia()).append("\n");
                 }
 
                 if (resultado.getFecha() != null) {
