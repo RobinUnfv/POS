@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -20,251 +21,242 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<!--<?import com.robin.pos.util.AutoCompleteTextField?>-->
+<BorderPane fx:id="root" minHeight="600" minWidth="1200" prefHeight="600" prefWidth="1400" stylesheets="@../css/venta.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.VentaController">
 
-<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="558.0" prefWidth="1312.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.VentaController">
     <center>
-        <HBox prefHeight="558.0" prefWidth="1260.0" BorderPane.alignment="CENTER">
-            <children>
-                <!-- Panel Izquierdo - DATOS VENTAS -->
-                <VBox prefHeight="558.0" prefWidth="279.0">
-                    <children>
+        <HBox spacing="10" styleClass="main-container">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
 
-                        <!-- RUC / DNI con botones -->
-                        <GridPane>
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="10.0" prefWidth="100.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="10.0" prefWidth="110.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="47.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="76.0" minWidth="10.0" prefWidth="37.0" />
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            </rowConstraints>
-                            <children>
-                                <Label fx:id="lblNumDoc" prefHeight="18.0" prefWidth="137.0" text="RUC / DNI" GridPane.columnIndex="1">
-                                    <GridPane.margin>
-                                        <Insets left="5.0" />
-                                    </GridPane.margin>
-                                </Label>
-                                <TextField fx:id="txtNumDoc" onKeyPressed="#buscarClienteNumId" prefHeight="25.0" prefWidth="180.0" promptText="Num. Doc." GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                <Button fx:id="btnBuscarCliente" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#buscarCliente" prefHeight="27.0" prefWidth="25.0" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                                    <graphic>
-                                        <ImageView fitHeight="19.0" fitWidth="18.0" pickOnBounds="true" smooth="false">
-                                            <image>
-                                                <Image url="@../imagenes/buscarCliente16.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                    <GridPane.margin>
-                                        <Insets left="5.0" />
-                                    </GridPane.margin>
-                                    <cursor>
-                                        <Cursor fx:constant="HAND" />
-                                    </cursor>
-                                </Button>
-                                <Button fx:id="btnNuevoCliente" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#nuevoCliente" prefHeight="28.0" prefWidth="25.0" text="Button" GridPane.columnIndex="3" GridPane.rowIndex="1">
-                                    <graphic>
-                                        <ImageView fitHeight="20.0" fitWidth="18.0" pickOnBounds="true">
-                                            <image>
-                                                <Image url="@../imagenes/newCliente16.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                    <cursor>
-                                        <Cursor fx:constant="HAND" />
-                                    </cursor>
-                                </Button>
-                        <Label prefHeight="17.0" prefWidth="82.0" text="Doc. Identidad" />
-                        <ComboBox fx:id="cbxDocIdentidad" onAction="#escogerTipoDocumento" prefHeight="25.0" prefWidth="91.0" GridPane.rowIndex="1">
-<!--                            <items>-->
-<!--                                <FXCollections fx:factory="observableArrayList">-->
-<!--                                    <String fx:value="CE" />-->
-<!--                                    <String fx:value="DNI" />-->
-<!--                                    <String fx:value="OTR" />-->
-<!--                                    <String fx:value="RUC" />-->
-<!--                                </FXCollections>-->
-<!--                            </items>-->
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </ComboBox>
-                             </children>
-                        </GridPane>
+            <!-- ============================================ -->
+            <!-- PANEL IZQUIERDO: DATOS DEL CLIENTE Y VENTA -->
+            <!-- ============================================ -->
+            <VBox spacing="8" styleClass="panel-cliente" HBox.hgrow="NEVER">
+                <HBox.margin>
+                    <Insets right="5" />
+                </HBox.margin>
 
-                        <!-- Resto de campos -->
-                        <GridPane prefHeight="328.0" prefWidth="290.0">
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="48.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="25.0" minHeight="10.0" prefHeight="19.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            </rowConstraints>
-                            <children>
-                                <Label fx:id="lblRazSocNom" prefHeight="18.0" prefWidth="286.0" text="Razón Social / Nombre" />
-                                <TextArea fx:id="txtRazSocNom" promptText="Razon Social / Nombre" text="CLIENTES VARIOS" GridPane.rowIndex="1" />
-                                <Label prefHeight="17.0" prefWidth="189.0" text="Dirección" GridPane.rowIndex="2" />
-                                <TextArea fx:id="txtDireccion" prefHeight="45.0" prefWidth="290.0" promptText="Direccion" GridPane.rowIndex="3" />
-                                <Label prefHeight="17.0" prefWidth="189.0" text="Fecha" GridPane.rowIndex="4" />
-                                <DatePicker fx:id="txtFechaVenta" prefHeight="25.0" prefWidth="290.0" GridPane.rowIndex="5" />
-                                <Label prefHeight="17.0" prefWidth="189.0" text="Moneda" GridPane.rowIndex="6" />
-                                <ComboBox fx:id="cbxMoneda" prefHeight="25.0" prefWidth="290.0" promptText="SOL" GridPane.rowIndex="7" />
-                                <Label prefHeight="17.0" prefWidth="189.0" text="Forma Pago" GridPane.rowIndex="8" />
-                                <ComboBox fx:id="cbxFormaPago" prefHeight="25.0" prefWidth="290.0" promptText="VENTA CONTADO" GridPane.rowIndex="9" />
-                                <Label prefHeight="17.0" prefWidth="189.0" text="Mot. Contingencia" GridPane.rowIndex="10" />
-                                <ComboBox fx:id="cbxMotConting" prefHeight="25.0" prefWidth="290.0" promptText="Facturación Electronica" GridPane.rowIndex="11" />
-                            </children>
-                        </GridPane>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Button fx:id="btnBoleta" mnemonicParsing="false" prefHeight="43.0" prefWidth="132.0" style="-fx-text-fill: black; -fx-font-size: 20px; -fx-font-weight: bold;" text="BOLETA">
-                           <HBox.margin>
-                              <Insets right="5.0" />
-                           </HBox.margin>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
+                <!-- Sección: Documento de Identidad -->
+                <VBox spacing="5" styleClass="seccion-documento">
+               <Label prefHeight="18.0" prefWidth="114.0" styleClass="label-seccion" text="Documento Pago" />
+               <HBox alignment="CENTER" spacing="0">
+                  <children>
+                     <ToggleButton fx:id="btnBoleta" onAction="#onBoleta" prefHeight="26.0" prefWidth="104.0" styleClass="btn-DocuPaga" text="BOLETA">
+                        <toggleGroup>
+                           <ToggleGroup fx:id="tipoDocumentoGroup" />
+                        </toggleGroup>
+                     </ToggleButton>
+                     <ToggleButton fx:id="btnFactura" onAction="#onFactura" prefHeight="26.0" prefWidth="104.0" styleClass="btn-DocuPaga" text="FACTURA" toggleGroup="$tipoDocumentoGroup" />
+                  </children>
+               </HBox>
+                    <Label prefHeight="18.0" prefWidth="126.0" styleClass="label-seccion" text="Tipo Documento" />
+                    <HBox spacing="5">
+                       <ComboBox fx:id="cbxDocIdentidad" maxWidth="Infinity" onAction="#escogerTipoDocumento" prefHeight="30.0" prefWidth="145.0" promptText="Seleccione...">
+                           <tooltip>
+                               <Tooltip text="Seleccione el tipo de documento" />
+                           </tooltip>
+                       </ComboBox>
+                        <TextField fx:id="txtNumDoc" onKeyPressed="#buscarClienteNumId" prefHeight="30.0" prefWidth="174.0" promptText="Ingrese número..." HBox.hgrow="ALWAYS">
+                            <tooltip>
+                                <Tooltip text="Presione Enter para buscar" />
+                            </tooltip>
+                        </TextField>
+
+                        <Button fx:id="btnBuscarCliente" onAction="#buscarCliente" styleClass="btn-icon">
+                            <graphic>
+                                <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
+                                    <Image url="@../imagenes/buscarCliente16.png" />
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Buscar cliente" />
+                            </tooltip>
                         </Button>
-                        <Button fx:id="btnFactura" mnemonicParsing="false" prefHeight="43.0" prefWidth="133.0" style="-fx-text-fill: black; -fx-font-size: 20px; -fx-font-weight: bold;" text="FACTURA">
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
+
+                        <Button fx:id="btnNuevoCliente" onAction="#nuevoCliente" styleClass="btn-icon">
+                            <graphic>
+                                <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
+                                    <Image url="@../imagenes/newCliente16.png" />
+                                </ImageView>
+                            </graphic>
+                            <tooltip>
+                                <Tooltip text="Nuevo cliente" />
+                            </tooltip>
                         </Button>
-                     </children>
-                  </HBox>
-                    </children>
-                    <padding>
-                        <Insets left="5.0" right="5.0" />
-                    </padding>
-                </VBox>
-
-                <Separator orientation="VERTICAL" prefHeight="200.0" />
-
-                <!-- Panel Central - Productos -->
-                <VBox prefHeight="558.0" prefWidth="694.0" spacing="10.0">
-                    <HBox fx:id="hbxTBotones" alignment="CENTER_RIGHT" prefWidth="200.0">
-                        <children>
-                            <Button fx:id="btnAgregarProducto" alignment="CENTER" onAction="#agregarProductoVenta" prefHeight="26.0" prefWidth="26.0">
-                        <cursor>
-                           <Cursor fx:constant="HAND" />
-                        </cursor>
-                        <graphic>
-                           <ImageView fitHeight="22.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                              <image>
-                                 <Image url="@../imagenes/agregar32.png" />
-                              </image>
-                           </ImageView>
-                        </graphic></Button>
-                            <Button fx:id="btnEliminarProducto" layoutX="10.0" layoutY="10.0" onAction="#eliminarProductoVenta" prefHeight="8.0" prefWidth="23.0">
-                        <HBox.margin>
-                           <Insets />
-                        </HBox.margin>
-                        <graphic>
-                           <ImageView fitHeight="20.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-                              <image>
-                                 <Image url="@../imagenes/eliminar32.png" />
-                              </image>
-                           </ImageView>
-                        </graphic>
-                        <cursor>
-                           <Cursor fx:constant="HAND" />
-                        </cursor></Button>
-                        </children>
                     </HBox>
-                    <children>
-                        <!-- Tabla de Venta -->
-                        <TableView fx:id="tVenta" onKeyPressed="#tVentaKeyPressed" prefHeight="372.0" prefWidth="674.0">
-                            <columns>
-                                <TableColumn fx:id="colItem" prefWidth="30.0" text="Item" />
-                                <TableColumn fx:id="colDescripcion" prefWidth="380.0" text="Descripción" />
-                                <TableColumn fx:id="colCantidad" prefWidth="60.0" text="Cantidad" />
-                                <TableColumn fx:id="colPrecio" prefWidth="90" text="Precio" />
-                                <TableColumn fx:id="colTotal" prefWidth="110" text="Total" />
-                            </columns>
-                            <columnResizePolicy>
-                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                            </columnResizePolicy>
-                        </TableView>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="149.0" prefWidth="680.0">
-                     <children>
-      
-                              <!-- Campos de cálculo -->
-                              <GridPane hgap="10.0" prefHeight="149.0" prefWidth="257.0" style="-fx-background-color: #f5f5f5; -fx-padding: 15; -fx-border-color: #cccccc; -fx-border-width: 2;" vgap="8.0">
-                                  <columnConstraints>
-                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="103.0" minWidth="10.0" prefWidth="98.0" />
-                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="91.0" />
-                                  </columnConstraints>
-                                  <rowConstraints>
-                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  </rowConstraints>
-                                  <children>
-                                      <Label style="-fx-font-weight: bold;" text="Pago:" />
-                                      <TextField fx:id="txtPago" alignment="CENTER_RIGHT" onKeyPressed="#calcularVuelto" text="0.00" GridPane.columnIndex="1" />
-      
-                                      <Label style="-fx-font-weight: bold;" text="Vuelto:" GridPane.rowIndex="1" />
-                                      <TextField fx:id="txtVuelto" alignment="CENTER_RIGHT" editable="false" style="-fx-background-color: #f0f0f0;" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      
-                                      <Label style="-fx-font-weight: bold;" text="Sub Total:" GridPane.rowIndex="2" />
-                                      <TextField fx:id="lblSubTotal" alignment="CENTER_RIGHT" editable="false" style="-fx-background-color: #f0f0f0;" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      
-                                      <Label style="-fx-font-weight: bold;" text="IGV:" GridPane.rowIndex="3" />
-                                      <TextField fx:id="lblIgv" alignment="CENTER_RIGHT" editable="false" style="-fx-background-color: #f0f0f0;" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      
-                                      <Label style="-fx-font-weight: bold;" text="T. Gravada:" GridPane.rowIndex="4" />
-                                      <TextField fx:id="lblTotGravada" alignment="CENTER_RIGHT" editable="false" style="-fx-background-color: #f0f0f0;" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                  </children>
-                           <HBox.margin>
-                              <Insets right="10.0" />
-                           </HBox.margin>
-                              </GridPane>
-                              <!-- Total Principal -->
-                              <VBox alignment="CENTER" prefHeight="150.0" prefWidth="292.0" style="-fx-border-color: #cccccc; -fx-border-width: 2; -fx-padding: 20;">
-                           <children>
-                                      <Label fx:id="lblTotal" style="-fx-font-size: 33px; -fx-font-weight: bold; -fx-text-fill: #000005;" text="S/0.00" />
-                           </children>
-                              </VBox>
-                     </children>
-                  </HBox>
-                    </children>
-                    <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                    </padding>
                 </VBox>
-            <Separator orientation="VERTICAL" prefHeight="200.0" />
-                <VBox prefHeight="558.0" prefWidth="290.0" spacing="5">
-                    <padding>
-                        <Insets bottom="5" left="5" right="5" top="5" />
-                    </padding>
-                    <TextField fx:id="txtDesArinda1" onKeyPressed="#buscarArinda1" promptText="Buscar producto..." />
-                    <TableView fx:id="tArinda1" onKeyPressed="#tArinda1KeyPressed" onMouseClicked="#tArinda1MouseClicked" VBox.vgrow="ALWAYS">
-                        <columns>
-                            <TableColumn fx:id="colProducto" prefWidth="100.0" text="Productos" />
-                        </columns>
-                        <columnResizePolicy>
-                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                        </columnResizePolicy>
-                    </TableView>
+
+                <!-- Sección: Datos del Cliente -->
+                <VBox spacing="5" VBox.vgrow="ALWAYS">
+                    <Label fx:id="lblRazSocNom" styleClass="label-seccion" text="Razón Social / Nombre" />
+                    <TextArea fx:id="txtRazSocNom" prefRowCount="2" promptText="Razón Social / Nombre del cliente" text="CLIENTES VARIOS" wrapText="true" />
+
+                    <Label styleClass="label-seccion" text="Dirección" />
+                    <TextArea fx:id="txtDireccion" prefRowCount="2" promptText="Dirección del cliente" wrapText="true" />
+
+                    <Label styleClass="label-seccion" text="Fecha" />
+                    <DatePicker fx:id="txtFechaVenta" maxWidth="Infinity">
+                        <tooltip>
+                            <Tooltip text="Fecha de la venta" />
+                        </tooltip>
+                    </DatePicker>
+
+                    <Label styleClass="label-seccion" text="Moneda" />
+                    <ComboBox fx:id="cbxMoneda" maxWidth="Infinity" promptText="SOL">
+                        <tooltip>
+                            <Tooltip text="Moneda de la transacción" />
+                        </tooltip>
+                    </ComboBox>
+
+                    <Label styleClass="label-seccion" text="Forma de Pago" />
+                    <ComboBox fx:id="cbxFormaPago" maxWidth="Infinity" promptText="VENTA CONTADO">
+                        <tooltip>
+                            <Tooltip text="Seleccione forma de pago" />
+                        </tooltip>
+                    </ComboBox>
+
+                    <Label styleClass="label-seccion" text="Motivo Contingencia" />
+                    <ComboBox fx:id="cbxMotConting" maxWidth="Infinity" promptText="Facturación Electrónica">
+                        <tooltip>
+                            <Tooltip text="Motivo de contingencia" />
+                        </tooltip>
+                    </ComboBox>
+               <Label fx:id="lblGuiaRemision" prefHeight="18.0" prefWidth="126.0" styleClass="label-seccion" text="Guía de Remisión" />
+               <TextField fx:id="txtGuiaRemision" onKeyPressed="#buscarClienteNumId" prefHeight="30.0" prefWidth="174.0" promptText="Ingrese número de guía remisión">
+                  <tooltip>
+                     <Tooltip text="Presione Enter para buscar" />
+                  </tooltip>
+               </TextField>
                 </VBox>
-            </children>
+            </VBox>
+
+            <!-- ===================================== -->
+            <!-- PANEL CENTRAL: TABLA DE PRODUCTOS -->
+            <!-- ===================================== -->
+            <VBox prefHeight="579.0" prefWidth="665.0" spacing="10" styleClass="panel-productos" HBox.hgrow="ALWAYS">
+
+                <!-- Tabla de Venta -->
+                <TableView fx:id="tVenta" onKeyPressed="#tVentaKeyPressed" styleClass="tabla-venta" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colItem" minWidth="37.599915742874146" prefWidth="42.399964570999146" resizable="false" text="Item" />
+                        <TableColumn fx:id="colDescripcion" minWidth="180.00000381469727" prefWidth="402.4000053405762" text="Descripción" />
+                        <TableColumn fx:id="colCantidad" minWidth="0.0" prefWidth="59.199981689453125" text="Cant." />
+                        <TableColumn fx:id="colPrecio" minWidth="89.59991455078125" prefWidth="97.59991455078125" text="Precio Unit." />
+                        <TableColumn fx:id="colTotal" minWidth="94.39990234375" prefWidth="112.0" text="Total" />
+                    </columns>
+                    <placeholder>
+                        <Label styleClass="placeholder-text" text="No hay productos agregados" />
+                    </placeholder>
+                </TableView>
+
+                <!-- Panel de Cálculos y Total -->
+                <HBox alignment="CENTER_RIGHT" spacing="10">
+                   <!-- Barra de herramientas -->
+                   <HBox prefHeight="176.0" prefWidth="130.0" spacing="5" styleClass="toolbar">
+                       <Button fx:id="btnAgregarProducto" minWidth="26.0" onAction="#agregarProductoVenta" prefHeight="38.0" prefWidth="26.0" styleClass="btn-toolbar, btn-add">
+                           <graphic>
+                               <ImageView fitHeight="28.0" fitWidth="32.0" preserveRatio="true">
+                                   <Image url="@../imagenes/agregar32.png" />
+                               </ImageView>
+                           </graphic>
+                           <tooltip>
+                               <Tooltip text="Agregar producto (Insert)" />
+                           </tooltip>
+                       </Button>
+   
+                       <Button fx:id="btnEliminarProducto" onAction="#eliminarProductoVenta" styleClass="btn-toolbar, btn-delete">
+                           <graphic>
+                               <ImageView fitHeight="27.0" fitWidth="34.0" preserveRatio="true">
+                                   <Image url="@../imagenes/eliminar32.png" />
+                               </ImageView>
+                           </graphic>
+                           <tooltip>
+                               <Tooltip text="Eliminar producto (Supr)" />
+                           </tooltip>
+                       </Button>
+                   </HBox>
+                    <!-- Cálculos detallados -->
+                    <GridPane hgap="10" prefHeight="218.0" prefWidth="277.0" styleClass="panel-calculos" vgap="8">
+                        <padding>
+                            <Insets bottom="15" left="15" right="15" top="15" />
+                        </padding>
+
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="NEVER" minWidth="80" />
+                            <ColumnConstraints hgrow="ALWAYS" minWidth="100" prefWidth="120" />
+                        </columnConstraints>
+
+                        <Label styleClass="label-calculo" text="Pago:" GridPane.rowIndex="0" />
+                        <TextField fx:id="txtPago" alignment="CENTER_RIGHT" onKeyPressed="#calcularVuelto" styleClass="campo-calculo" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <tooltip>
+                                <Tooltip text="Monto entregado por el cliente" />
+                            </tooltip>
+                        </TextField>
+
+                        <Label styleClass="label-calculo" text="Vuelto:" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtVuelto" alignment="CENTER_RIGHT" editable="false" styleClass="campo-readonly" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                        <Label styleClass="label-calculo" text="Sub Total:" GridPane.rowIndex="2" />
+                        <TextField fx:id="lblSubTotal" alignment="CENTER_RIGHT" editable="false" styleClass="campo-readonly" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                        <Label styleClass="label-calculo" text="IGV (18%):" GridPane.rowIndex="3" />
+                        <TextField fx:id="lblIgv" alignment="CENTER_RIGHT" editable="false" styleClass="campo-readonly" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                        <Label styleClass="label-calculo" text="Total Gravado:" GridPane.rowIndex="4" />
+                        <TextField fx:id="lblTotGravada" alignment="CENTER_RIGHT" editable="false" styleClass="campo-readonly" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <rowConstraints>
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                  </rowConstraints>
+                    </GridPane>
+
+                    <!-- Total Principal -->
+                    <VBox alignment="CENTER" prefHeight="218.0" prefWidth="327.0" styleClass="panel-total">
+                        <padding>
+                            <Insets bottom="20" left="30" right="30" top="20" />
+                        </padding>
+                        <Label prefHeight="27.0" prefWidth="148.0" styleClass="label-total-titulo" text="TOTAL A PAGAR" />
+                        <Label fx:id="lblTotal" alignment="CENTER" prefHeight="54.0" prefWidth="285.0" styleClass="label-total-monto" text="S/ 0.00" />
+                  <Button fx:id="btnPagar" maxWidth="Infinity" onAction="#realizarPago" styleClass="btn-comprobante" text="PAGAR">
+                     <tooltip>
+                        <Tooltip text="Generar Factura" />
+                     </tooltip>
+                  </Button>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- ================================== -->
+            <!-- PANEL DERECHO: BÚSQUEDA PRODUCTOS -->
+            <!-- ================================== -->
+            <VBox spacing="8" styleClass="panel-busqueda" HBox.hgrow="NEVER">
+                <HBox.margin>
+                    <Insets left="5" />
+                </HBox.margin>
+
+                <Label styleClass="titulo-panel" text="Catálogo de Productos" />
+
+                <TextField fx:id="txtDesArinda1" onKeyPressed="#buscarArinda1" promptText="🔍 Buscar producto...">
+                    <tooltip>
+                        <Tooltip text="Buscar por nombre, código o descripción" />
+                    </tooltip>
+                </TextField>
+
+                <TableView fx:id="tArinda1" onKeyPressed="#tArinda1KeyPressed" onMouseClicked="#tArinda1MouseClicked" styleClass="tabla-catalogo" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colProducto" text="Producto" />
+                    </columns>
+                    <placeholder>
+                        <Label styleClass="placeholder-text" text="No se encontraron productos" />
+                    </placeholder>
+                </TableView>
+
+                <Label styleClass="hint-text" text="Doble clic para agregar" />
+            </VBox>
         </HBox>
     </center>
 </BorderPane>
