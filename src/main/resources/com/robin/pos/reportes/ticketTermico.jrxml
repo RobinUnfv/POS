@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio - Ticket Térmico 80mm -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+              name="ticketTermico" 
+              pageWidth="227" 
+              pageHeight="842" 
+              columnWidth="207" 
+              leftMargin="10" 
+              rightMargin="10" 
+              topMargin="10" 
+              bottomMargin="10" 
+              uuid="ticket-termico-001">
+	
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	
+	<!-- PARÁMETROS DE LA EMPRESA -->
+	<parameter name="LOGO_PATH" class="java.lang.String"/>
+	<parameter name="EMPRESA_NOMBRE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["EMPRESA DEMO SUNAT ACTUALIZADA SAC"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="EMPRESA_RUC" class="java.lang.String">
+		<defaultValueExpression><![CDATA["20161515648"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="EMPRESA_DIRECCION" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Villa Libertadores\nLima 654 321"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="EMPRESA_EMAIL" class="java.lang.String">
+		<defaultValueExpression><![CDATA["empresademo@gmail.com"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="EMPRESA_WEB" class="java.lang.String">
+		<defaultValueExpression><![CDATA["www.facturas.net"]]></defaultValueExpression>
+	</parameter>
+	
+	<!-- PARÁMETROS DEL COMPROBANTE -->
+	<parameter name="TIPO_COMPROBANTE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["FACTURA ELECTRÓNICA"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SERIE_NUMERO" class="java.lang.String">
+		<defaultValueExpression><![CDATA["F001 - 00000001"]]></defaultValueExpression>
+	</parameter>
+	
+	<!-- PARÁMETROS DEL CLIENTE -->
+	<parameter name="CLIENTE_NOMBRE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["EMPRESA CLIENTE SAC"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLIENTE_DOCUMENTO" class="java.lang.String">
+		<defaultValueExpression><![CDATA["20123456789"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIPO_DOC_CLIENTE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["DNI"]]></defaultValueExpression>
+	</parameter>
+	
+	<!-- PARÁMETROS DE FECHA Y HORA -->
+	<parameter name="FECHA_EMISION" class="java.lang.String">
+		<defaultValueExpression><![CDATA["15/06/2025"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HORA_EMISION" class="java.lang.String">
+		<defaultValueExpression><![CDATA["10:45:15 AM"]]></defaultValueExpression>
+	</parameter>
+	
+	<!-- PARÁMETROS DE TOTALES -->
+	<parameter name="TOTAL_GRAVADO" class="java.math.BigDecimal">
+		<defaultValueExpression><![CDATA[new BigDecimal("6302.20")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IGV_TOTAL" class="java.math.BigDecimal">
+		<defaultValueExpression><![CDATA[new BigDecimal("1067.78")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IMPORTE_TOTAL" class="java.math.BigDecimal">
+		<defaultValueExpression><![CDATA[new BigDecimal("7369.99")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SON" class="java.lang.String">
+		<defaultValueExpression><![CDATA["SIETE MIL TRESCIENTOS SESENTA Y NUEVE CON 99/100"]]></defaultValueExpression>
+	</parameter>
+	
+	<!-- PARÁMETROS ADICIONALES -->
+	<parameter name="FORMA_PAGO" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Contado"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONDICION_VENTA" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CONTADO"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="QR_CODE_IMAGE" class="java.io.InputStream"/>
+	<parameter name="REPRESENTACION_IMPRESA" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Representación impresa de la FACTURA ELECTRÓNICA.\nPuede verificarla en www.sunat.gob.pe\nwww.nubefact.com\nPowered by NUBEFACT"]]></defaultValueExpression>
+	</parameter>
+	
+	<!-- CAMPOS DEL DETALLE -->
+	<field name="cantidad" class="java.math.BigDecimal"/>
+	<field name="unidad" class="java.lang.String"/>
+	<field name="codigo" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="precioUnitario" class="java.math.BigDecimal"/>
+	<field name="valorTotal" class="java.math.BigDecimal"/>
+	
+	<!-- ==================== TÍTULO (HEADER) ==================== -->
+	<title>
+		<band height="180" splitType="Stretch">
+			<!-- LOGO -->
+			<image hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement x="54" y="0" width="100" height="50" uuid="logo-image-001"/>
+				<imageExpression><![CDATA[$P{LOGO_PATH}]]></imageExpression>
+			</image>
+			
+			<!-- NOMBRE DE LA EMPRESA -->
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="55" width="207" height="15" uuid="empresa-nombre-001"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EMPRESA_NOMBRE}]]></textFieldExpression>
+			</textField>
+			
+			<!-- RUC -->
+			<textField>
+				<reportElement x="0" y="70" width="207" height="12" uuid="empresa-ruc-001"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["RUC: " + $P{EMPRESA_RUC}]]></textFieldExpression>
+			</textField>
+			
+			<!-- DIRECCIÓN -->
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="82" width="207" height="20" uuid="empresa-direccion-001"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EMPRESA_DIRECCION}]]></textFieldExpression>
+			</textField>
+			
+			<!-- EMAIL -->
+			<textField>
+				<reportElement x="0" y="102" width="207" height="10" uuid="empresa-email-001"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Correo: " + $P{EMPRESA_EMAIL}]]></textFieldExpression>
+			</textField>
+			
+			<!-- WEB -->
+			<textField>
+				<reportElement x="0" y="112" width="207" height="10" uuid="empresa-web-001"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Web: " + $P{EMPRESA_WEB}]]></textFieldExpression>
+			</textField>
+			
+			<!-- LÍNEA SEPARADORA -->
+			<line>
+				<reportElement x="0" y="127" width="207" height="1" uuid="line-separador-001"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			
+			<!-- TIPO DE COMPROBANTE -->
+			<textField>
+				<reportElement x="0" y="132" width="207" height="15" uuid="tipo-comprobante-001"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TIPO_COMPROBANTE}]]></textFieldExpression>
+			</textField>
+			
+			<!-- SERIE Y NÚMERO -->
+			<textField>
+				<reportElement x="0" y="147" width="207" height="12" uuid="serie-numero-001"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{SERIE_NUMERO}]]></textFieldExpression>
+			</textField>
+			
+			<!-- LÍNEA SEPARADORA -->
+			<line>
+				<reportElement x="0" y="164" width="207" height="1" uuid="line-separador-002"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			
+			<!-- CLIENTE -->
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="169" width="207" height="10" uuid="cliente-nombre-001"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CLIENTE_NOMBRE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	
+	<!-- ==================== PAGE HEADER ==================== -->
+	<pageHeader>
+		<band height="50" splitType="Stretch">
+			<!-- DOCUMENTO DEL CLIENTE -->
+			<textField>
+				<reportElement x="0" y="0" width="207" height="10" uuid="cliente-documento-001"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TIPO_DOC_CLIENTE} + " " + $P{CLIENTE_DOCUMENTO}]]></textFieldExpression>
+			</textField>
+			
+			<!-- FECHA Y HORA -->
+			<textField>
+				<reportElement x="0" y="10" width="207" height="10" uuid="fecha-hora-001"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["FECHA: " + $P{FECHA_EMISION} + " HORA: " + $P{HORA_EMISION}]]></textFieldExpression>
+			</textField>
+			
+			<!-- LÍNEA SEPARADORA -->
+			<line>
+				<reportElement x="0" y="25" width="207" height="1" uuid="line-separador-003"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			
+			<!-- ENCABEZADO DE COLUMNAS -->
+			<staticText>
+				<reportElement x="0" y="30" width="20" height="18" uuid="header-cant-001"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cant]]></text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="20" y="30" width="15" height="18" uuid="header-um-001"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[U.M]]></text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="35" y="30" width="45" height="18" uuid="header-cod-001"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COD]]></text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="80" y="30" width="67" height="18" uuid="header-precio-001"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRECIO]]></text>
+			</staticText>
+			
+			<staticText>
+				<reportElement x="147" y="30" width="60" height="18" uuid="header-total-001"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	
+	<!-- ==================== COLUMN HEADER ==================== -->
+	<columnHeader>
+		<band height="5">
+			<!-- LÍNEA SEPARADORA -->
+			<line>
+				<reportElement x="0" y="2" width="207" height="1" uuid="line-separador-004"/>
+			</line>
+		</band>
+	</columnHeader>
+	
+	<!-- ==================== DETALLE ==================== -->
+	<detail>
+		<band height="35" splitType="Stretch">
+			<!-- DESCRIPCIÓN (en línea aparte) -->
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="207" height="12" uuid="detalle-descripcion-001"/>
+				<box leftPadding="1" rightPadding="1" topPadding="1" bottomPadding="1"/>
+				<textElement verticalAlignment="Top">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DESCRIPCION\n" + $F{descripcion}]]></textFieldExpression>
+			</textField>
+			
+			<!-- FILA DE DATOS -->
+			<!-- CANTIDAD -->
+			<textField>
+				<reportElement x="0" y="15" width="20" height="12" uuid="detalle-cantidad-001"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cantidad}.intValue()]]></textFieldExpression>
+			</textField>
+			
+			<!-- UNIDAD -->
+			<textField>
+				<reportElement x="20" y="15" width="15" height="12" uuid="detalle-unidad-001"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unidad}]]></textFieldExpression>
+			</textField>
+			
+			<!-- CÓDIGO -->
+			<textField>
+				<reportElement x="35" y="15" width="45" height="12" uuid="detalle-codigo-001"/>
+				<box leftPadding="1" rightPadding="1"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression>
+			</textField>
+			
+			<!-- PRECIO UNITARIO -->
+			<textField pattern="#,##0.00">
+				<reportElement x="80" y="15" width="67" height="12" uuid="detalle-precio-001"/>
+				<box leftPadding="1" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{precioUnitario}]]></textFieldExpression>
+			</textField>
+			
+			<!-- VALOR TOTAL -->
+			<textField pattern="#,##0.00">
+				<reportElement x="147" y="15" width="60" height="12" uuid="detalle-total-001"/>
+				<box leftPadding="1" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valorTotal}]]></textFieldExpression>
+			</textField>
+			
+			<!-- LÍNEA SEPARADORA ENTRE ITEMS -->
+			<line>
+				<reportElement x="0" y="30" width="207" height="1" uuid="line-item-separator"/>
+				<graphicElement>
+					<pen lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	
+	<!-- ==================== SUMMARY (PIE DEL TICKET) ==================== -->
+	<summary>
+		<band height="250" splitType="Stretch">
+			<!-- LÍNEA SEPARADORA -->
+			<line>
+				<reportElement x="0" y="5" width="207" height="1" uuid="line-separador-005"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			
+			<!-- TOTAL GRAVADO -->
+			<staticText>
+				<reportElement x="0" y="10" width="120" height="12" uuid="label-gravado-001"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[TOTAL GRAVADO .......................]]></text>
+			</staticText>
+			<textField pattern="(S/) #,##0.00">
+				<reportElement x="120" y="10" width="87" height="12" uuid="value-gravado-001"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOTAL_GRAVADO}]]></textFieldExpression>
+			</textField>
+			
+			<!-- IGV -->
+			<staticText>
+				<reportElement x="0" y="22" width="120" height="12" uuid="label-igv-001"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[I.G.V ...........................................]]></text>
+			</staticText>
+			<textField pattern="(S/) #,##0.00">
+				<reportElement x="120" y="22" width="87" height="12" uuid="value-igv-001"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{IGV_TOTAL}]]></textFieldExpression>
+			</textField>
+			
+			<!-- TOTAL -->
+			<staticText>
+				<reportElement x="0" y="34" width="120" height="15" uuid="label-total-001"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL ........................................]]></text>
+			</staticText>
+			<textField pattern="(S/) #,##0.00">
+				<reportElement x="120" y="34" width="87" height="15" uuid="value-total-001"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{IMPORTE_TOTAL}]]></textFieldExpression>
+			</textField>
+			
+			<!-- LÍNEA SEPARADORA -->
+			<line>
+				<reportElement x="0" y="54" width="207" height="1" uuid="line-separador-006"/>
+			</line>
+			
+			<!-- SON -->
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="60" width="207" height="15" uuid="son-text-001"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["SON: " + $P{SON} + " CON " + ($P{IMPORTE_TOTAL}.remainder(BigDecimal.ONE).multiply(new BigDecimal("100"))).intValue() + "/100"]]></textFieldExpression>
+			</textField>
+			
+			<!-- LÍNEA SEPARADORA -->
+			<line>
+				<reportElement x="0" y="80" width="207" height="1" uuid="line-separador-007"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			
+			<!-- FORMA DE PAGO -->
+			<textField>
+				<reportElement x="0" y="85" width="207" height="10" uuid="forma-pago-001"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["FORMA DE PAGO: " + $P{FORMA_PAGO}]]></textFieldExpression>
+			</textField>
+			
+			<!-- CONDICIÓN VENTA -->
+			<textField>
+				<reportElement x="0" y="95" width="207" height="10" uuid="condicion-venta-001"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["COND.VENTA: " + $P{CONDICION_VENTA}]]></textFieldExpression>
+			</textField>
+			
+			<!-- LÍNEA SEPARADORA -->
+			<line>
+				<reportElement x="0" y="110" width="207" height="1" uuid="line-separador-008"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			
+			<!-- QR CODE -->
+			<image hAlign="Center" vAlign="Middle" onErrorType="Blank">
+				<reportElement x="54" y="120" width="100" height="100" uuid="qr-code-image-001"/>
+				<imageExpression><![CDATA[$P{QR_CODE_IMAGE}]]></imageExpression>
+			</image>
+			
+			<!-- LÍNEA SEPARADORA -->
+			<line>
+				<reportElement x="0" y="225" width="207" height="1" uuid="line-separador-009"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			
+			<!-- REPRESENTACIÓN IMPRESA -->
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="230" width="207" height="20" uuid="representacion-001"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REPRESENTACION_IMPRESA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

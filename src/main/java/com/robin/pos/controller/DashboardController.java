@@ -1,12 +1,22 @@
 package com.robin.pos.controller;
 
+import java.io.IOException;
+
+import com.robin.pos.MainApp;
+import com.robin.pos.util.Mensaje;
+
 import javafx.animation.*;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -62,6 +72,10 @@ public class DashboardController {
     private static final double EXPANDED_WIDTH = 220.0;
     private static final double COLLAPSED_WIDTH = 70.0;
     private static final Duration ANIMATION_DURATION = Duration.millis(300);
+    
+    private Tab tabVenta;
+    private Tab tabCliente;
+    private Tab tabArticulo;
 
     @FXML
     public void initialize() {
@@ -373,9 +387,25 @@ public class DashboardController {
     }
 
     @FXML
-    public void ingresarNuevoProducto() {
-        System.out.println("Navegando a Nuevo Producto");
-        // Cargar vista de nuevo producto
+    public void ingresarNuevoProducto() throws IOException {
+    	if (this.tabArticulo == null) {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/Arinda1.fxml"));
+            Parent  ap = loader.load();
+
+            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/producto.png").toString());
+            icono.setFitWidth(16);
+            icono.setFitHeight(16);
+            tabArticulo = new Tab("Articulo", ap);
+            tabArticulo.setGraphic(icono);
+            tabArticulo.setClosable(true);
+            tabArticulo.setOnClosed(e -> tabArticulo = null);
+
+            this.tabPane.getTabs().add(tabArticulo);
+            this.tabPane.getSelectionModel().select(tabArticulo);
+        } else {
+            // Si el tab ya existe, solo selecciónalo
+            this.tabPane.getSelectionModel().select(tabArticulo);
+        }
     }
 
     @FXML
@@ -393,9 +423,9 @@ public class DashboardController {
 
     @FXML
     public void salirSistema() {
-        System.out.println("Cerrando sesión...");
-        // Implementar lógica de cierre de sesión
-        System.exit(0);
+    	if (Mensaje.confirmacion(null,"Confirmar","¿Está seguro de salir del sistema?").get() != ButtonType.CANCEL) {
+    		this.btnSalir.getScene().getWindow().hide();
+    	}
     }
 
     /**

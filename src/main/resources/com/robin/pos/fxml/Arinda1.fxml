@@ -7,7 +7,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -17,11 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vbxPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
-      prefHeight="700.0" prefWidth="800.0" style="-fx-background-color: #f8f9fa;" 
-      stylesheets="@../css/articulo.css" 
-      xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="com.robin.pos.controller.ArticuloController">
+<VBox fx:id="vbxPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="800.0" style="-fx-background-color: #f8f9fa;" stylesheets="@../css/articulo.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.Arinda1Controller">
     
     <!-- HEADER -->
     <HBox alignment="CENTER_LEFT" prefHeight="70.0" style="-fx-background-color: linear-gradient(to right, #f39c12, #e67e22); -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);">
@@ -97,34 +92,6 @@
                         <children>
                             <Label styleClass="field-label" text="Descripción del Artículo *" />
                             <TextField fx:id="txtDescripcion" prefHeight="40.0" promptText="Ingrese la descripción completa del artículo" styleClass="custom-textfield" GridPane.rowIndex="1" />
-                        </children>
-                    </GridPane>
-                </children>
-                <VBox.margin>
-                    <Insets bottom="15.0" />
-                </VBox.margin>
-            </VBox>
-            
-            <!-- SECCIÓN 2: CÓDIGO DE BARRAS -->
-            <VBox spacing="10.0">
-                <children>
-                    <Label styleClass="section-title" text="🏷️ Identificación" />
-                    <Separator prefWidth="200.0" />
-                    
-                    <GridPane hgap="15.0" vgap="12.0">
-                        <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        </columnConstraints>
-                        <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                        </rowConstraints>
-                        <children>
-                            <Label styleClass="field-label" text="Código de Barras" />
-                            <Label styleClass="field-label" text="Número de Compañía *" GridPane.columnIndex="1" />
-                            <TextField fx:id="txtCodigoBarra" prefHeight="40.0" promptText="Escanee o ingrese el código de barras" styleClass="custom-textfield" GridPane.rowIndex="1" />
-                            <TextField fx:id="txtNoCia" prefHeight="40.0" promptText="Número de compañía" styleClass="custom-textfield" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         </children>
                     </GridPane>
                 </children>
@@ -214,28 +181,6 @@
                 </VBox.margin>
             </VBox>
             
-            <!-- SECCIÓN 5: OBSERVACIONES -->
-            <VBox spacing="10.0">
-                <children>
-                    <Label styleClass="section-title" text="ℹ️ Información Adicional" />
-                    <Separator prefWidth="200.0" />
-                    
-                    <GridPane hgap="15.0" vgap="12.0">
-                        <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        </columnConstraints>
-                        <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
-                        </rowConstraints>
-                        <children>
-                            <Label styleClass="field-label" text="Observaciones" />
-                            <TextArea fx:id="txtObservaciones" prefRowCount="3" promptText="Notas adicionales sobre el artículo..." styleClass="custom-textarea" wrapText="true" GridPane.rowIndex="1" />
-                        </children>
-                    </GridPane>
-                </children>
-            </VBox>
-            
         </children>
     </VBox>
     
@@ -245,7 +190,7 @@
             <Insets bottom="15.0" left="30.0" right="30.0" top="15.0" />
         </padding>
         <children>
-            <Button fx:id="btnRegistrar" mnemonicParsing="false" onAction="#guardarArticulo" prefHeight="50.0" prefWidth="250.0" styleClass="btn-primary" text="REGISTRAR ARTÍCULO">
+            <Button fx:id="btnRegistrar" mnemonicParsing="false" onAction="#guardarArticulo" prefHeight="49.0" prefWidth="180.0" styleClass="btn-primary" text="REGISTRAR">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
@@ -256,12 +201,6 @@
                         </image>
                     </ImageView>
                 </graphic>
-            </Button>
-            
-            <Button fx:id="btnLimpiar" mnemonicParsing="false" onAction="#limpiarFormulario" prefHeight="50.0" prefWidth="180.0" styleClass="btn-secondary" text="LIMPIAR">
-                <cursor>
-                    <Cursor fx:constant="HAND" />
-                </cursor>
             </Button>
             
             <Button fx:id="btnSalir" mnemonicParsing="false" onAction="#cerrarModal" prefHeight="50.0" prefWidth="180.0" styleClass="btn-secondary" text="CANCELAR">

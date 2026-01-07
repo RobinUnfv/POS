@@ -28,7 +28,7 @@
                         <!-- Dashboard -->
                         <Button fx:id="btnDashboard" alignment="CENTER_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#ingresarDashboard" prefHeight="50.0" prefWidth="200.0" styleClass="menu-button" text="Dashboard">
                             <graphic>
-                                <Label fx:id="iconDashboard" style="-fx-text-fill: #e94560; -fx-font-size: 20px;" text="📊" />
+                                <Label fx:id="iconDashboard" style="-fx-text-fill: #236FA6; -fx-font-size: 20px;" text="📊" />
                             </graphic>
                             <cursor>
                                 <Cursor fx:constant="HAND" />

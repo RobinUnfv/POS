@@ -60,7 +60,7 @@
 
 .menu-button:hover {
     -fx-background-color: #f8f9fa;
-    -fx-border-color: rgba(233, 69, 96, 0.3);
+    -fx-border-color: rgba(11, 103, 176, 0.3);
     -fx-translate-x: 5;
     -fx-effect: dropshadow(gaussian, rgba(233, 69, 96, 0.15), 8, 0, 0, 0);
 }
@@ -97,10 +97,10 @@
 }
 
 .submenu-button:hover {
-    -fx-background-color: rgba(233, 69, 96, 0.08);
-    -fx-text-fill: #e94560;
+    -fx-background-color: rgba(111, 186, 242, 0.08);
+    -fx-text-fill: black;
     -fx-translate-x: 8;
-    -fx-border-color: rgba(233, 69, 96, 0.3);
+    -fx-border-color: rgba(111, 186, 242, 0.3);
     -fx-border-width: 0 0 0 3;
     -fx-font-weight: 500;
 }
