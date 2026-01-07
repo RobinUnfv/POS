@@ -1,305 +1,203 @@
-/* ========================================
-   DASHBOARD STYLES - Sistema POS
-   Versión Mejorada con Sub-menús y Animaciones
-   ======================================== */
+/* ============================================
+   DASHBOARD CSS - DISEÑO BLANCO MODERNO
+   ============================================ */
 
-/* ===== ESTILOS PARA BOTÓN SALIR ===== */
-.btnSalid {
-    -fx-background-color: transparent;
-    -fx-text-fill: while;
-    -fx-border-width: 0;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-padding: 12 20 12 20;
+/* Colores principales */
+.root {
+    -fx-accent-color: #e94560;
+    -fx-background-white: #ffffff;
+    -fx-background-light: #f8f9fa;
+    -fx-border-light: #e0e0e0;
+    -fx-text-dark: #2c3e50;
+    -fx-text-medium: #5a6c7d;
+    -fx-text-light: #95a5a6;
+    -fx-success-color: #4ecca3;
+    -fx-warning-color: #ffa502;
+    -fx-danger-color: #ff6b6b;
+    -fx-info-color: #5f27cd;
 }
 
-.btnSalid:hover {
-    -fx-background-color: #F7C8C8;
-    -fx-cursor: hand;
-    -fx-font-size: 15px;
-    -fx-font-weight: bold;
-    -fx-text-fill: white;
-}
-
-.btnSalid:pressed {
-    -fx-background-color: #B71C1C;
-}
-
-/* ===== BOTÓN SALIR VERSIÓN SIDEBAR OSCURO ===== */
-.btn-salir {
-	/*
-    -fx-background-color: #e74c3c;
-    -fx-text-fill: white;
-    -fx-font-size: 13px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 8px;
-    -fx-cursor: hand;
-    -fx-transition: all 0.3s ease;
-    */
-    -fx-background-color: transparent;
-    -fx-text-fill: white;
-    -fx-border-width: 0;
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-    -fx-padding: 12 20 12 20;
-}
-
-.btn-salir:hover {
-    -fx-background-color: #c0392b;
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
-}
-
-.btn-salir:pressed {
-    -fx-background-color: #a93226;
-}
-
-/* ===== MENÚ PRINCIPAL ===== */
-.menu-button {
-    -fx-background-color: transparent;
-    -fx-text-fill: #ecf0f1;
-    -fx-border-width: 0;
-    -fx-font-size: 14px;
-    -fx-font-family: "System";
-    -fx-font-weight: 500;
-    -fx-padding: 12 20 12 20;
-    -fx-alignment: center-left;
-    -fx-background-radius: 8px;
-    -fx-cursor: hand;
-}
-
-/* Efecto HOVER - Mejorado */
-.menu-button:hover {
-    -fx-background-color: #34495e;
-    -fx-text-fill: white;
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-    -fx-effect: dropshadow(three-pass-box, rgba(52, 152, 219, 0.4), 8, 0, 2, 2);
-    -fx-border-color: #3498db;
-    -fx-border-width: 0 0 0 3;
-}
-
-/* Efecto PRESSED (al hacer clic) */
-.menu-button:pressed {
-    -fx-background-color: #2c3e50;
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-    -fx-text-fill: #ecf0f1;
-}
-
-/* Botón ACTIVO (seleccionado) */
-.menu-button-active {
-    -fx-background-color: #3498db;
-    -fx-text-fill: white;
-    -fx-border-color: #2980b9;
-    -fx-border-width: 0 0 0 4;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(three-pass-box, rgba(52, 152, 219, 0.3), 5, 0, 0, 0);
-}
-
-/* Hover del botón activo */
-.menu-button-active:hover {
-    -fx-background-color: #2980b9;
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
-    -fx-effect: dropshadow(three-pass-box, rgba(52, 152, 219, 0.6), 10, 0, 0, 0);
-}
-
-/* ===== SUB-MENÚS ===== */
-.submenu-button {
-    -fx-background-color: transparent;
-    -fx-text-fill: #bdc3c7;
-    -fx-font-size: 13px;
-    -fx-border-width: 0;
-    -fx-background-radius: 5px;
-    -fx-cursor: hand;
-    -fx-padding: 10 20 10 50;
-    -fx-alignment: center-left;
-}
-
-.submenu-button:hover {
-    -fx-background-color: #2c3e50;
-    -fx-text-fill: white;
-    -fx-translate-x: 5px;
-    -fx-border-color: #3498db;
-    -fx-border-width: 0 0 0 2;
-}
-
-.submenu-button:pressed {
-    -fx-background-color: #1a252f;
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
-}
-
-/* Sub-menú item activo */
-.submenu-button-active {
-    -fx-background-color: #2980b9;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-border-color: #3498db;
-    -fx-border-width: 0 0 0 3;
-}
-
-.submenu-button-active:hover {
-    -fx-background-color: #2471a3;
-}
-
-/* ===== BOTÓN TOGGLE (Colapsar/Expandir) ===== */
+/* ============================================
+   BOTÓN TOGGLE (HAMBURGUESA)
+   ============================================ */
 .toggle-button {
     -fx-background-color: transparent;
-    -fx-text-fill: white;
-    -fx-font-size: 40px;
-    -fx-cursor: hand;
-    -fx-background-radius: 5px;
-    -fx-padding: 5px 10px;
+    -fx-background-radius: 8px;
+    -fx-text-fill: black;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-transition: all 0.3s ease;
 }
 
 .toggle-button:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.15);
-    -fx-scale-x: 1.1;
-    -fx-scale-y: 1.1;
+    -fx-background-color: #EBF2F5;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0,128,255), 10, 0, 0, 3);
 }
 
 .toggle-button:pressed {
-    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-background-color: #EBF2F5;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
 }
 
-/* ===== VARIANTES DE HOVER ESPECÍFICAS POR TIPO ===== */
-
-/* Botón Dashboard */
-.menu-button-dashboard:hover {
-    -fx-background-color: #9b59b6;
-    -fx-text-fill: white;
-    -fx-effect: dropshadow(three-pass-box, rgba(155, 89, 182, 0.4), 8, 0, 0, 0);
-}
-
-/* Botón Ventas - Verde */
-.menu-button-ventas:hover {
-    -fx-background-color: #27ae60;
-    -fx-text-fill: white;
-    -fx-effect: dropshadow(three-pass-box, rgba(39, 174, 96, 0.4), 8, 0, 0, 0);
-}
-
-/* Botón Clientes - Azul */
-.menu-button-clientes:hover {
-    -fx-background-color: #3498db;
-    -fx-text-fill: white;
-    -fx-effect: dropshadow(three-pass-box, rgba(52, 152, 219, 0.4), 8, 0, 0, 0);
-}
-
-/* Botón Productos - Naranja */
-.menu-button-productos:hover {
-    -fx-background-color: #f39c12;
-    -fx-text-fill: white;
-    -fx-effect: dropshadow(three-pass-box, rgba(243, 156, 18, 0.4), 8, 0, 0, 0);
-}
-
-/* Botón Reportes - Rojo */
-.menu-button-reportes:hover {
-    -fx-background-color: #e74c3c;
-    -fx-text-fill: white;
-    -fx-effect: dropshadow(three-pass-box, rgba(231, 76, 60, 0.4), 8, 0, 0, 0);
-}
-
-/* ===== EFECTOS DE TRANSICIÓN DEL SIDEBAR ===== */
-.sidebar-collapsed {
-    -fx-pref-width: 60px;
-}
-
-.sidebar-expanded {
-    -fx-pref-width: 220px;
-}
-
-/* ===== TABS ===== */
-.tab-pane {
-    -fx-background-color: #f5f5f5;
-}
-
-.tab-pane .tab-header-area {
-    -fx-padding: 0 10 0 10;
-}
-
-.tab-pane .tab {
-    -fx-background-color: #ecf0f1;
-    -fx-background-radius: 5 5 0 0;
-    -fx-padding: 8 15 8 15;
-}
-
-.tab-pane .tab:selected {
-    -fx-background-color: white;
-    -fx-border-color: transparent transparent #3498db transparent;
-    -fx-border-width: 0 0 3 0;
-}
-
-.tab-pane .tab-label {
-    -fx-text-fill: #2c3e50;
-    -fx-font-size: 13px;
-}
-
-.tab-pane .tab:selected .tab-label {
-    -fx-text-fill: #3498db;
-    -fx-font-weight: bold;
-}
-
-.tab-pane .tab:hover {
-    -fx-background-color: #d5d8dc;
-}
-
-/* ===== SEARCH BAR ===== */
-.text-field {
-    -fx-background-color: white;
-    -fx-text-fill: #2c3e50;
-    -fx-prompt-text-fill: #95a5a6;
-}
-
-.text-field:focused {
-    -fx-border-color: #3498db;
-    -fx-border-width: 2;
-    -fx-effect: dropshadow(gaussian, rgba(52, 152, 219, 0.3), 10, 0, 0, 0);
-}
-
-/* ===== SEPARADORES ===== */
-.separator .line {
-    -fx-border-color: #34495e;
-    -fx-border-width: 0.5 0 0 0;
-}
-
-/* ===== ESTADOS DE BOTONES ===== */
-.menu-button:focused {
-    -fx-background-color: #34495e;
-    -fx-border-color: #3498db;
-    -fx-border-width: 2;
-    -fx-border-radius: 8;
-}
-
-.menu-button:disabled {
-    -fx-opacity: 0.5;
-    -fx-text-fill: #7f8c8d;
-}
-
-.menu-button:disabled:hover {
+/* ============================================
+   BOTONES DEL MENÚ PRINCIPAL
+   ============================================ */
+.menu-button {
     -fx-background-color: transparent;
-    -fx-scale-x: 1;
-    -fx-scale-y: 1;
-    -fx-effect: none;
+    -fx-background-radius: 12px;
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 15px;
+    -fx-font-weight: 500;
+    -fx-border-color: transparent;
+    -fx-border-radius: 12px;
+    -fx-border-width: 2px;
+    -fx-transition: all 0.3s ease;
+    -fx-padding: 10 15 10 15;
 }
 
-/* ===== SCROLLBAR PERSONALIZADO ===== */
+.menu-button:hover {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: rgba(233, 69, 96, 0.3);
+    -fx-translate-x: 5;
+    -fx-effect: dropshadow(gaussian, rgba(233, 69, 96, 0.15), 8, 0, 0, 0);
+}
+
+.menu-button:pressed {
+    -fx-background-color: #f0f0f0;
+    -fx-translate-x: 3;
+}
+
+/* Botón del menú activo */
+.menu-button-active {
+    -fx-background-color: linear-gradient(to right, rgba(233, 69, 96, 0.1), rgba(255, 107, 149, 0.1));
+    -fx-border-color: #e94560;
+    -fx-text-fill: #e94560;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(233, 69, 96, 0.2), 8, 0, 0, 1);
+}
+
+.menu-button-active:hover {
+    -fx-background-color: linear-gradient(to right, rgba(233, 69, 96, 0.15), rgba(255, 107, 149, 0.15));
+    -fx-translate-x: 5;
+}
+
+/* ============================================
+   BOTONES DEL SUB-MENÚ
+   ============================================ */
+.submenu-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #5a6c7d;
+    -fx-font-size: 13px;
+    -fx-font-weight: normal;
+    -fx-transition: all 0.2s ease;
+}
+
+.submenu-button:hover {
+    -fx-background-color: rgba(233, 69, 96, 0.08);
+    -fx-text-fill: #e94560;
+    -fx-translate-x: 8;
+    -fx-border-color: rgba(233, 69, 96, 0.3);
+    -fx-border-width: 0 0 0 3;
+    -fx-font-weight: 500;
+}
+
+.submenu-button:pressed {
+    -fx-background-color: rgba(233, 69, 96, 0.05);
+    -fx-translate-x: 5;
+}
+
+/* ============================================
+   BOTÓN SALIR
+   ============================================ */
+.btn-salir {
+    -fx-background-color: linear-gradient(to right, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1));
+    -fx-background-radius: 12px;
+    -fx-text-fill: #e74c3c;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-color: rgba(231, 76, 60, 0.3);
+    -fx-border-radius: 12px;
+    -fx-border-width: 1.5px;
+    -fx-transition: all 0.3s ease;
+}
+
+.btn-salir:hover {
+    -fx-background-color: linear-gradient(to right, rgba(231, 76, 60, 0.2), rgba(192, 57, 43, 0.2));
+    -fx-border-color: #e74c3c;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-effect: dropshadow(gaussian, rgba(231, 76, 60, 0.3), 8, 0, 0, 2);
+}
+
+.btn-salir:pressed {
+    -fx-background-color: rgba(231, 76, 60, 0.15);
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* ============================================
+   SIDEBAR COLAPSADA
+   ============================================ */
+.sidebar-collapsed .menu-button {
+    -fx-padding: 10 5 10 5;
+    -fx-alignment: center;
+}
+
+.sidebar-collapsed .submenu-button {
+    -fx-padding: 8 5 8 5;
+}
+
+/* Ocultar texto cuando el sidebar está colapsado */
+.sidebar-collapsed .menu-button .text,
+.sidebar-collapsed .submenu-button .text,
+.sidebar-collapsed .btn-salir .text {
+    -fx-opacity: 0;
+    -fx-transition: opacity 0.2s ease;
+}
+
+/* ============================================
+   ANIMACIONES DE FLECHAS
+   ============================================ */
+.arrow-expanded {
+    -fx-rotate: 90;
+    -fx-transition: rotate 0.3s ease;
+}
+
+.arrow-collapsed {
+    -fx-rotate: 0;
+    -fx-transition: rotate 0.3s ease;
+}
+
+/* ============================================
+   TOOLTIPS PERSONALIZADOS
+   ============================================ */
+.tooltip {
+    -fx-background-color: #2c3e50;
+    -fx-background-radius: 8px;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 8 12 8 12;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 0, 2);
+}
+
+/* ============================================
+   SCROLLBAR PERSONALIZADO
+   ============================================ */
 .scroll-bar {
     -fx-background-color: transparent;
 }
 
 .scroll-bar .thumb {
-    -fx-background-color: #95a5a6;
-    -fx-background-radius: 5px;
+    -fx-background-color: rgba(233, 69, 96, 0.3);
+    -fx-background-radius: 8px;
 }
 
 .scroll-bar .thumb:hover {
-    -fx-background-color: #7f8c8d;
-}
-
-.scroll-bar .track {
-    -fx-background-color: transparent;
+    -fx-background-color: rgba(233, 69, 96, 0.5);
 }
 
 .scroll-bar .increment-button,
@@ -308,49 +206,232 @@
     -fx-padding: 0;
 }
 
-/* ===== ANIMACIONES ===== */
-@keyframes fadeIn {
-    from {
-        -fx-opacity: 0;
+/* ============================================
+   SEPARADORES
+   ============================================ */
+.separator .line {
+    -fx-background-color: #e0e0e0;
+    -fx-border-width: 1px 0 0 0;
+}
+
+/* ============================================
+   EFECTOS HOVER PARA ICONOS
+   ============================================ */
+.menu-button:hover .label {
+    -fx-scale-x: 1.15;
+    -fx-scale-y: 1.15;
+    -fx-transition: scale 0.2s ease;
+}
+
+/* ============================================
+   BARRA DE BÚSQUEDA
+   ============================================ */
+.text-field {
+    -fx-prompt-text-fill: #95a5a6;
+    -fx-text-fill: #2c3e50;
+}
+
+.text-field:focused {
+    -fx-border-color: #e94560;
+    -fx-border-width: 2px;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(233, 69, 96, 0.2), 8, 0, 0, 0);
+}
+
+/* ============================================
+   TOP BAR
+   ============================================ */
+.top-bar {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 8, 0, 0, 2);
+}
+
+/* ============================================
+   USER PROFILE BOX
+   ============================================ */
+.user-profile-box {
+    -fx-background-color: linear-gradient(to right, #e94560, #ff6b95);
+    -fx-background-radius: 25px;
+    -fx-effect: dropshadow(gaussian, rgba(233, 69, 96, 0.3), 8, 0, 0, 2);
+}
+
+.user-profile-box:hover {
+    -fx-effect: dropshadow(gaussian, rgba(233, 69, 96, 0.5), 12, 0, 0, 3);
+    -fx-cursor: hand;
+}
+
+/* ============================================
+   SIDEBAR - ESTILOS BASE
+   ============================================ */
+.sidebar {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 10, 0, 3, 0);
+}
+
+/* ============================================
+   HEADER DEL SIDEBAR
+   ============================================ */
+.sidebar-header {
+    -fx-background-color: white;
+    -fx-border-color: #f0f0f0;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* ============================================
+   SUB-MENUS
+   ============================================ */
+.submenu-container {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8px;
+}
+
+/* ============================================
+   ANIMACIONES Y TRANSICIONES
+   ============================================ */
+* {
+    -fx-smooth: true;
+}
+
+/* ============================================
+   ESTADOS DE BOTONES
+   ============================================ */
+.button {
+    -fx-cursor: hand;
+}
+
+.button:disabled {
+    -fx-opacity: 0.5;
+}
+
+/* ============================================
+   EFECTOS DE FOCUS
+   ============================================ */
+.button:focused,
+.text-field:focused {
+    -fx-background-insets: 0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* ============================================
+   ESTILOS PARA ICONOS EN MODO COLAPSADO
+   ============================================ */
+.collapsed-icon-only .menu-button,
+.collapsed-icon-only .btn-salir {
+    -fx-content-display: graphic-only;
+}
+
+/* ============================================
+   RESPONSIVE - PEQUEÑAS PANTALLAS
+   ============================================ */
+@media (max-width: 800px) {
+    .menu-button {
+        -fx-font-size: 14px;
+        -fx-padding: 8 12 8 12;
     }
-    to {
-        -fx-opacity: 1;
+    
+    .submenu-button {
+        -fx-font-size: 12px;
     }
 }
 
-@keyframes slideIn {
-    from {
-        -fx-opacity: 0;
-        -fx-translate-y: -10px;
+/* ============================================
+   EFECTOS DE SOMBRA PERSONALIZADOS
+   ============================================ */
+.shadow-light {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 8, 0, 0, 2);
+}
+
+.shadow-medium {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 10, 0, 0, 3);
+}
+
+.shadow-strong {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 12, 0, 0, 4);
+}
+
+/* ============================================
+   ANIMACIÓN DE PULSACIÓN
+   ============================================ */
+@keyframes pulse {
+    0% {
+        -fx-scale-x: 1;
+        -fx-scale-y: 1;
     }
-    to {
-        -fx-opacity: 1;
-        -fx-translate-y: 0;
+    50% {
+        -fx-scale-x: 1.05;
+        -fx-scale-y: 1.05;
+    }
+    100% {
+        -fx-scale-x: 1;
+        -fx-scale-y: 1;
     }
 }
 
-/* ===== TOOLTIPS ===== */
-.tooltip {
-    -fx-background-color: #2c3e50;
-    -fx-text-fill: white;
-    -fx-font-size: 12px;
-    -fx-padding: 5 10 5 10;
-    -fx-background-radius: 5px;
+/* ============================================
+   SCROLL PANE
+   ============================================ */
+.scroll-pane {
+    -fx-background-color: transparent;
 }
 
-/* ===== EFECTOS ADICIONALES ===== */
-.menu-button-glow:hover {
-    -fx-background-color: rgba(52, 152, 219, 0.2);
-    -fx-text-fill: #3498db;
-    -fx-effect: dropshadow(three-pass-box, #3498db, 15, 0, 0, 0);
-    -fx-border-color: #3498db;
-    -fx-border-width: 1;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
 }
 
-.menu-button-gradient:hover {
-    -fx-background-color: linear-gradient(to right, #3498db, #2980b9);
-    -fx-text-fill: white;
-    -fx-effect: dropshadow(three-pass-box, rgba(52, 152, 219, 0.5), 10, 0, 0, 0);
+/* ============================================
+   SEPARADOR PERSONALIZADO
+   ============================================ */
+.separator:horizontal .line {
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0.5 0 0 0;
+}
+
+/* ============================================
+   EFECTOS DE HOVER MEJORADOS
+   ============================================ */
+.menu-button:hover {
+    -fx-background-color: #f8f9fa;
+    -fx-cursor: hand;
+}
+
+.menu-button-active:hover {
+    -fx-background-color: linear-gradient(to right, rgba(233, 69, 96, 0.15), rgba(255, 107, 149, 0.15));
+}
+
+/* ============================================
+   ESTILOS PARA TABS
+   ============================================ */
+.tab-pane {
+    -fx-background-color: #f5f5f5;
+}
+
+.tab-pane .tab-header-background {
+    -fx-background-color: white;
+}
+
+.tab-pane .tab {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: white;
+    -fx-border-color: #e94560;
+    -fx-border-width: 2 2 0 2;
+}
+
+/* ============================================
+   MODO OSCURO (OPCIONAL)
+   ============================================ */
+.dark-mode .sidebar {
+    -fx-background-color: #1a1a2e;
+}
+
+.dark-mode .menu-button {
+    -fx-text-fill: #ecf0f1;
+}
+
+.dark-mode .menu-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
 }

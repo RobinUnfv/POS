@@ -1,526 +1,417 @@
 package com.robin.pos.controller;
 
-import com.robin.pos.MainApp;
-import com.robin.pos.util.Mensaje;
-
 import javafx.animation.*;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+public class DashboardController {
 
-public class DashboardController implements Initializable {
-
-    // ===== COMPONENTES ORIGINALES =====
-    @FXML
-    private Button btn;
-
-    @FXML
-    private Button btnCliente;
-
-    @FXML
-    private Button btnDashboard;
-
-    @FXML
-    private Button btnProductos;
-
-    @FXML
-    private Button btnReportes;
-
-    @FXML
-    private Button btnVentas;
-
-    @FXML
-    private ImageView imgLogoCia;
-
-    @FXML
-    private TextField txtBuscar;
-
-    @FXML
-    private TabPane tabPane;
+    @FXML private VBox sidebar;
+    @FXML private HBox headerBox;
+    @FXML private VBox menuContainer;
+    @FXML private Button btnToggleMenu;
+    @FXML private ImageView imgLogoCia;
     
-    @FXML
-    private Button btnSalir;
-
-    // ===== NUEVOS COMPONENTES PARA MENÚ MEJORADO =====
-    @FXML
-    private VBox sidebar;
+    // Botones del menú principal
+    @FXML private Button btnDashboard;
+    @FXML private Button btnVentas;
+    @FXML private Button btnCliente;
+    @FXML private Button btnProductos;
+    @FXML private Button btnReportes;
+    @FXML private Button btnSalir;
     
-    @FXML
-    private VBox menuContainer;
+    // Botones del sub-menú
+    @FXML private Button btnFactura;
+    @FXML private Button btnProforma;
+    @FXML private Button btnNuevoCliente;
+    @FXML private Button btnListaClientes;
+    @FXML private Button btnNuevoProducto;
+    @FXML private Button btnCatalogo;
     
-    @FXML
-    private Button btnToggleMenu;
+    // Sub-menús
+    @FXML private VBox ventasSubmenu;
+    @FXML private VBox clientesSubmenu;
+    @FXML private VBox productosSubmenu;
     
-    // === SUB-MENÚS ===
-    @FXML
-    private VBox ventasSubmenu;
+    // Flechas de sub-menús
+    @FXML private Label lblVentasArrow;
+    @FXML private Label lblClientesArrow;
+    @FXML private Label lblProductosArrow;
     
-    @FXML
-    private VBox clientesSubmenu;
+    // Iconos del menú
+    @FXML private Label iconDashboard;
+    @FXML private Label iconVentas;
+    @FXML private Label iconClientes;
+    @FXML private Label iconProductos;
+    @FXML private Label iconReportes;
     
-    @FXML
-    private VBox productosSubmenu;
+    // Otros componentes
+    @FXML private TabPane tabPane;
+    @FXML private TextField txtBuscar;
+    @FXML private Label lblUsuario;
     
-    // === BOTONES SUB-MENÚ VENTAS ===
-    @FXML
-    private Button btnFactura;
-    
-    @FXML
-    private Button btnProforma;
-    
-    // === BOTONES SUB-MENÚ CLIENTES ===
-    @FXML
-    private Button btnNuevoCliente;
-    
-    @FXML
-    private Button btnListaClientes;
-    
-    // === BOTONES SUB-MENÚ PRODUCTOS ===
-    @FXML
-    private Button btnNuevoProducto;
-    
-    @FXML
-    private Button btnCatalogo;
-    
-    // === FLECHAS DE SUB-MENÚS ===
-    @FXML
-    private Label lblVentasArrow;
-    
-    @FXML
-    private Label lblClientesArrow;
-    
-    @FXML
-    private Label lblProductosArrow;
-    
-    @FXML
-    private Label lblUsuario;
-
-    // ===== TABS ORIGINALES =====
-    private Tab tabVenta;
-    private Tab tabCliente;
-    private Tab tabProducto;
-    private Tab tabReporte;
-    
-    // ===== NUEVOS TABS PARA SUB-MENÚS =====
-    private Tab tabFactura;
-    private Tab tabProforma;
-    private Tab tabNuevoCliente;
-    private Tab tabListaClientes;
-    private Tab tabNuevoProducto;
-    private Tab tabCatalogo;
-    
-    // ===== VARIABLES DE ESTADO PARA SIDEBAR =====
-    private boolean isSidebarCollapsed = false;
-    private static final double SIDEBAR_WIDTH_EXPANDED = 220.0;
-    private static final double SIDEBAR_WIDTH_COLLAPSED = 60.0;
+    // Variables de estado
+    private boolean isSidebarExpanded = true;
+    private static final double EXPANDED_WIDTH = 220.0;
+    private static final double COLLAPSED_WIDTH = 70.0;
     private static final Duration ANIMATION_DURATION = Duration.millis(300);
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("Dashboard inicializado correctamente");
+    @FXML
+    public void initialize() {
+        // Configurar el estado inicial
+        setupInitialState();
         
-        // Configurar el estado inicial de los botones usando CSS classes
-        setActiveButton(btnDashboard);
+        // Configurar eventos de hover para efectos visuales
+        setupHoverEffects();
         
-        // Configurar nombre de usuario
-        if (lblUsuario != null) {
-            lblUsuario.setText("Admin");
-        }
+        System.out.println("Dashboard Controller inicializado correctamente");
     }
 
-    // ========================================
-    // MÉTODOS ORIGINALES DE NAVEGACIÓN
-    // ========================================
-
-    @FXML
-    void ingresarDashboard(ActionEvent event) {
-        this.setActiveButton((Button) event.getSource());
+    /**
+     * Configurar el estado inicial del sidebar
+     */
+    private void setupInitialState() {
+        // Asegurar que todos los sub-menús estén cerrados al inicio
         closeAllSubmenus();
+        
+        // Configurar el ancho inicial del sidebar
+        sidebar.setPrefWidth(EXPANDED_WIDTH);
+        sidebar.setMinWidth(EXPANDED_WIDTH);
+        sidebar.setMaxWidth(EXPANDED_WIDTH);
     }
 
-    @FXML
-    void ingreasarVenta(ActionEvent event) throws IOException {
-        // Si el sidebar está colapsado, solo expandimos el sub-menú
-        if (!isSidebarCollapsed) {
-            toggleVentasSubmenu();
-        }
-        // Mantener la funcionalidad original de abrir tab
-        this.setActiveButton((Button) event.getSource());
+    /**
+     * Configurar efectos de hover para los botones
+     */
+    private void setupHoverEffects() {
+        // Aquí puedes agregar efectos adicionales de hover si lo deseas
     }
 
+    /**
+     * Alternar entre sidebar expandido y colapsado
+     */
     @FXML
-    void ingresarCliente(ActionEvent event) throws IOException {
-        // Si el sidebar está colapsado, solo expandimos el sub-menú
-        if (!isSidebarCollapsed) {
-            toggleClientesSubmenu();
-        }
-        // Mantener la funcionalidad original
-        this.setActiveButton((Button) event.getSource());
-    }
-
-    @FXML
-    void ingresarProducto(ActionEvent event) {
-        // Si el sidebar está colapsado, solo expandimos el sub-menú
-        if (!isSidebarCollapsed) {
-            toggleProductosSubmenu();
-        }
-        this.setActiveButton((Button) event.getSource());
-    }
-
-    @FXML
-    void ingresarReporte(ActionEvent event) {
-        this.setActiveButton((Button) event.getSource());
-        closeAllSubmenus();
-    }
-    
-    @FXML
-    void salirSistema(ActionEvent event) {
-        if (Mensaje.confirmacion(null, "Confirmar", "¿Está seguro de salir?").get() != ButtonType.CANCEL) {
-            this.btnSalir.getScene().getWindow().hide();
-        }
-    }
-
-    // ========================================
-    // NUEVOS MÉTODOS PARA SUB-MENÚS
-    // ========================================
-    
-    // === SUB-MENÚ VENTAS ===
-    
-    @FXML
-    private void toggleVentasSubmenu() {
-        if (ventasSubmenu != null && !isSidebarCollapsed) {
-            toggleSubmenu(ventasSubmenu, lblVentasArrow);
-            // Cerrar otros sub-menús
-            if (clientesSubmenu != null) closeSubmenu(clientesSubmenu, lblClientesArrow);
-            if (productosSubmenu != null) closeSubmenu(productosSubmenu, lblProductosArrow);
-        }
-    }
-    
-    @FXML
-    private void ingresarFactura() throws IOException {
-        System.out.println("Ingresando a Factura/Boleta");
-        setActiveButton(btnFactura);
+    public void toggleSidebar() {
+        isSidebarExpanded = !isSidebarExpanded;
         
-        if (tabFactura == null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/Venta.fxml"));
-                BorderPane ap = loader.load();
-                
-                ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/carritoCompras32.png").toString());
-                icono.setFitWidth(16);
-                icono.setFitHeight(16);
-                
-                tabFactura = new Tab("Factura/Boleta", ap);
-                tabFactura.setGraphic(icono);
-                tabFactura.setClosable(true);
-                tabFactura.setOnClosed(e -> tabFactura = null);
-                
-                this.tabPane.getTabs().add(tabFactura);
-            } catch (Exception e) {
-                System.err.println("Error al cargar Factura: " + e.getMessage());
-            }
+        // Cerrar todos los sub-menús al colapsar
+        if (!isSidebarExpanded) {
+            closeAllSubmenus();
         }
-        if (tabFactura != null) {
-            this.tabPane.getSelectionModel().select(tabFactura);
-        }
-    }
-    
-    @FXML
-    private void ingresarProforma() {
-        System.out.println("Ingresando a Proforma");
-        setActiveButton(btnProforma);
-        
-        // Aquí puedes implementar la carga de tu vista de Proforma
-        // Similar a ingresarFactura()
-    }
-    
-    // === SUB-MENÚ CLIENTES ===
-    
-    @FXML
-    private void toggleClientesSubmenu() {
-        if (clientesSubmenu != null && !isSidebarCollapsed) {
-            toggleSubmenu(clientesSubmenu, lblClientesArrow);
-            // Cerrar otros sub-menús
-            if (ventasSubmenu != null) closeSubmenu(ventasSubmenu, lblVentasArrow);
-            if (productosSubmenu != null) closeSubmenu(productosSubmenu, lblProductosArrow);
-        }
-    }
-    
-    @FXML
-    private void ingresarNuevoCliente() {
-        System.out.println("Ingresando a Nuevo Cliente");
-        setActiveButton(btnNuevoCliente);
-        
-        // Aquí puedes implementar la carga de tu vista de Nuevo Cliente
-    }
-    
-    @FXML
-    private void ingresarListaClientes() throws IOException {
-        System.out.println("Ingresando a Lista de Clientes");
-        setActiveButton(btnListaClientes);
-        
-        if (tabListaClientes == null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/ListaCliente.fxml"));
-                BorderPane ap = loader.load();
-                
-                ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/listaClientes.png").toString());
-                icono.setFitWidth(16);
-                icono.setFitHeight(16);
-                
-                tabListaClientes = new Tab("Lista Clientes", ap);
-                tabListaClientes.setGraphic(icono);
-                tabListaClientes.setClosable(true);
-                tabListaClientes.setOnClosed(e -> tabListaClientes = null);
-                
-                this.tabPane.getTabs().add(tabListaClientes);
-            } catch (Exception e) {
-                System.err.println("Error al cargar Lista Clientes: " + e.getMessage());
-            }
-        }
-        if (tabListaClientes != null) {
-            this.tabPane.getSelectionModel().select(tabListaClientes);
-        }
-    }
-    
-    // === SUB-MENÚ PRODUCTOS ===
-    
-    @FXML
-    private void toggleProductosSubmenu() {
-        if (productosSubmenu != null && !isSidebarCollapsed) {
-            toggleSubmenu(productosSubmenu, lblProductosArrow);
-            // Cerrar otros sub-menús
-            if (ventasSubmenu != null) closeSubmenu(ventasSubmenu, lblVentasArrow);
-            if (clientesSubmenu != null) closeSubmenu(clientesSubmenu, lblClientesArrow);
-        }
-    }
-    
-    @FXML
-    private void ingresarNuevoProducto() {
-        System.out.println("Ingresando a Nuevo Producto");
-        setActiveButton(btnNuevoProducto);
-        
-        // Aquí puedes implementar la carga de tu vista de Nuevo Producto
-    }
-    
-    @FXML
-    private void ingresarCatalogo() {
-        System.out.println("Ingresando a Catálogo");
-        setActiveButton(btnCatalogo);
-        
-        // Aquí puedes implementar la carga de tu vista de Catálogo
-    }
-
-    // ========================================
-    // MÉTODOS PARA COLAPSAR/EXPANDIR SIDEBAR
-    // ========================================
-    
-    @FXML
-    private void toggleSidebar() {
-        if (sidebar == null) {
-            System.err.println("Error: sidebar es null. Verifica el fx:id en el FXML");
-            return;
-        }
-        
-        if (isSidebarCollapsed) {
-            expandSidebar();
-        } else {
-            collapseSidebar();
-        }
-        isSidebarCollapsed = !isSidebarCollapsed;
-    }
-    
-    private void collapseSidebar() {
-        // Cerrar todos los sub-menús antes de colapsar
-        closeAllSubmenus();
         
         // Animación de ancho del sidebar
-        Timeline timeline = new Timeline(
-            new KeyFrame(ANIMATION_DURATION,
-                new KeyValue(sidebar.prefWidthProperty(), SIDEBAR_WIDTH_COLLAPSED, Interpolator.EASE_BOTH)
-            )
-        );
+        animateSidebarWidth();
         
-        // Ocultar textos y flechas con fade
-        if (menuContainer != null) {
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(150), menuContainer);
-            fadeOut.setFromValue(1.0);
-            fadeOut.setToValue(0.3);
-            
-            fadeOut.setOnFinished(e -> {
-                if (imgLogoCia != null) imgLogoCia.setVisible(false);
-                if (lblVentasArrow != null) lblVentasArrow.setVisible(false);
-                if (lblClientesArrow != null) lblClientesArrow.setVisible(false);
-                if (lblProductosArrow != null) lblProductosArrow.setVisible(false);
-                
-                // Cambiar el texto del botón a solo icono
-                if (btnToggleMenu != null) btnToggleMenu.setText("☰");
-            });
-            
-            fadeOut.play();
-        }
+        // Animar visibilidad de textos y logo
+        animateContentVisibility();
         
-        timeline.play();
+        // Cambiar el símbolo del botón toggle
+        animateToggleButton();
     }
-    
-    private void expandSidebar() {
-        // Animación de ancho del sidebar
+
+    /**
+     * Animar el ancho del sidebar
+     */
+    private void animateSidebarWidth() {
+        double targetWidth = isSidebarExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH;
+        
         Timeline timeline = new Timeline(
+            new KeyFrame(Duration.ZERO,
+                new KeyValue(sidebar.prefWidthProperty(), sidebar.getPrefWidth()),
+                new KeyValue(sidebar.minWidthProperty(), sidebar.getMinWidth()),
+                new KeyValue(sidebar.maxWidthProperty(), sidebar.getMaxWidth())
+            ),
             new KeyFrame(ANIMATION_DURATION,
-                new KeyValue(sidebar.prefWidthProperty(), SIDEBAR_WIDTH_EXPANDED, Interpolator.EASE_BOTH)
+                new KeyValue(sidebar.prefWidthProperty(), targetWidth, Interpolator.EASE_BOTH),
+                new KeyValue(sidebar.minWidthProperty(), targetWidth, Interpolator.EASE_BOTH),
+                new KeyValue(sidebar.maxWidthProperty(), targetWidth, Interpolator.EASE_BOTH)
             )
         );
-        
-        timeline.setOnFinished(e -> {
-            if (imgLogoCia != null) imgLogoCia.setVisible(true);
-            if (lblVentasArrow != null) lblVentasArrow.setVisible(true);
-            if (lblClientesArrow != null) lblClientesArrow.setVisible(true);
-            if (lblProductosArrow != null) lblProductosArrow.setVisible(true);
-            
-            // Fade in de los textos
-            if (menuContainer != null) {
-                FadeTransition fadeIn = new FadeTransition(Duration.millis(200), menuContainer);
-                fadeIn.setFromValue(0.3);
-                fadeIn.setToValue(1.0);
-                fadeIn.play();
-            }
-            
-            if (btnToggleMenu != null) btnToggleMenu.setText("✕");
-        });
-        
         timeline.play();
     }
 
-    // ========================================
-    // MÉTODOS AUXILIARES PARA SUB-MENÚS
-    // ========================================
-    
-    private void toggleSubmenu(VBox submenu, Label arrow) {
-        if (submenu.isVisible()) {
-            closeSubmenu(submenu, arrow);
+    /**
+     * Animar la visibilidad del contenido (textos)
+     */
+    private void animateContentVisibility() {
+        // Animar opacidad del logo
+        FadeTransition logoFade = new FadeTransition(ANIMATION_DURATION, imgLogoCia);
+        logoFade.setToValue(isSidebarExpanded ? 1.0 : 0.0);
+        
+        // Animar visibilidad de los textos de los botones
+        animateButtonTexts(btnDashboard);
+        animateButtonTexts(btnVentas);
+        animateButtonTexts(btnCliente);
+        animateButtonTexts(btnProductos);
+        animateButtonTexts(btnReportes);
+        animateButtonTexts(btnSalir);
+        
+        // Ocultar/mostrar flechas de sub-menú
+        animateArrows();
+        
+        logoFade.play();
+    }
+
+    /**
+     * Animar el texto de un botón
+     */
+    private void animateButtonTexts(Button button) {
+        if (isSidebarExpanded) {
+            // Mostrar texto
+            PauseTransition pause = new PauseTransition(Duration.millis(150));
+            pause.setOnFinished(e -> button.setText(getButtonOriginalText(button)));
+            pause.play();
         } else {
-            openSubmenu(submenu, arrow);
+            // Ocultar texto inmediatamente
+            button.setText("");
         }
     }
-    
-    private void openSubmenu(VBox submenu, Label arrow) {
-        submenu.setVisible(true);
-        submenu.setManaged(true);
-        
-        // Animación de altura
-        submenu.setMaxHeight(0);
-        Timeline timeline = new Timeline(
-            new KeyFrame(Duration.millis(250),
-                new KeyValue(submenu.maxHeightProperty(), 200, Interpolator.EASE_OUT)
-            )
-        );
-        
-        // Animación de opacidad
-        FadeTransition fade = new FadeTransition(Duration.millis(250), submenu);
-        fade.setFromValue(0.0);
-        fade.setToValue(1.0);
-        
-        // Rotar flecha
-        if (arrow != null) {
-            RotateTransition rotate = new RotateTransition(Duration.millis(250), arrow);
-            rotate.setToAngle(90);
-            rotate.play();
-        }
-        
-        timeline.play();
+
+    /**
+     * Obtener el texto original de un botón
+     */
+    private String getButtonOriginalText(Button button) {
+        if (button == btnDashboard) return "Dashboard";
+        if (button == btnVentas) return "Ventas";
+        if (button == btnCliente) return "Clientes";
+        if (button == btnProductos) return "Productos";
+        if (button == btnReportes) return "Reportes";
+        if (button == btnSalir) return "SALIR";
+        return "";
+    }
+
+    /**
+     * Animar las flechas de los sub-menús
+     */
+    private void animateArrows() {
+        animateLabelOpacity(lblVentasArrow);
+        animateLabelOpacity(lblClientesArrow);
+        animateLabelOpacity(lblProductosArrow);
+    }
+
+    /**
+     * Animar opacidad de un label
+     */
+    private void animateLabelOpacity(Label label) {
+        FadeTransition fade = new FadeTransition(ANIMATION_DURATION, label);
+        fade.setToValue(isSidebarExpanded ? 1.0 : 0.0);
         fade.play();
     }
-    
-    private void closeSubmenu(VBox submenu, Label arrow) {
-        if (!submenu.isVisible()) return;
+
+    /**
+     * Animar el botón toggle
+     */
+    private void animateToggleButton() {
+        // Rotación sutil del icono
+        RotateTransition rotate = new RotateTransition(ANIMATION_DURATION, btnToggleMenu);
+        rotate.setByAngle(isSidebarExpanded ? 0 : 180);
+        rotate.play();
         
-        // Animación de altura
-        Timeline timeline = new Timeline(
-            new KeyFrame(Duration.millis(200),
-                new KeyValue(submenu.maxHeightProperty(), 0, Interpolator.EASE_IN)
-            )
-        );
-        
-        // Animación de opacidad
-        FadeTransition fade = new FadeTransition(Duration.millis(200), submenu);
-        fade.setFromValue(1.0);
-        fade.setToValue(0.0);
-        
-        // Rotar flecha de vuelta
-        if (arrow != null) {
-            RotateTransition rotate = new RotateTransition(Duration.millis(200), arrow);
-            rotate.setToAngle(0);
-            rotate.play();
-        }
-        
-        timeline.setOnFinished(e -> {
-            submenu.setVisible(false);
-            submenu.setManaged(false);
-        });
-        
-        timeline.play();
-        fade.play();
+        // Cambiar el símbolo si lo deseas
+        // btnToggleMenu.setText(isSidebarExpanded ? "☰" : "→");
     }
-    
+
+    /**
+     * Cerrar todos los sub-menús
+     */
     private void closeAllSubmenus() {
-        if (ventasSubmenu != null && lblVentasArrow != null) {
-            closeSubmenu(ventasSubmenu, lblVentasArrow);
-        }
-        if (clientesSubmenu != null && lblClientesArrow != null) {
-            closeSubmenu(clientesSubmenu, lblClientesArrow);
-        }
-        if (productosSubmenu != null && lblProductosArrow != null) {
-            closeSubmenu(productosSubmenu, lblProductosArrow);
+        closeSubmenu(ventasSubmenu, lblVentasArrow);
+        closeSubmenu(clientesSubmenu, lblClientesArrow);
+        closeSubmenu(productosSubmenu, lblProductosArrow);
+    }
+
+    /**
+     * Cerrar un sub-menú específico
+     */
+    private void closeSubmenu(VBox submenu, Label arrow) {
+        if (submenu.isVisible()) {
+            animateSubmenu(submenu, arrow, false);
         }
     }
 
-    // ========================================
-    // MÉTODO MEJORADO PARA BOTÓN ACTIVO
-    // ========================================
-    
-    private void setActiveButton(Button activeButton) {
-        // Remover clase activa de todos los botones principales
-        if (btnDashboard != null) btnDashboard.getStyleClass().remove("menu-button-active");
-        if (btnVentas != null) btnVentas.getStyleClass().remove("menu-button-active");
-        if (btnCliente != null) btnCliente.getStyleClass().remove("menu-button-active");
-        if (btnProductos != null) btnProductos.getStyleClass().remove("menu-button-active");
-        if (btnReportes != null) btnReportes.getStyleClass().remove("menu-button-active");
+    /**
+     * Alternar sub-menú de Ventas
+     */
+    @FXML
+    public void toggleVentasSubmenu() {
+        if (!isSidebarExpanded) return; // No permitir abrir sub-menús si está colapsado
         
-        // Remover clase activa de todos los botones de sub-menú
-        if (btnFactura != null) btnFactura.getStyleClass().remove("submenu-button-active");
-        if (btnProforma != null) btnProforma.getStyleClass().remove("submenu-button-active");
-        if (btnNuevoCliente != null) btnNuevoCliente.getStyleClass().remove("submenu-button-active");
-        if (btnListaClientes != null) btnListaClientes.getStyleClass().remove("submenu-button-active");
-        if (btnNuevoProducto != null) btnNuevoProducto.getStyleClass().remove("submenu-button-active");
-        if (btnCatalogo != null) btnCatalogo.getStyleClass().remove("submenu-button-active");
+        boolean isCurrentlyVisible = ventasSubmenu.isVisible();
+        
+        // Cerrar otros sub-menús
+        closeSubmenu(clientesSubmenu, lblClientesArrow);
+        closeSubmenu(productosSubmenu, lblProductosArrow);
+        
+        // Toggle del sub-menú actual
+        animateSubmenu(ventasSubmenu, lblVentasArrow, !isCurrentlyVisible);
+    }
+
+    /**
+     * Alternar sub-menú de Clientes
+     */
+    @FXML
+    public void toggleClientesSubmenu() {
+        if (!isSidebarExpanded) return;
+        
+        boolean isCurrentlyVisible = clientesSubmenu.isVisible();
+        
+        // Cerrar otros sub-menús
+        closeSubmenu(ventasSubmenu, lblVentasArrow);
+        closeSubmenu(productosSubmenu, lblProductosArrow);
+        
+        // Toggle del sub-menú actual
+        animateSubmenu(clientesSubmenu, lblClientesArrow, !isCurrentlyVisible);
+    }
+
+    /**
+     * Alternar sub-menú de Productos
+     */
+    @FXML
+    public void toggleProductosSubmenu() {
+        if (!isSidebarExpanded) return;
+        
+        boolean isCurrentlyVisible = productosSubmenu.isVisible();
+        
+        // Cerrar otros sub-menús
+        closeSubmenu(ventasSubmenu, lblVentasArrow);
+        closeSubmenu(clientesSubmenu, lblClientesArrow);
+        
+        // Toggle del sub-menú actual
+        animateSubmenu(productosSubmenu, lblProductosArrow, !isCurrentlyVisible);
+    }
+
+    /**
+     * Animar apertura/cierre de un sub-menú
+     */
+    private void animateSubmenu(VBox submenu, Label arrow, boolean show) {
+        if (show) {
+            // Mostrar sub-menú
+            submenu.setVisible(true);
+            submenu.setManaged(true);
+            
+            // Animación de altura
+            submenu.setMaxHeight(0);
+            Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(submenu.maxHeightProperty(), 0)),
+                new KeyFrame(ANIMATION_DURATION, new KeyValue(submenu.maxHeightProperty(), 200, Interpolator.EASE_BOTH))
+            );
+            
+            // Animación de opacidad
+            FadeTransition fade = new FadeTransition(ANIMATION_DURATION, submenu);
+            fade.setFromValue(0);
+            fade.setToValue(1);
+            
+            // Rotar flecha
+            RotateTransition rotate = new RotateTransition(ANIMATION_DURATION, arrow);
+            rotate.setToAngle(90);
+            
+            ParallelTransition parallel = new ParallelTransition(timeline, fade, rotate);
+            parallel.play();
+            
+        } else {
+            // Ocultar sub-menú
+            Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(submenu.maxHeightProperty(), submenu.getHeight())),
+                new KeyFrame(ANIMATION_DURATION, new KeyValue(submenu.maxHeightProperty(), 0, Interpolator.EASE_BOTH))
+            );
+            
+            FadeTransition fade = new FadeTransition(ANIMATION_DURATION, submenu);
+            fade.setFromValue(1);
+            fade.setToValue(0);
+            
+            // Rotar flecha
+            RotateTransition rotate = new RotateTransition(ANIMATION_DURATION, arrow);
+            rotate.setToAngle(0);
+            
+            ParallelTransition parallel = new ParallelTransition(timeline, fade, rotate);
+            parallel.setOnFinished(e -> {
+                submenu.setVisible(false);
+                submenu.setManaged(false);
+            });
+            parallel.play();
+        }
+    }
+
+    // ===== MÉTODOS DE NAVEGACIÓN =====
+    
+    @FXML
+    public void ingresarDashboard() {
+        setActiveButton(btnDashboard);
+        System.out.println("Navegando a Dashboard");
+        // Aquí cargarías la vista correspondiente en el TabPane
+    }
+
+    @FXML
+    public void ingresarFactura() {
+        System.out.println("Navegando a Factura");
+        // Cargar vista de factura
+    }
+
+    @FXML
+    public void ingresarProforma() {
+        System.out.println("Navegando a Proforma");
+        // Cargar vista de proforma
+    }
+
+    @FXML
+    public void ingresarNuevoCliente() {
+        System.out.println("Navegando a Nuevo Cliente");
+        // Cargar vista de nuevo cliente
+    }
+
+    @FXML
+    public void ingresarListaClientes() {
+        System.out.println("Navegando a Lista de Clientes");
+        // Cargar vista de lista de clientes
+    }
+
+    @FXML
+    public void ingresarNuevoProducto() {
+        System.out.println("Navegando a Nuevo Producto");
+        // Cargar vista de nuevo producto
+    }
+
+    @FXML
+    public void ingresarCatalogo() {
+        System.out.println("Navegando a Catálogo");
+        // Cargar vista de catálogo
+    }
+
+    @FXML
+    public void ingresarReporte() {
+        setActiveButton(btnReportes);
+        System.out.println("Navegando a Reportes");
+        // Cargar vista de reportes
+    }
+
+    @FXML
+    public void salirSistema() {
+        System.out.println("Cerrando sesión...");
+        // Implementar lógica de cierre de sesión
+        System.exit(0);
+    }
+
+    /**
+     * Establecer un botón como activo
+     */
+    private void setActiveButton(Button activeButton) {
+        // Remover clase activa de todos los botones
+        btnDashboard.getStyleClass().remove("menu-button-active");
+        btnVentas.getStyleClass().remove("menu-button-active");
+        btnCliente.getStyleClass().remove("menu-button-active");
+        btnProductos.getStyleClass().remove("menu-button-active");
+        btnReportes.getStyleClass().remove("menu-button-active");
         
         // Agregar clase activa al botón seleccionado
-        if (activeButton != null) {
-            // Verificar si es un botón de sub-menú
-            boolean isSubmenuButton = (activeButton == btnFactura || activeButton == btnProforma ||
-                                      activeButton == btnNuevoCliente || activeButton == btnListaClientes ||
-                                      activeButton == btnNuevoProducto || activeButton == btnCatalogo);
-            
-            String activeClass = isSubmenuButton ? "submenu-button-active" : "menu-button-active";
-            
-            if (!activeButton.getStyleClass().contains(activeClass)) {
-                activeButton.getStyleClass().add(activeClass);
-            }
+        if (!activeButton.getStyleClass().contains("menu-button-active")) {
+            activeButton.getStyleClass().add("menu-button-active");
         }
     }
 }
