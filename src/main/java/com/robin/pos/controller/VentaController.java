@@ -918,6 +918,7 @@ public class VentaController implements Initializable {
 
             if (resultado.isExito()) {
                 // Mostrar mensaje de éxito con información del comprobante
+                /*
                 StringBuilder mensajeExito = new StringBuilder();
                 mensajeExito.append("¡Comprobante emitido exitosamente!\n\n");
 
@@ -937,7 +938,7 @@ public class VentaController implements Initializable {
                 }
 
                 Mensaje.alerta(null, "Comprobante Generado", mensajeExito.toString());
-
+                */
                 // Imprimir el comprobante
                 imprimirComprobante(resultado, new ArrayList<>(listaDetalleVentas));
 
