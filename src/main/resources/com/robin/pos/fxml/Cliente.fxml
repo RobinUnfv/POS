@@ -6,208 +6,259 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
 
-<VBox fx:id="vbxPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="470.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.ClienteController">
-    <children>
-        <VBox fx:id="vbxCuerpo" prefHeight="417.0" prefWidth="460.0" styleClass="borderPanel" stylesheets="@../css/panel.css">
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </VBox.margin>
-            <children>
-                <GridPane fx:id="gpDocumento" prefHeight="47.0" prefWidth="448.0">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="177.0" minWidth="10.0" prefWidth="157.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="149.0" minWidth="10.0" prefWidth="149.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="193.0" minWidth="10.0" prefWidth="142.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints maxHeight="26.0" minHeight="6.0" prefHeight="17.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="47.0" minHeight="0.0" prefHeight="36.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                    <children>
-                        <Text fx:id="lblTipDoc" strokeType="OUTSIDE" strokeWidth="0.0" text="Tipo Documento" wrappingWidth="120.845703125" />
-                        <ComboBox fx:id="cbxTipDoc" prefWidth="150.0" GridPane.rowIndex="1">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor></ComboBox>
-                        <Text fx:id="lblTipNum" strokeType="OUTSIDE" strokeWidth="0.0" text="Num. Documento" wrappingWidth="124.271484375" GridPane.columnIndex="2" />
-                        <TextField fx:id="txtNumDoc" promptText="Num. Documento" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                    </children>
-                </GridPane>
-                <GridPane fx:id="gpDos">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="192.0" minWidth="10.0" prefWidth="192.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="40.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="216.0" minWidth="10.0" prefWidth="216.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints maxHeight="25.0" minHeight="10.0" prefHeight="19.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="46.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-               <children>
-                  <Label fx:id="lblTipPersona" text="Tipo Persona" />
-                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="borderPanel" stylesheets="@../css/panel.css" GridPane.rowIndex="1">
-                     <children>
-                        <RadioButton fx:id="rbnJuridico" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" text="Juridico">
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </RadioButton>
-                        <RadioButton fx:id="rbnNatural" mnemonicParsing="false" prefHeight="17.0" prefWidth="91.0" text="Natural">
-                           <opaqueInsets>
-                              <Insets left="10.0" />
-                           </opaqueInsets>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </RadioButton>
-                     </children>
-                  </HBox>
-                  <Label fx:id="lblNacionalidad" prefHeight="17.0" prefWidth="87.0" text="Nacionalidad" GridPane.columnIndex="2" />
-                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="borderPanel" stylesheets="@../css/panel.css" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                     <children>
-                        <RadioButton fx:id="rbnNacional" mnemonicParsing="false" prefHeight="17.0" prefWidth="87.0" text="Nacional">
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </RadioButton>
-                        <RadioButton fx:id="rbnExtranjero" mnemonicParsing="false" prefHeight="17.0" prefWidth="91.0" text="Extranjero">
-                           <opaqueInsets>
-                              <Insets left="10.0" />
-                           </opaqueInsets>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </RadioButton>
-                     </children>
-                  </HBox>
-               </children>
-                </GridPane>
-            <GridPane fx:id="gpTres" prefHeight="118.0" prefWidth="448.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="192.0" minWidth="10.0" prefWidth="192.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="41.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="215.0" minWidth="10.0" prefWidth="215.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="43.0" minHeight="4.0" prefHeight="26.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="61.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="50.0" minHeight="4.0" prefHeight="29.0" />
-              </rowConstraints>
-               <children>
-                  <Label prefHeight="17.0" prefWidth="115.0" text="Apellido Paterno" />
-                  <Label prefHeight="17.0" prefWidth="115.0" text="Apellido Materno" GridPane.columnIndex="2" />
-                  <TextField fx:id="txtApePat" promptText="Apellido Paterno" GridPane.rowIndex="1" />
-                  <TextField fx:id="txtApeMat" promptText="Apellido Materno" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <Label prefHeight="5.0" prefWidth="115.0" text="Primer Nombre" GridPane.rowIndex="2" />
-                  <Label prefHeight="1.0" prefWidth="115.0" text="Segundo Nombre" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <TextField fx:id="txtPriNom" prefHeight="22.0" prefWidth="192.0" promptText="Primer Nombre" GridPane.rowIndex="3" />
-                  <TextField fx:id="txtSegNom" promptText="Segundo Nombre" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-               </children>
-               <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
-            </GridPane>
-            <GridPane fx:id="gpCuatro">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label prefHeight="17.0" prefWidth="187.0" text="Razón Social" />
-                  <TextField fx:id="txtRazSocial" promptText="Razón Social" GridPane.rowIndex="1" />
-               </children>
-            </GridPane>
-            <GridPane fx:id="gpCinco" prefWidth="448.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label prefHeight="17.0" prefWidth="187.0" text="Dirección" />
-                  <TextField fx:id="txtDirec" promptText="Dirección" GridPane.rowIndex="1" />
-               </children>
-            </GridPane>
-            <GridPane fx:id="gpSeis">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label prefHeight="17.0" prefWidth="126.0" text="Departamento" />
-                  <Label prefHeight="17.0" prefWidth="130.0" text="Provincia" GridPane.columnIndex="1" />
-                  <Label prefHeight="17.0" prefWidth="75.0" text="Distrito" GridPane.columnIndex="2" />
-                  <ComboBox fx:id="cbxDepartamento" onAction="#buscarProvincias" prefWidth="150.0" GridPane.rowIndex="1">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor></ComboBox>
-                  <ComboBox fx:id="cbxProvincia" onAction="#buscarDistrito" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor></ComboBox>
-                  <ComboBox fx:id="cbxDistrito" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor></ComboBox>
-               </children>
-            </GridPane>
-            </children>
+<?import javafx.scene.layout.Region?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<VBox fx:id="vbxPrincipal"
+      styleClass="root-container"
+      stylesheets="@../css/Cliente.css"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.robin.pos.controller.ClienteController"
+      VBox.vgrow="ALWAYS"
+      HBox.hgrow="ALWAYS">
+
+    <!-- ==================== CABECERA (FIJA) ==================== -->
+    <HBox styleClass="header-container" alignment="CENTER_LEFT" spacing="15" minHeight="80" maxHeight="80">
+        <padding>
+            <Insets top="15" right="20" bottom="15" left="20"/>
+        </padding>
+
+        <!-- Icono de usuario -->
+        <StackPane styleClass="header-icon-container" minWidth="45" minHeight="45" maxWidth="45" maxHeight="45">
+            <SVGPath content="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                     styleClass="header-icon"
+                     scaleX="1.2" scaleY="1.2"/>
+        </StackPane>
+
+        <VBox spacing="2" alignment="CENTER_LEFT">
+            <Label fx:id="lblTitulo" text="Registro de Cliente" styleClass="header-title"/>
+            <Label fx:id="lblSubtitulo" text="Complete los datos del cliente" styleClass="header-subtitle"/>
         </VBox>
-        <HBox fx:id="hbxPie" alignment="CENTER" prefHeight="55.0" prefWidth="460.0" styleClass="borderPanel" stylesheets="@../css/panel.css">
-            <VBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" />
-            </VBox.margin>
-         <children>
-            <Button fx:id="btnRegistrar" mnemonicParsing="false" onAction="#guardarCliente" prefHeight="54.0" prefWidth="207.0" text="REGISTRAR">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <graphic>
-                  <ImageView fitHeight="21.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../imagenes/guardar-el-archivo.png" />
-                     </image>
-                  </ImageView>
-               </graphic></Button>
-            <Button fx:id="btnSalir" mnemonicParsing="false" onAction="#cerrarModal" prefHeight="54.0" prefWidth="207.0" text="SALIR">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <graphic>
-                  <ImageView fitHeight="21.0" fitWidth="89.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../imagenes/cerrar-sesion.png" />
-                     </image>
-                  </ImageView>
-               </graphic></Button>
-         </children>
+    </HBox>
+
+    <!-- ==================== CONTENIDO CON SCROLL ==================== -->
+    <ScrollPane fitToWidth="true"
+                styleClass="content-scroll"
+                VBox.vgrow="ALWAYS"
+                hbarPolicy="NEVER"
+                vbarPolicy="AS_NEEDED">
+
+        <VBox fx:id="vbxCuerpo" styleClass="form-container" spacing="12">
+            <padding>
+                <Insets top="15" right="20" bottom="15" left="20"/>
+            </padding>
+
+            <!-- ===== SECCIÓN: DOCUMENTO ===== -->
+            <VBox styleClass="section-container" spacing="12">
+                <Label text="Información del Documento" styleClass="section-title"/>
+
+                <GridPane fx:id="gpDocumento" hgap="15" vgap="8">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="35"/>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="65"/>
+                    </columnConstraints>
+
+                    <!-- Tipo Documento -->
+                    <VBox spacing="5">
+                        <Label text="Tipo Documento" styleClass="field-label"/>
+                        <ComboBox fx:id="cbxTipDoc" maxWidth="Infinity" styleClass="modern-combo">
+                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        </ComboBox>
+                    </VBox>
+
+                    <!-- Número Documento -->
+                    <VBox spacing="5" GridPane.columnIndex="1">
+                        <Label fx:id="lblTipNum" text="Número de Documento" styleClass="field-label"/>
+                        <TextField fx:id="txtNumDoc" promptText="Ingrese el número" styleClass="modern-field"/>
+                    </VBox>
+                </GridPane>
+            </VBox>
+
+            <!-- ===== SECCIÓN: TIPO PERSONA Y NACIONALIDAD ===== -->
+            <GridPane fx:id="gpDos" hgap="15" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" percentWidth="50"/>
+                    <ColumnConstraints hgrow="SOMETIMES" percentWidth="50"/>
+                </columnConstraints>
+
+                <!-- Tipo Persona -->
+                <VBox spacing="6">
+                    <Label fx:id="lblTipPersona" text="Tipo de Persona" styleClass="field-label"/>
+                    <HBox styleClass="radio-group" spacing="15" alignment="CENTER_LEFT">
+                        <padding>
+                            <Insets top="8" right="12" bottom="8" left="12"/>
+                        </padding>
+                        <RadioButton fx:id="rbnJuridico" text="Jurídico" styleClass="modern-radio">
+                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        </RadioButton>
+                        <RadioButton fx:id="rbnNatural" text="Natural" styleClass="modern-radio">
+                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        </RadioButton>
+                    </HBox>
+                </VBox>
+
+                <!-- Nacionalidad -->
+                <VBox spacing="6" GridPane.columnIndex="1">
+                    <Label fx:id="lblNacionalidad" text="Nacionalidad" styleClass="field-label"/>
+                    <HBox styleClass="radio-group" spacing="15" alignment="CENTER_LEFT">
+                        <padding>
+                            <Insets top="8" right="12" bottom="8" left="12"/>
+                        </padding>
+                        <RadioButton fx:id="rbnNacional" text="Nacional" styleClass="modern-radio">
+                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        </RadioButton>
+                        <RadioButton fx:id="rbnExtranjero" text="Extranjero" styleClass="modern-radio">
+                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        </RadioButton>
+                    </HBox>
+                </VBox>
+            </GridPane>
+
+            <!-- ===== SECCIÓN: DATOS PERSONA NATURAL (DNI/CE) ===== -->
+            <VBox fx:id="gpTres" styleClass="section-container" spacing="12">
+                <Label text="Datos Personales" styleClass="section-title"/>
+
+                <!-- Apellidos -->
+                <GridPane hgap="15" vgap="8">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50"/>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50"/>
+                    </columnConstraints>
+
+                    <VBox spacing="5">
+                        <Label text="Apellido Paterno *" styleClass="field-label"/>
+                        <TextField fx:id="txtApePat" promptText="Ingrese apellido paterno" styleClass="modern-field"/>
+                    </VBox>
+
+                    <VBox spacing="5" GridPane.columnIndex="1">
+                        <Label text="Apellido Materno *" styleClass="field-label"/>
+                        <TextField fx:id="txtApeMat" promptText="Ingrese apellido materno" styleClass="modern-field"/>
+                    </VBox>
+                </GridPane>
+
+                <!-- Nombres -->
+                <GridPane hgap="15" vgap="8">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50"/>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50"/>
+                    </columnConstraints>
+
+                    <VBox spacing="5">
+                        <Label text="Primer Nombre *" styleClass="field-label"/>
+                        <TextField fx:id="txtPriNom" promptText="Ingrese primer nombre" styleClass="modern-field"/>
+                    </VBox>
+
+                    <VBox spacing="5" GridPane.columnIndex="1">
+                        <Label text="Segundo Nombre" styleClass="field-label"/>
+                        <TextField fx:id="txtSegNom" promptText="Ingrese segundo nombre" styleClass="modern-field"/>
+                    </VBox>
+                </GridPane>
+            </VBox>
+
+            <!-- ===== SECCIÓN: RAZÓN SOCIAL (RUC) ===== -->
+            <VBox fx:id="gpCuatro" styleClass="section-container" spacing="10">
+                <Label text="Datos de la Empresa" styleClass="section-title"/>
+
+                <VBox spacing="5">
+                    <Label text="Razón Social *" styleClass="field-label"/>
+                    <TextField fx:id="txtRazSocial" promptText="Ingrese la razón social" styleClass="modern-field"/>
+                </VBox>
+            </VBox>
+
+            <!-- ===== SECCIÓN: DIRECCIÓN ===== -->
+            <VBox fx:id="gpCinco" styleClass="section-container" spacing="10">
+                <Label text="Dirección" styleClass="section-title"/>
+
+                <VBox spacing="5">
+                    <Label text="Dirección Completa *" styleClass="field-label"/>
+                    <TextField fx:id="txtDirec" promptText="Ingrese la dirección completa" styleClass="modern-field"/>
+                </VBox>
+            </VBox>
+
+            <!-- ===== SECCIÓN: UBIGEO ===== -->
+            <VBox fx:id="gpSeis" styleClass="section-container" spacing="10">
+                <Label text="Ubicación Geográfica" styleClass="section-title"/>
+
+                <GridPane hgap="12" vgap="8">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="33"/>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="34"/>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="33"/>
+                    </columnConstraints>
+
+                    <!-- Departamento -->
+                    <VBox spacing="5">
+                        <Label text="Departamento *" styleClass="field-label"/>
+                        <ComboBox fx:id="cbxDepartamento" maxWidth="Infinity" onAction="#buscarProvincias" styleClass="modern-combo">
+                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        </ComboBox>
+                    </VBox>
+
+                    <!-- Provincia -->
+                    <VBox spacing="5" GridPane.columnIndex="1">
+                        <Label text="Provincia *" styleClass="field-label"/>
+                        <ComboBox fx:id="cbxProvincia" maxWidth="Infinity" onAction="#buscarDistrito" styleClass="modern-combo">
+                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        </ComboBox>
+                    </VBox>
+
+                    <!-- Distrito -->
+                    <VBox spacing="5" GridPane.columnIndex="2">
+                        <Label text="Distrito *" styleClass="field-label"/>
+                        <ComboBox fx:id="cbxDistrito" maxWidth="Infinity" styleClass="modern-combo">
+                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        </ComboBox>
+                    </VBox>
+                </GridPane>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+
+    <!-- ==================== PIE / BOTONES (FIJO) ==================== -->
+    <HBox fx:id="hbxPie" styleClass="footer-container" alignment="CENTER_RIGHT" spacing="12"
+          minHeight="60" maxHeight="60">
+        <padding>
+            <Insets top="12" right="20" bottom="12" left="20"/>
+        </padding>
+
+        <!-- Indicador de campos requeridos -->
+        <HBox alignment="CENTER_LEFT" spacing="5">
+            <Label text="*" styleClass="required-indicator"/>
+            <Label text="Campos obligatorios" styleClass="required-text"/>
         </HBox>
-    </children>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <!-- Botón Cancelar -->
+        <Button fx:id="btnSalir" text="Cancelar" onAction="#cerrarModal"
+                styleClass="btn-secondary" prefWidth="110" prefHeight="36">
+            <cursor><Cursor fx:constant="HAND"/></cursor>
+            <graphic>
+                <SVGPath content="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                         styleClass="btn-icon-secondary" scaleX="0.65" scaleY="0.65"/>
+            </graphic>
+        </Button>
+
+        <!-- Botón Registrar -->
+        <Button fx:id="btnRegistrar" text="Registrar" onAction="#guardarCliente"
+                styleClass="btn-primary" prefWidth="120" prefHeight="36">
+            <cursor><Cursor fx:constant="HAND"/></cursor>
+            <graphic>
+                <SVGPath content="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
+                         styleClass="btn-icon-primary" scaleX="0.7" scaleY="0.7"/>
+            </graphic>
+        </Button>
+    </HBox>
 </VBox>

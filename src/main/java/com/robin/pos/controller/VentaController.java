@@ -936,7 +936,7 @@ public class VentaController implements Initializable {
                     mensajeExito.append("Fecha: ").append(resultado.getFecha());
                 }
 
-                Mensaje.alerta(null, "Comprobante Generado", mensajeExito.toString());
+                //Mensaje.alerta(null, "Comprobante Generado", mensajeExito.toString());
 
                 // Imprimir el comprobante
                 imprimirComprobante(resultado, new ArrayList<>(listaDetalleVentas));

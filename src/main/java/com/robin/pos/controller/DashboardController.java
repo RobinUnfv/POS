@@ -75,6 +75,7 @@ public class DashboardController {
     
     private Tab tabVenta;
     private Tab tabCliente;
+    private Tab tabListaCliente;
     private Tab tabArticulo;
 
     @FXML
@@ -363,9 +364,24 @@ public class DashboardController {
     }
 
     @FXML
-    public void ingresarFactura() {
+    public void ingresarFactura() throws IOException {
         System.out.println("Navegando a Factura");
-        // Cargar vista de factura
+        if (tabVenta == null) {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/Venta.fxml"));
+            BorderPane ap = loader.load();
+            //VentaController ventaController = loader.getController();
+            // LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEE dd MMM hh:mm:ss a"))
+
+            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/carritoCompras32.png").toString());
+            icono.setFitWidth(16);
+            icono.setFitHeight(16);
+            tabVenta = new Tab("Venta", ap);
+            tabVenta.setGraphic(icono);
+            tabVenta.setClosable(true);
+            tabVenta.setOnClosed(e -> tabVenta = null);
+
+            this.tabPane.getTabs().add(tabVenta);
+        }
     }
 
     @FXML
@@ -375,15 +391,55 @@ public class DashboardController {
     }
 
     @FXML
-    public void ingresarNuevoCliente() {
+    public void ingresarNuevoCliente() throws IOException {
         System.out.println("Navegando a Nuevo Cliente");
-        // Cargar vista de nuevo cliente
+        if (this.tabCliente == null)  {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/Cliente.fxml"));
+            VBox  ap = loader.load();
+            /*
+            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/producto.png").toString());
+            icono.setFitWidth(16);
+            icono.setFitHeight(16);
+
+            tabArticulo = new Tab("Articulo", ap);
+
+            tabArticulo.setGraphic(icono);
+            */
+            tabCliente = new Tab("Articulo", ap);
+            tabCliente.setClosable(true);
+            tabCliente.setOnClosed(e -> tabCliente = null);
+
+            this.tabPane.getTabs().add(tabCliente);
+            this.tabPane.getSelectionModel().select(tabCliente);
+        } else {
+            // Si el tab ya existe, solo selecciónalo
+            this.tabPane.getSelectionModel().select(tabCliente);
+        }
     }
 
     @FXML
-    public void ingresarListaClientes() {
+    public void ingresarListaClientes() throws IOException {
         System.out.println("Navegando a Lista de Clientes");
-        // Cargar vista de lista de clientes
+        if (tabListaCliente == null) {
+
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/ListaCliente.fxml"));
+            BorderPane ap = loader.load();
+
+            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/listaClientes.png").toString());
+            icono.setFitWidth(16);
+            icono.setFitHeight(16);
+            tabListaCliente = new Tab("Lista Clientes", ap);
+            tabListaCliente.setGraphic(icono);
+            tabListaCliente.setClosable(true);
+            tabListaCliente.setOnClosed(e -> tabListaCliente = null);
+
+            this.tabPane.getTabs().add(tabListaCliente);
+            this.tabPane.getSelectionModel().select(tabListaCliente);
+
+        }else {
+            // Si el tab ya existe, solo selecciónalo
+            this.tabPane.getSelectionModel().select(tabListaCliente);
+        }
     }
 
     @FXML
