@@ -381,6 +381,10 @@ public class DashboardController {
             tabVenta.setOnClosed(e -> tabVenta = null);
 
             this.tabPane.getTabs().add(tabVenta);
+            this.tabPane.getSelectionModel().select(tabVenta);
+        } else {
+            // Si el tab ya existe, solo selecciónalo
+            this.tabPane.getSelectionModel().select(tabVenta);
         }
     }
 
@@ -405,7 +409,7 @@ public class DashboardController {
 
             tabArticulo.setGraphic(icono);
             */
-            tabCliente = new Tab("Articulo", ap);
+            tabCliente = new Tab("Cliente", ap);
             tabCliente.setClosable(true);
             tabCliente.setOnClosed(e -> tabCliente = null);
 

@@ -13,6 +13,7 @@ module com.robin.pos {
     requires net.sf.jasperreports.core;
     requires com.google.zxing;
     requires com.google.zxing.javase;
+    requires jdk.compiler;
 
 //    requires com.robin.pos;
 
