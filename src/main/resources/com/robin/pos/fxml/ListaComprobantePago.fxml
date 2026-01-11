@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<VBox fx:id="vbxPrincipal" styleClass="root-container" stylesheets="@../css/Listacomprobante.css" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.ListaComprobantePagoController">
+    
+    <!-- ==================== CABECERA ==================== -->
+    <VBox spacing="15" styleClass="header-container">
+        <padding>
+            <Insets bottom="20" left="25" right="25" top="20" />
+        </padding>
+        
+        <!-- Título y subtítulo -->
+        <VBox spacing="3">
+            <Label fx:id="lblTitulo" styleClass="header-title" text="Lista de Comprobantes de Pago" />
+            <Label fx:id="lblSubtitulo" styleClass="header-subtitle" text="Administra y consulta la información de tus comprobantes" />
+        </VBox>
+        
+        <!-- Barra de herramientas -->
+        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="toolbar-container">
+            <padding>
+                <Insets bottom="12" left="15" right="15" top="12" />
+            </padding>
+            
+            <!-- Campo de búsqueda -->
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="search-container" HBox.hgrow="SOMETIMES">
+                <padding>
+                    <Insets bottom="8" left="15" right="15" top="8" />
+                </padding>
+                <SVGPath content="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" scaleX="0.85" scaleY="0.85" styleClass="search-icon" />
+                <TextField fx:id="txtBuscar" onKeyPressed="#buscarComprobante" prefWidth="280" promptText="Buscar por número, cliente o documento..." styleClass="search-field" />
+            </HBox>
+            
+            <!-- Filtro por estado -->
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label styleClass="filter-label" text="Estado:" />
+                <ComboBox fx:id="cbxEstado" onAction="#filtrarPorEstado" prefHeight="25.0" prefWidth="106.0" styleClass="filter-combo">
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                </ComboBox>
+            </HBox>
+            
+            <!-- Filtro por fechas -->
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label styleClass="filter-label" text="Desde:" />
+                <DatePicker fx:id="dpFechaInicio" prefHeight="25.0" prefWidth="106.0" styleClass="filter-date" />
+            </HBox>
+            
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <Label styleClass="filter-label" text="Hasta:" />
+                <DatePicker fx:id="dpFechaFin" prefHeight="25.0" prefWidth="109.0" styleClass="filter-date" />
+            </HBox>
+            
+            <!-- Botón buscar por fechas -->
+            <Button fx:id="btnBuscarFechas" onAction="#buscarPorFechas" styleClass="btn-filter">
+                <graphic>
+                    <SVGPath content="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" scaleX="0.7" scaleY="0.7" styleClass="btn-filter-icon" />
+                </graphic>
+                <tooltip><Tooltip text="Buscar por rango de fechas" /></tooltip>
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+            
+            <Region HBox.hgrow="ALWAYS" />
+            
+            <!-- Contador de registros -->
+            <HBox alignment="CENTER" spacing="8" styleClass="counter-container">
+                <padding>
+                    <Insets bottom="8" left="15" right="15" top="8" />
+                </padding>
+                <SVGPath content="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" scaleX="0.8" scaleY="0.8" styleClass="counter-icon" />
+                <Label fx:id="lblContador" styleClass="counter-label" text="0 Comprobantes" />
+            </HBox>
+            
+            <!-- Botones de acción -->
+            <HBox alignment="CENTER_RIGHT" spacing="8">
+                <!-- Botón Copia A4 -->
+                <Button fx:id="btnCopiaA4" onAction="#generarCopiaA4" styleClass="btn-action btn-a4" text="Copia A4">
+                    <graphic>
+                        <SVGPath content="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" scaleX="0.65" scaleY="0.65" styleClass="btn-icon" />
+                    </graphic>
+                    <tooltip><Tooltip text="Generar copia del documento en formato A4" /></tooltip>
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                </Button>
+                
+                <!-- Botón Copia POS -->
+                <Button fx:id="btnCopiaPOS" onAction="#generarCopiaPOS" styleClass="btn-action btn-pos" text="Copia POS">
+                    <graphic>
+                        <SVGPath content="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z" scaleX="0.65" scaleY="0.65" styleClass="btn-icon" />
+                    </graphic>
+                    <tooltip><Tooltip text="Generar copia del documento en formato ticket POS" /></tooltip>
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                </Button>
+                
+                <!-- Botón Actualizar -->
+                <Button fx:id="btnActualizar" onAction="#actualizarLista" styleClass="btn-action btn-refresh">
+                    <graphic>
+                        <SVGPath content="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" scaleX="0.7" scaleY="0.7" styleClass="btn-icon" />
+                    </graphic>
+                    <tooltip><Tooltip text="Actualizar lista (F5)" /></tooltip>
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                </Button>
+            </HBox>
+        </HBox>
+    </VBox>
+    
+    <!-- ==================== TABLA ==================== -->
+    <VBox styleClass="table-wrapper" VBox.vgrow="ALWAYS">
+        <padding>
+            <Insets bottom="20" left="25" right="25" top="0" />
+        </padding>
+        
+        <StackPane styleClass="table-container" VBox.vgrow="ALWAYS">
+            <effect>
+                <DropShadow blurType="GAUSSIAN" color="#00000015" offsetY="4" radius="12" />
+            </effect>
+            
+            <TableView fx:id="tblComprobantes" styleClass="modern-table" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colNumero" minWidth="120" prefWidth="140" text="Nº Comprobante" />
+                    <TableColumn fx:id="colFecha" minWidth="90" prefWidth="100" text="Fecha" />
+                    <TableColumn fx:id="colCliente" minWidth="200" prefWidth="458.3999938964844" text="Cliente / Razón Social" />
+                    <TableColumn fx:id="colTipoDoc" minWidth="80" prefWidth="175.19989013671875" text="Tipo Doc." />
+                    <TableColumn fx:id="colDocumento" minWidth="100" prefWidth="122.4000244140625" text="Documento" />
+                    <TableColumn fx:id="colMoneda" minWidth="57.60009765625" prefWidth="67.2000732421875" text="Moneda" />
+                    <TableColumn fx:id="colTotal" minWidth="100" prefWidth="120" text="Total" />
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                </columnResizePolicy>
+            </TableView>
+        </StackPane>
+    </VBox>
+    
+    <!-- ==================== BARRA DE ESTADO ==================== -->
+    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="status-bar">
+        <padding>
+            <Insets bottom="10" left="25" right="25" top="10" />
+        </padding>
+        
+        <Label fx:id="lblEstado" styleClass="status-text" text="Listo" />
+        
+        <Region HBox.hgrow="ALWAYS" />
+        
+        <HBox alignment="CENTER_RIGHT" spacing="15">
+            <Label styleClass="shortcut-hint" text="F5: Actualizar" />
+            <Label styleClass="shortcut-hint" text="F6: Copia A4" />
+            <Label styleClass="shortcut-hint" text="F7: Copia POS" />
+            <Label styleClass="shortcut-hint" text="Doble clic: Ver detalle" />
+        </HBox>
+    </HBox>
+</VBox>

@@ -77,6 +77,7 @@ public class DashboardController {
     private Tab tabCliente;
     private Tab tabListaCliente;
     private Tab tabArticulo;
+    private Tab tabListaComPago;
 
     @FXML
     public void initialize() {
@@ -392,6 +393,32 @@ public class DashboardController {
     public void ingresarProforma() {
         System.out.println("Navegando a Proforma");
         // Cargar vista de proforma
+    }
+
+    @FXML
+    public void ingresarListaFacBol() throws IOException {
+        System.out.println("Navegando a Lista de Facturas y Boletas");
+        if (this.tabListaComPago == null)  {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/ListaComprobantePago.fxml"));
+            VBox  ap = loader.load();
+
+            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/invoice.png").toString());
+            icono.setFitWidth(16);
+            icono.setFitHeight(16);
+
+            tabListaComPago = new Tab("Lista Factura/Boleta", ap);
+
+            tabListaComPago.setGraphic(icono);
+
+            tabListaComPago.setClosable(true);
+            tabListaComPago.setOnClosed(e -> tabListaComPago = null);
+
+            this.tabPane.getTabs().add(tabListaComPago);
+            this.tabPane.getSelectionModel().select(tabListaComPago);
+        } else {
+            // Si el tab ya existe, solo selecciónalo
+            this.tabPane.getSelectionModel().select(tabListaComPago);
+        }
     }
 
     @FXML

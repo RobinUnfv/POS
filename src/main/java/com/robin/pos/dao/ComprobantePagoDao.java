@@ -1,18 +1,19 @@
 package com.robin.pos.dao;
 
+import com.robin.pos.model.ComprobantePago;
 import com.robin.pos.model.DetalleVenta;
 import com.robin.pos.model.ParametrosComprobante;
 import com.robin.pos.model.ResultadoEmision;
 import com.robin.pos.util.ConexionBD;
 import oracle.jdbc.OracleTypes;
 
-import java.sql.CallableStatement;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -488,5 +489,211 @@ public class ComprobantePagoDao {
 
         return resultado;
     }
+
+    // ================================================================================================
+
+    /**
+     * Lista comprobantes de pago (Facturas despachadas)
+     *
+     * @param noCia Código de compañía
+     * @return Lista de comprobantes
+     */
+    public List<ComprobantePago> listarDocumentosFB(String noCia, String tipoDoc, String estado) {
+        List<ComprobantePago> lista = new ArrayList<>();
+
+        String sql = """
+            SELECT NO_FACTU, TRUNC(FECHA) AS FECHA, TIPO_DOC_CLI, NUM_DOC_CLI,
+                   NBR_CLIENTE, MONEDA, TOTAL
+            FROM FACTU.ARFAFE
+            WHERE NO_CIA = ?
+            AND TIPO_DOC = ?
+            AND ESTADO = ?
+            ORDER BY FECHA DESC
+            """;
+
+        Connection cx = null;
+        try {
+            cx = ConexionBD.oracle();
+            PreparedStatement ps = cx.prepareStatement(sql);
+            ps.setString(1, noCia);
+            ps.setString(2, tipoDoc);
+            ps.setString(3, estado);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ComprobantePago comprobante = mapearResultSet(rs);
+                lista.add(comprobante);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Error al listar comprobantes de pago despachadas", ex);
+        } finally {
+            ConexionBD.cerrarCxOracle(cx);
+        }
+
+        return lista;
+    }
+
+    /**
+     * Lista comprobantes por rango de fechas
+     *
+     * @param noCia Código de compañía
+     * @param fechaInicio Fecha inicio
+     * @param fechaFin Fecha fin
+     * @return Lista de comprobantes
+     */
+    public List<ComprobantePago> listarPorFechas(String noCia, String tipoDoc, String estado,
+                                                 LocalDate fechaInicio, LocalDate fechaFin) {
+        List<ComprobantePago> lista = new ArrayList<>();
+
+        String sql = """
+            SELECT NO_FACTU, TRUNC(FECHA) AS FECHA, TIPO_DOC_CLI, NUM_DOC_CLI,
+                   NBR_CLIENTE, MONEDA, TOTAL
+            FROM FACTU.ARFAFE
+            WHERE NO_CIA = ?
+            AND TIPO_DOC = ?
+            AND ESTADO = ?
+            AND TRUNC(FECHA) BETWEEN ? AND ?
+            ORDER BY FECHA DESC
+            """;
+
+        Connection cx = null;
+        try {
+            cx = ConexionBD.oracle();
+            PreparedStatement ps = cx.prepareStatement(sql);
+            ps.setString(1, noCia);
+            ps.setString(2, tipoDoc);
+            ps.setString(3, estado);
+            ps.setDate(4, Date.valueOf(fechaInicio));
+            ps.setDate(5, Date.valueOf(fechaFin));
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ComprobantePago comprobante = mapearResultSet(rs);
+                lista.add(comprobante);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Error al listar comprobantes de pago por fechas", ex);
+        } finally {
+            ConexionBD.cerrarCxOracle(cx);
+        }
+
+        return lista;
+    }
+
+    /**
+     * Busca comprobante por número de factura
+     *
+     * @param noCia Código de compañía
+     * @param noFactu Número de factura
+     * @return ComprobantePago o null si no existe
+     */
+    public ComprobantePago buscarNumCompPago(String noCia, String noFactu, String tipoDoc) {
+        ComprobantePago comprobante = null;
+
+        String sql = """
+            SELECT NO_FACTU, TRUNC(FECHA) AS FECHA, TIPO_DOC_CLI, NUM_DOC_CLI,
+                   NBR_CLIENTE, MONEDA, TOTAL
+            FROM FACTU.ARFAFE
+            WHERE NO_CIA = ?
+            AND NO_FACTU = ?
+            AND TIPO_DOC = ?
+            """;
+
+        Connection cx = null;
+        try {
+            cx = ConexionBD.oracle();
+            PreparedStatement ps = cx.prepareStatement(sql);
+            ps.setString(1, noCia);
+            ps.setString(2, noFactu);
+            ps.setString(3, tipoDoc);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                comprobante = mapearResultSet(rs);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Error al buscar comprobante pago por número", ex);
+        } finally {
+            ConexionBD.cerrarCxOracle(cx);
+        }
+
+        return comprobante;
+    }
+
+    /**
+     * Busca comprobantes por documento del cliente
+     *
+     * @param noCia Código de compañía
+     * @param numDocCli Número de documento del cliente
+     * @return Lista de comprobantes
+     */
+    public List<ComprobantePago> buscarPorDocumentoCliente(String noCia, String numDocCli) {
+        List<ComprobantePago> lista = new ArrayList<>();
+
+        String sql = """
+            SELECT NO_FACTU, TRUNC(FECHA) AS FECHA, TIPO_DOC_CLI, NUM_DOC_CLI,
+                   NBR_CLIENTE, MONEDA, TOTAL
+            FROM FACTU.ARFAFE
+            WHERE NO_CIA = ?
+            AND NUM_DOC_CLI = ?
+            ORDER BY FECHA DESC
+            """;
+
+        Connection cx = null;
+        try {
+            cx = ConexionBD.oracle();
+            PreparedStatement ps = cx.prepareStatement(sql);
+            ps.setString(1, noCia);
+            ps.setString(2, numDocCli);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ComprobantePago comprobante = mapearResultSet(rs);
+                lista.add(comprobante);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Error al buscar facturas por documento cliente", ex);
+        } finally {
+            ConexionBD.cerrarCxOracle(cx);
+        }
+
+        return lista;
+    }
+
+    /**
+     * Mapea un ResultSet a un objeto ComprobantePago
+     */
+    private ComprobantePago mapearResultSet(ResultSet rs) throws SQLException {
+        ComprobantePago comprobante = new ComprobantePago();
+
+        comprobante.setNoFactu(rs.getString("NO_FACTU"));
+
+        Date fecha = rs.getDate("FECHA");
+        if (fecha != null) {
+            comprobante.setFecha(fecha.toLocalDate());
+        }
+
+        comprobante.setTipoDocCli(rs.getString("TIPO_DOC_CLI"));
+        comprobante.setNumDocCli(rs.getString("NUM_DOC_CLI"));
+        comprobante.setNbrCliente(rs.getString("NBR_CLIENTE"));
+        comprobante.setMoneda(rs.getString("MONEDA"));
+        comprobante.setTotal(rs.getDouble("TOTAL"));
+
+        return comprobante;
+    }
+
+
 
 }
