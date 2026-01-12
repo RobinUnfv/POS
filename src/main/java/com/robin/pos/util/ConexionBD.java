@@ -13,6 +13,7 @@ public class ConexionBD {
     private static String puerto = "1521";
     private static String sid = "BDNX1";  // CASA ROBIN
     //private static String sid = "BD145NEX"; // NEXER
+    //private static String sid = "DICOFE";// CELIA
     private static String usuario = "LLE";
     private static String password = "YVL";
 
