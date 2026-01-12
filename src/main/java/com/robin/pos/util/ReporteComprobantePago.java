@@ -6,6 +6,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
+import javax.swing.*;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -60,12 +61,31 @@ public class ReporteComprobantePago {
 
             // Llenar el reporte
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
-
+            /*
             // Mostrar el reporte en un visor
             JasperViewer viewer = new JasperViewer(jasperPrint, false);
             String tipoComprobante = Metodos.getTipoComprobante(resultado.getNoFactu());
             viewer.setTitle(tipoComprobante+" ELECTRONICA - " + resultado.getNoFactu());
             viewer.setVisible(true);
+            */
+            String tipoComprobante = Metodos.getTipoComprobante(resultado.getNoFactu());
+            SwingUtilities.invokeLater(() -> {
+                JasperViewer viewer = new JasperViewer(jasperPrint, false);
+                viewer.setTitle(tipoComprobante + " ELECTRONICA - " + resultado.getNoFactu());
+
+                // Configurar la ventana para que se muestre al frente
+                viewer.setAlwaysOnTop(true);   // Temporalmente siempre al frente
+                viewer.setVisible(true);
+                viewer.toFront();              // Traer al frente
+                viewer.requestFocus();         // Solicitar foco
+                viewer.setAlwaysOnTop(false);  // Quitar siempre al frente después
+
+                // Centrar en pantalla
+                viewer.setLocationRelativeTo(null);
+
+                // Estado normal
+                viewer.setExtendedState(JFrame.NORMAL);
+            });
 
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error al generar reporte", e);

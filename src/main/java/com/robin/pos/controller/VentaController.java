@@ -944,9 +944,6 @@ public class VentaController implements Initializable {
                 // Limpiar formulario después de la venta exitosa
                 limpiarFormularioVenta();
 
-                // TODO: Aquí puedes agregar lógica para imprimir el comprobante
-                // imprimirComprobante(resultado);
-
             } else {
                 // Mostrar error
                 Mensaje.error(null, "Error en Comprobante",

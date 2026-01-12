@@ -25,6 +25,20 @@ public class ResultadoEmision {
     private String msjError;     // Mensaje de error específico
     private String fecProceso;   // Fecha del proceso
 
+    public ResultadoEmision() {
+    }
+
+    public ResultadoEmision(String noCliente, String noOrden, String noGuia, String noFactu,
+                            String fecha, String serie, String correlativo) {
+        this.noCliente = noCliente;
+        this.noOrden = noOrden;
+        this.noGuia = noGuia;
+        this.noFactu = noFactu;
+        this.fecha = fecha;
+        this.serie = serie;
+        this.correlativo = correlativo;
+    }
+
     // ========== GETTERS Y SETTERS ==========
 
     public boolean isExito() { return exito; }
