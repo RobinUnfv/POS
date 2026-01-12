@@ -40,7 +40,7 @@ public class ReporteComprobantePagoTicket {
 
     // Datos de la empresa (pueden ser configurables)
     private String empresaNombre = "CORPORACION TEXTIL CELIA E.I.R.L.";
-    private String empresaActividad = "VENTA DE ROPA PARA BEBES\nPRECIOS ESPECIALES PARA MAYORISTAS";
+    private String empresaActividad = "EN DISEÑO Y MODELOS EXCLUSIVOS EN PRODUCTOS TEXTILES - \nPRENDAS DE VESTIR - CON PRECIOS ESPECIALES PARA PROVINCIA - \nVENTAS POR MAYOR Y MENOR";
     private String empresaDireccion = "JR. GAMARRA NRO. 676 INT. 262\nLA VICTORIA - LIMA - LIMA";
     private String empresaRuc = "20609272016";
     private String empresaTelefonos = "";

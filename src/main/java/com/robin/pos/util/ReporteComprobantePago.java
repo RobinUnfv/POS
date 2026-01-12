@@ -27,7 +27,7 @@ public class ReporteComprobantePago {
     private static final String LOGO_PATH = "/com/robin/pos/imagenes/logos-nexer.png";
 
     private String empresaNombre = "CORPORACION TEXTIL CELIA E.I.R.L.";
-    private String empresaActividad = "EN DISEÑO Y MODELOS EXCLUSIVOS\nROPA PARA BEBES - CAMPAÑA ESCOLAR\nPRECIOS ESPECIALES PARA PROVINCIAS - VENTAS POR MAYOR Y MENOR";
+    private String empresaActividad = "EN DISEÑO Y MODELOS EXCLUSIVOS EN PRODUCTOS TEXTILES - \nPRENDAS DE VESTIR - CON PRECIOS ESPECIALES PARA PROVINCIA - \nVENTAS POR MAYOR Y MENOR";
     private String empresaDireccion = "JR. MARISCAL AGUSTIN GAMARRA NRO. 676 INT. 262 URB. EL PORVENIR - LA VICTORIA - LIMA - LIMA";
     private String empresaRuc = "20609272016";
     private String empresaTelefonos = "/";
