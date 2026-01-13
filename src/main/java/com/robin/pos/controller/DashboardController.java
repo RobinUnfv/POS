@@ -78,6 +78,7 @@ public class DashboardController {
     private Tab tabListaCliente;
     private Tab tabArticulo;
     private Tab tabListaComPago;
+    private Tab tabListaArinda1;
 
     @FXML
     public void initialize() {
@@ -496,9 +497,26 @@ public class DashboardController {
     }
 
     @FXML
-    public void ingresarCatalogo() {
+    public void ingresarCatalogo() throws IOException{
         System.out.println("Navegando a Catálogo");
-        // Cargar vista de catálogo
+        if (this.tabListaArinda1 == null) {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/ListaArinda1.fxml"));
+            VBox  ap = loader.load();
+
+            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/listaArti.png").toString());
+            icono.setFitWidth(16);
+            icono.setFitHeight(16);
+            tabListaArinda1 = new Tab("Catálogo", ap);
+            tabListaArinda1.setGraphic(icono);
+            tabListaArinda1.setClosable(true);
+            tabListaArinda1.setOnClosed(e -> tabListaArinda1 = null);
+
+            this.tabPane.getTabs().add(tabListaArinda1);
+            this.tabPane.getSelectionModel().select(tabListaArinda1);
+        } else {
+            // Si el tab ya existe, solo selecciónalo
+            this.tabPane.getSelectionModel().select(tabListaArinda1);
+        }
     }
 
     @FXML

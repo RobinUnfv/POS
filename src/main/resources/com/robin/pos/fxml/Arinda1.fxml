@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vbxPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="800.0" style="-fx-background-color: #f8f9fa;" stylesheets="@../css/articulo.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.Arinda1Controller">
+<VBox fx:id="vbxPrincipal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="800.0" style="-fx-background-color: #f8f9fa;" stylesheets="@../css/arinda1.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.Arinda1Controller">
     
     <!-- HEADER -->
     <HBox alignment="CENTER_LEFT" prefHeight="70.0" style="-fx-background-color: linear-gradient(to right, #f39c12, #e67e22); -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);">
@@ -38,7 +38,7 @@
     </HBox>
     
     <!-- CONTENT BODY -->
-    <VBox fx:id="vbxCuerpo" prefHeight="550.0" prefWidth="800.0" style="-fx-background-color: white; -fx-background-radius: 0 0 10 10;" VBox.vgrow="ALWAYS">
+    <VBox fx:id="vbxCuerpo" prefHeight="525.0" prefWidth="800.0" style="-fx-background-color: white; -fx-background-radius: 0 0 10 10;" VBox.vgrow="ALWAYS">
         <padding>
             <Insets bottom="20.0" left="30.0" right="30.0" top="25.0" />
         </padding>
@@ -61,7 +61,7 @@
                             <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
                         </rowConstraints>
                         <children>
-                            <Label styleClass="field-label" text="Código *" />
+                            <Label styleClass="field-label" text="Código" />
                             <Label styleClass="field-label" text="Tipo de Artículo *" GridPane.columnIndex="1" />
                             <Label styleClass="field-label" text="Estado" GridPane.columnIndex="2" />
                             
@@ -198,19 +198,6 @@
                     <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                         <image>
                             <Image url="@../imagenes/guardar-el-archivo.png" />
-                        </image>
-                    </ImageView>
-                </graphic>
-            </Button>
-            
-            <Button fx:id="btnSalir" mnemonicParsing="false" onAction="#cerrarModal" prefHeight="50.0" prefWidth="180.0" styleClass="btn-secondary" text="CANCELAR">
-                <cursor>
-                    <Cursor fx:constant="HAND" />
-                </cursor>
-                <graphic>
-                    <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                        <image>
-                            <Image url="@../imagenes/cerrar-sesion.png" />
                         </image>
                     </ImageView>
                 </graphic>
