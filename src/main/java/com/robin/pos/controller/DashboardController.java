@@ -421,22 +421,14 @@ public class DashboardController {
             this.tabPane.getSelectionModel().select(tabListaComPago);
         }
     }
-
+    /*
     @FXML
     public void ingresarNuevoCliente() throws IOException {
         System.out.println("Navegando a Nuevo Cliente");
         if (this.tabCliente == null)  {
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/Cliente.fxml"));
             VBox  ap = loader.load();
-            /*
-            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/producto.png").toString());
-            icono.setFitWidth(16);
-            icono.setFitHeight(16);
 
-            tabArticulo = new Tab("Articulo", ap);
-
-            tabArticulo.setGraphic(icono);
-            */
             tabCliente = new Tab("Cliente", ap);
             tabCliente.setClosable(true);
             tabCliente.setOnClosed(e -> tabCliente = null);
@@ -448,7 +440,7 @@ public class DashboardController {
             this.tabPane.getSelectionModel().select(tabCliente);
         }
     }
-
+    */
     @FXML
     public void ingresarListaClientes() throws IOException {
         System.out.println("Navegando a Lista de Clientes");
@@ -460,7 +452,7 @@ public class DashboardController {
             ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/listaClientes.png").toString());
             icono.setFitWidth(16);
             icono.setFitHeight(16);
-            tabListaCliente = new Tab("Lista Clientes", ap);
+            tabListaCliente = new Tab("Ficha Cliente", ap);
             tabListaCliente.setGraphic(icono);
             tabListaCliente.setClosable(true);
             tabListaCliente.setOnClosed(e -> tabListaCliente = null);

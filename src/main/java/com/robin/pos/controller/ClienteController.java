@@ -1,36 +1,44 @@
 package com.robin.pos.controller;
 
 import com.robin.pos.dao.*;
-import com.robin.pos.model.Arccdi;
-import com.robin.pos.model.Arccdp;
-import com.robin.pos.model.Arccpr;
-import com.robin.pos.model.EntidadTributaria;
+import com.robin.pos.model.*;
 import com.robin.pos.util.Mensaje;
 import com.robin.pos.util.Metodos;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Controlador mejorado para el formulario de Cliente
  * Incluye validación en tiempo real, atajos de teclado y mejor UX
  *
  * @author Robin POS
- * @version 2.0
+ * @version 2.1
  */
 public class ClienteController implements Initializable {
+
+    private static final Logger LOGGER = Logger.getLogger(ClienteController.class.getName());
 
     // === COMPONENTES FXML ===
     @FXML private VBox vbxPrincipal;
@@ -40,10 +48,12 @@ public class ClienteController implements Initializable {
     // Secciones del formulario
     @FXML private GridPane gpDocumento;
     @FXML private GridPane gpDos;
-    @FXML private VBox gpTres;      // Cambiado a VBox para el nuevo diseño
-    @FXML private VBox gpCuatro;    // Cambiado a VBox para el nuevo diseño
+    //@FXML private VBox gpTres;
+    @FXML private VBox gpCuatro;
     @FXML private VBox gpCinco;
     @FXML private VBox gpSeis;
+    @FXML private VBox gpContacto;
+    @FXML private VBox vbxNacionalidad;
 
     // Labels
     @FXML private Label lblTitulo;
@@ -60,12 +70,16 @@ public class ClienteController implements Initializable {
 
     // TextField
     @FXML private TextField txtNumDoc;
+    /*
     @FXML private TextField txtApePat;
     @FXML private TextField txtApeMat;
     @FXML private TextField txtPriNom;
     @FXML private TextField txtSegNom;
+    */
     @FXML private TextField txtRazSocial;
     @FXML private TextField txtDirec;
+    @FXML private TextField txtTelefono;
+    @FXML private TextField txtEmail;
 
     // RadioButton
     @FXML private RadioButton rbnJuridico;
@@ -73,9 +87,19 @@ public class ClienteController implements Initializable {
     @FXML private RadioButton rbnNacional;
     @FXML private RadioButton rbnExtranjero;
 
+    // CheckBox
+    @FXML private CheckBox chkActivo;
+
     // Botones
     @FXML private Button btnRegistrar;
     @FXML private Button btnSalir;
+
+
+    @FXML
+    private Label lblEmpresa;
+
+    @FXML
+    private Label lblNombre;
 
     // === GRUPOS DE TOGGLE ===
     private ToggleGroup tipoPersonaGroup;
@@ -85,6 +109,13 @@ public class ClienteController implements Initializable {
     private static final String NO_CIA = "01";
     private static final String ESTILO_ERROR = "validation-error";
     private static final String ESTILO_EXITO = "validation-success";
+
+    // === MODO EDICIÓN ===
+    private boolean modoEdicion = false;
+    private Cliente clienteActual;
+
+    // Stage para indicador de carga
+    private Stage loadingStage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -96,7 +127,9 @@ public class ClienteController implements Initializable {
 
         // Listener para cambio de tipo de documento
         cbxTipDoc.valueProperty().addListener((obs, oldVal, newVal) -> {
-            txtNumDoc.setText("");
+            if (!modoEdicion) {
+                txtNumDoc.setText("");
+            }
             limpiarEstilosValidacion(txtNumDoc);
             updateVisibilityByTipoDoc(newVal);
             Metodos.configuracionNumeroDocumento(txtNumDoc, newVal != null ? newVal : "RUC");
@@ -130,9 +163,9 @@ public class ClienteController implements Initializable {
         rbnExtranjero.setToggleGroup(nacionalidadGroup);
 
         rbnNacional.setUserData("N");
-        rbnExtranjero.setUserData("E");
+        rbnExtranjero.setUserData("S");
         rbnJuridico.setUserData("J");
-        rbnNatural.setUserData("P");
+        rbnNatural.setUserData("N");
 
         // Selección por defecto
         rbnJuridico.setSelected(true);
@@ -153,23 +186,39 @@ public class ClienteController implements Initializable {
         });
 
         // Convertir a mayúsculas automáticamente
-        configurarMayusculas(txtApePat);
-        configurarMayusculas(txtApeMat);
-        configurarMayusculas(txtPriNom);
-        configurarMayusculas(txtSegNom);
         configurarMayusculas(txtRazSocial);
         configurarMayusculas(txtDirec);
+
+        // Validar email
+        if (txtEmail != null) {
+            txtEmail.textProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null && !newVal.isEmpty()) {
+                    txtEmail.setText(newVal.toLowerCase());
+                }
+            });
+        }
+
+        // Validar teléfono (solo números)
+        if (txtTelefono != null) {
+            txtTelefono.textProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null && !newVal.matches("\\d*")) {
+                    txtTelefono.setText(newVal.replaceAll("[^\\d]", ""));
+                }
+            });
+        }
     }
 
     /**
      * Configura un campo para convertir texto a mayúsculas
      */
     private void configurarMayusculas(TextField campo) {
-        campo.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null && !newVal.equals(newVal.toUpperCase())) {
-                campo.setText(newVal.toUpperCase());
-            }
-        });
+        if (campo != null) {
+            campo.textProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null && !newVal.equals(newVal.toUpperCase())) {
+                    campo.setText(newVal.toUpperCase());
+                }
+            });
+        }
     }
 
     /**
@@ -200,50 +249,51 @@ public class ClienteController implements Initializable {
         boolean isCE = "CE".equals(tipoDoc);
 
         // Mostrar/ocultar nacionalidad
-        lblNacionalidad.setVisible(isDNI || isCE);
-        lblNacionalidad.setManaged(isDNI || isCE);
-
-        // Buscar el contenedor padre de los radio buttons de nacionalidad
-        if (lblNacionalidad.getParent() != null && lblNacionalidad.getParent() instanceof VBox) {
-            VBox contenedorNacionalidad = (VBox) lblNacionalidad.getParent();
-            contenedorNacionalidad.setVisible(isDNI || isCE);
-            contenedorNacionalidad.setManaged(isDNI || isCE);
+        if (vbxNacionalidad != null) {
+            vbxNacionalidad.setVisible(isDNI || isCE);
+            vbxNacionalidad.setManaged(isDNI || isCE);
         }
 
         // Datos personales (DNI/CE) vs Razón Social (RUC)
+        /*
         gpTres.setVisible(!isRUC);
         gpTres.setManaged(!isRUC);
-        gpCuatro.setVisible(isRUC);
-        gpCuatro.setManaged(isRUC);
+        */
+        gpCuatro.setVisible(true);
+        gpCuatro.setManaged(true);
 
         // Caso especial para CE
-        if (isCE) {
-            gpTres.setVisible(true);
-            gpTres.setManaged(true);
-            gpCuatro.setVisible(false);
-            gpCuatro.setManaged(false);
-        }
+
 
         // Actualizar etiquetas y selecciones
         if (isRUC) {
+            lblEmpresa.setText("Datos de la Empresa");
+            lblNombre.setText("Razón Social*");
+            txtRazSocial.setPromptText("Ingrese la razón social de la empresa");
             lblTipNum.setText("Número de RUC");
             rbnJuridico.setSelected(true);
             rbnNacional.setSelected(true);
-            if (lblSubtitulo != null) {
+            if (lblSubtitulo != null && !modoEdicion) {
                 lblSubtitulo.setText("Complete los datos de la empresa");
             }
         } else if (isDNI) {
+            lblEmpresa.setText("Datos Personales");
+            lblNombre.setText("Apellido Paterno Materno Nombre*");
+            txtRazSocial.setPromptText("Ingrese los apellidos y nombres del cliente");
             lblTipNum.setText("Número de DNI");
             rbnNatural.setSelected(true);
             rbnNacional.setSelected(true);
-            if (lblSubtitulo != null) {
+            if (lblSubtitulo != null && !modoEdicion) {
                 lblSubtitulo.setText("Complete los datos personales del cliente");
             }
         } else if (isCE) {
             lblTipNum.setText("Número de CE");
+            lblEmpresa.setText("Datos Personales");
+            lblNombre.setText("Nombre*");
+            txtRazSocial.setPromptText("Ingrese el nombre del cliente");
             rbnNatural.setSelected(true);
             rbnExtranjero.setSelected(true);
-            if (lblSubtitulo != null) {
+            if (lblSubtitulo != null && !modoEdicion) {
                 lblSubtitulo.setText("Complete los datos del cliente extranjero");
             }
         }
@@ -253,7 +303,10 @@ public class ClienteController implements Initializable {
 
     @FXML
     void cerrarModal(ActionEvent event) {
-        btnSalir.getScene().getWindow().hide();
+        Stage stage = (Stage) vbxPrincipal.getScene().getWindow();
+        if (stage != null) {
+            stage.close();
+        }
     }
 
     @FXML
@@ -271,39 +324,111 @@ public class ClienteController implements Initializable {
             return;
         }
 
-        // Confirmar registro
-        if (Mensaje.confirmacion(null, "Confirmar Registro",
-                "¿Está seguro de registrar este cliente?").get() == ButtonType.OK) {
+        // Mensaje de confirmación
+        String accion = modoEdicion ? "actualizar" : "registrar";
+        String mensaje = "¿Está seguro de " + accion + " este cliente?";
 
-            EntidadTributaria entidad = obtenerDatosCliente();
-            int registro = ArccmcDao.registrar(entidad);
+        if (Mensaje.confirmacion(null, "Confirmar", mensaje).get() == ButtonType.OK) {
+            // Mostrar indicador de carga
+            mostrarCargando(modoEdicion ? "Actualizando cliente..." : "Registrando cliente...");
 
-            if (registro > 0) {
-                registro = ArcctdaDao.registrar(entidad);
-                Mensaje.alerta(null, "Registro Exitoso",
-                        "El cliente se registró correctamente.");
-                btnSalir.getScene().getWindow().hide();
-            } else {
-                Mensaje.error(null, "Error de Registro",
-                        "No se pudo registrar el cliente. Intente nuevamente.");
+            Task<Boolean> task = new Task<>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    return ejecutarGuardarCliente();
+                }
+            };
+
+            task.setOnSucceeded(e -> {
+                ocultarCargando();
+                if (task.getValue()) {
+                    String accionPasada = modoEdicion ? "actualizado" : "registrado";
+                    Mensaje.alerta(null, "Éxito", "Cliente " + accionPasada + " correctamente.");
+                    cerrarModal(null);
+                } else {
+                    Mensaje.error(null, "Error", "No se pudo " + accion + " el cliente.");
+                }
+            });
+
+            task.setOnFailed(e -> {
+                ocultarCargando();
+                Throwable ex = task.getException();
+                LOGGER.log(Level.SEVERE, "Error al guardar cliente", ex);
+                Mensaje.error(null, "Error", ex != null ? ex.getMessage() : "Error desconocido");
+            });
+
+            Thread thread = new Thread(task);
+            thread.setDaemon(true);
+            thread.start();
+        }
+    }
+
+    /**
+     * Ejecuta el guardado del cliente usando el DAO
+     */
+    private boolean ejecutarGuardarCliente() throws SQLException {
+        Cliente cliente = obtenerDatosClienteParaGuardar();
+        ClienteDao dao = new ClienteDao();
+        return dao.guardarCliente(cliente);
+    }
+
+    /**
+     * Obtiene los datos del cliente del formulario para guardar
+     */
+    private Cliente obtenerDatosClienteParaGuardar() {
+        Cliente cliente = new Cliente();
+        String tipoDoc = cbxTipDoc.getValue();
+
+        cliente.setNoCia(NO_CIA);
+        cliente.setNoCliente(txtNumDoc.getText().trim());
+        cliente.setTipoDocumento(tipoDoc);
+        cliente.setNombre(txtRazSocial.getText().trim());
+        switch (tipoDoc) {
+            case "RUC" -> {
+                this.lblEmpresa.setText("Datos de la Empresa");
+                this.lblNombre.setText("Razón Social *");
+                cliente.setTipoPersona("J");
+            }
+            case "DNI" -> {
+                this.lblEmpresa.setText("Datos Personales");
+                this.lblNombre.setText("Apellido Paterno Materno Nombre*");
+                cliente.setTipoPersona("N");
+            }
+            case "CE" -> {
+                this.lblEmpresa.setText("Datos Personales");
+                this.lblNombre.setText("Nombre*");
+                cliente.setTipoPersona("N");
             }
         }
+
+        cliente.setDireccion(txtDirec.getText().trim());
+        cliente.setTelefono(txtTelefono != null ? txtTelefono.getText().trim() : "");
+        cliente.setEmail(txtEmail != null ? txtEmail.getText().trim() : "");
+        cliente.setActivo(chkActivo != null && chkActivo.isSelected() ? "S" : "N");
+        cliente.setExtranjero(rbnExtranjero.isSelected() ? "S" : "N");
+
+        // Ubigeo
+        Arccdp dep = cbxDepartamento.getValue();
+        Arccpr prov = cbxProvincia.getValue();
+        Arccdi dist = cbxDistrito.getValue();
+
+        if (dep != null) cliente.setCodiDepa(dep.getCodDepa());
+        if (prov != null) cliente.setCodiProv(prov.getCodiProv());
+        if (dist != null) cliente.setCodiDist(dist.getCodiDist());
+
+        return cliente;
     }
 
     /**
      * Valida el formulario según el tipo de documento seleccionado
      */
     private boolean validarFormularioSegunTipo(String tipoDoc) {
-        switch (tipoDoc) {
-            case "RUC":
-                return validarCamposRuc();
-            case "DNI":
-                return validarCamposDni();
-            case "CE":
-                return validarCamposCE();
-            default:
-                return false;
-        }
+        return switch (tipoDoc) {
+            case "RUC" -> validarCamposRuc();
+            case "DNI" -> validarCamposDni();
+            case "CE" -> validarCamposCE();
+            default -> false;
+        };
     }
 
     private boolean validarCamposRuc() {
@@ -334,7 +459,7 @@ public class ClienteController implements Initializable {
             mostrarErrorCampo(txtNumDoc, "El número de DNI debe tener 8 dígitos.");
             return false;
         }
-
+        /*
         if (txtApePat.getText().trim().isEmpty()) {
             mostrarErrorCampo(txtApePat, "Debe ingresar el apellido paterno.");
             return false;
@@ -349,7 +474,7 @@ public class ClienteController implements Initializable {
             mostrarErrorCampo(txtPriNom, "Debe ingresar el primer nombre.");
             return false;
         }
-
+        */
         if (txtDirec.getText().trim().isEmpty()) {
             mostrarErrorCampo(txtDirec, "Debe ingresar la dirección.");
             return false;
@@ -366,15 +491,7 @@ public class ClienteController implements Initializable {
             return false;
         }
 
-        if (txtApePat.getText().trim().isEmpty()) {
-            mostrarErrorCampo(txtApePat, "Debe ingresar el apellido paterno.");
-            return false;
-        }
 
-        if (txtPriNom.getText().trim().isEmpty()) {
-            mostrarErrorCampo(txtPriNom, "Debe ingresar el primer nombre.");
-            return false;
-        }
 
         return true;
     }
@@ -401,65 +518,7 @@ public class ClienteController implements Initializable {
         return true;
     }
 
-    /**
-     * Obtiene los datos del cliente del formulario
-     */
-    private EntidadTributaria obtenerDatosCliente() {
-        EntidadTributaria entidad = new EntidadTributaria();
-        String tipoDoc = cbxTipDoc.getValue();
 
-        entidad.setNumeroDocumento(txtNumDoc.getText().trim());
-
-        switch (tipoDoc) {
-            case "RUC":
-                entidad.setTipoDocumento("6");
-                entidad.setNombre(txtRazSocial.getText().trim());
-                break;
-            case "DNI":
-                entidad.setTipoDocumento("1");
-                entidad.setNombre(construirNombreCompleto());
-                break;
-            case "CE":
-                entidad.setTipoDocumento("7");
-                entidad.setNombre(construirNombreCompleto());
-                break;
-        }
-
-        entidad.setDireccion(txtDirec.getText().trim());
-        entidad.setUbigeo(construirUbigeo());
-
-        return entidad;
-    }
-
-    private String construirNombreCompleto() {
-        StringBuilder nombre = new StringBuilder();
-        nombre.append(txtApePat.getText().trim());
-
-        String apeMat = txtApeMat.getText().trim();
-        if (!apeMat.isEmpty()) {
-            nombre.append(" ").append(apeMat);
-        }
-
-        nombre.append(" ").append(txtPriNom.getText().trim());
-
-        String segNom = txtSegNom.getText().trim();
-        if (!segNom.isEmpty()) {
-            nombre.append(" ").append(segNom);
-        }
-
-        return nombre.toString().trim();
-    }
-
-    private String construirUbigeo() {
-        Arccdp dep = cbxDepartamento.getValue();
-        Arccpr prov = cbxProvincia.getValue();
-        Arccdi dist = cbxDistrito.getValue();
-
-        if (dep != null && prov != null && dist != null) {
-            return dep.getCodDepa() + prov.getCodiProv() + dist.getCodiDist();
-        }
-        return "";
-    }
 
     // === CARGA DE UBIGEO ===
 
@@ -503,7 +562,7 @@ public class ClienteController implements Initializable {
         if (departamento == null) return;
 
         ArccprDao dao = new ArccprDao();
-        List<Arccpr> lista = dao.listaProvincias(NO_CIA, departamento.getCodDepa()); // listarProvincias(NO_CIA, departamento.getCodDepa());
+        List<Arccpr> lista = dao.listaProvincias(NO_CIA, departamento.getCodDepa());
 
         if (lista != null) {
             cbxProvincia.getItems().setAll(lista);
@@ -531,7 +590,8 @@ public class ClienteController implements Initializable {
             }
         });
 
-        if (!cbxProvincia.getItems().isEmpty()) {
+        // No seleccionar automáticamente si estamos en modo edición
+        if (!modoEdicion && !cbxProvincia.getItems().isEmpty()) {
             cbxProvincia.getSelectionModel().selectFirst();
             buscarDistrito(null);
         }
@@ -574,7 +634,8 @@ public class ClienteController implements Initializable {
             }
         });
 
-        if (!cbxDistrito.getItems().isEmpty()) {
+        // No seleccionar automáticamente si estamos en modo edición
+        if (!modoEdicion && !cbxDistrito.getItems().isEmpty()) {
             cbxDistrito.getSelectionModel().selectFirst();
         }
     }
@@ -613,17 +674,73 @@ public class ClienteController implements Initializable {
         };
     }
 
+    // === INDICADOR DE CARGA ===
+
+    private void mostrarCargando(String mensaje) {
+        Platform.runLater(() -> {
+            try {
+                loadingStage = new Stage();
+                loadingStage.initStyle(StageStyle.UNDECORATED);
+                loadingStage.initModality(Modality.APPLICATION_MODAL);
+
+                if (vbxPrincipal.getScene() != null && vbxPrincipal.getScene().getWindow() != null) {
+                    loadingStage.initOwner(vbxPrincipal.getScene().getWindow());
+                }
+
+                VBox vbox = new VBox(15);
+                vbox.setAlignment(Pos.CENTER);
+                vbox.setStyle("-fx-background-color: white; -fx-padding: 30; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-border-color: #e2e8f0; -fx-border-radius: 10; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 20, 0, 0, 5);");
+
+                ProgressIndicator progress = new ProgressIndicator();
+                progress.setStyle("-fx-progress-color: #3b82f6;");
+                progress.setPrefSize(50, 50);
+
+                Label label = new Label(mensaje);
+                label.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px; -fx-text-fill: #475569;");
+
+                vbox.getChildren().addAll(progress, label);
+
+                Scene scene = new Scene(vbox);
+                scene.setFill(null);
+                loadingStage.setScene(scene);
+                loadingStage.show();
+                loadingStage.centerOnScreen();
+
+            } catch (Exception e) {
+                LOGGER.warning("No se pudo mostrar indicador de carga: " + e.getMessage());
+            }
+        });
+    }
+
+    private void ocultarCargando() {
+        Platform.runLater(() -> {
+            try {
+                if (loadingStage != null) {
+                    loadingStage.close();
+                    loadingStage = null;
+                }
+            } catch (Exception e) {
+                LOGGER.warning("Error al ocultar indicador de carga: " + e.getMessage());
+            }
+        });
+    }
+
+    // === MÉTODOS PÚBLICOS ===
+
     /**
      * Limpia todos los campos del formulario
      */
     public void limpiarFormulario() {
         txtNumDoc.clear();
         txtRazSocial.clear();
-        txtApePat.clear();
-        txtApeMat.clear();
-        txtPriNom.clear();
-        txtSegNom.clear();
+
         txtDirec.clear();
+        if (txtTelefono != null) txtTelefono.clear();
+        if (txtEmail != null) txtEmail.clear();
+        if (chkActivo != null) chkActivo.setSelected(true);
 
         cbxDepartamento.getSelectionModel().clearSelection();
         cbxProvincia.getItems().clear();
@@ -632,24 +749,26 @@ public class ClienteController implements Initializable {
         cbxTipDoc.setValue("RUC");
         Metodos.configuracionNumeroDocumento(txtNumDoc, "RUC");
 
-        // Limpiar estilos de validación
         limpiarEstilosValidacion(txtNumDoc);
         limpiarEstilosValidacion(txtRazSocial);
-        limpiarEstilosValidacion(txtApePat);
-        limpiarEstilosValidacion(txtApeMat);
-        limpiarEstilosValidacion(txtPriNom);
-        limpiarEstilosValidacion(txtSegNom);
+
         limpiarEstilosValidacion(txtDirec);
 
         Platform.runLater(() -> txtNumDoc.requestFocus());
     }
 
     /**
-     * Establece el modo de edición con datos existentes
+     * Carga un cliente para edición
+     *
+     * @param cliente Cliente a editar
      */
-    public void setClienteParaEditar(EntidadTributaria cliente) {
+    public void cargarClienteParaEditar(Cliente cliente) {
         if (cliente == null) return;
 
+        this.modoEdicion = true;
+        this.clienteActual = cliente;
+
+        // Actualizar títulos
         if (lblTitulo != null) {
             lblTitulo.setText("Editar Cliente");
         }
@@ -660,25 +779,132 @@ public class ClienteController implements Initializable {
             btnRegistrar.setText("Actualizar");
         }
 
-        // Cargar datos del cliente en el formulario
-        txtNumDoc.setText(cliente.getNumeroDocumento());
-        txtDirec.setText(cliente.getDireccion());
+        // Cargar número de documento
+        txtNumDoc.setText(cliente.getNoCliente());
+        txtNumDoc.setDisable(true); // No permitir editar el número de documento
 
-        // Detectar tipo de documento y cargar campos correspondientes
+        // Detectar y establecer tipo de documento
         String tipoDoc = cliente.getTipoDocumento();
-        switch (tipoDoc) {
-            case "6" -> {
-                cbxTipDoc.setValue("RUC");
-                txtRazSocial.setText(cliente.getNombre());
+
+        System.out.println("Tipo de Documento: " + tipoDoc); // Debugging line
+        cbxTipDoc.setValue(tipoDoc);
+
+        txtRazSocial.setText(cliente.getNombre());
+        // Cargar dirección y contacto
+        txtDirec.setText(cliente.getDireccion() != null ? cliente.getDireccion() : "");
+        if (txtTelefono != null) {
+            txtTelefono.setText(cliente.getTelefono() != null ? cliente.getTelefono() : "");
+        }
+        if (txtEmail != null) {
+            txtEmail.setText(cliente.getEmail() != null ? cliente.getEmail() : "");
+        }
+
+        // Cargar estado activo
+        if (chkActivo != null) {
+            chkActivo.setSelected("S".equals(cliente.getActivo()));
+        }
+
+        // Cargar nacionalidad
+        if ("S".equals(cliente.getExtranjero())) {
+            rbnExtranjero.setSelected(true);
+        } else {
+            rbnNacional.setSelected(true);
+        }
+
+        // Cargar tipo persona
+        if ("J".equals(cliente.getTipoPersona())) {
+            rbnJuridico.setSelected(true);
+        } else {
+            rbnNatural.setSelected(true);
+        }
+
+        // Cargar ubigeo
+        cargarUbigeoCliente(cliente);
+    }
+
+
+    /**
+     * Carga el ubigeo del cliente
+     */
+    private void cargarUbigeoCliente(Cliente cliente) {
+        if (cliente.getCodiDepa() == null) return;
+
+        // Buscar y seleccionar departamento
+        Platform.runLater(() -> {
+            // Seleccionar departamento
+            for (Arccdp dep : cbxDepartamento.getItems()) {
+                if (dep.getCodDepa().equals(cliente.getCodiDepa())) {
+                    cbxDepartamento.setValue(dep);
+
+                    // Cargar provincias
+                    ArccprDao provDao = new ArccprDao();
+                    List<Arccpr> provincias = provDao.listaProvincias(NO_CIA, cliente.getCodiDepa());
+                    if (provincias != null) {
+                        cbxProvincia.getItems().setAll(provincias);
+
+                        // Configurar converter
+                        cbxProvincia.setConverter(new StringConverter<>() {
+                            @Override
+                            public String toString(Arccpr item) {
+                                return item == null ? "" : item.getDescProv();
+                            }
+                            @Override
+                            public Arccpr fromString(String string) {
+                                return null;
+                            }
+                        });
+
+                        // Seleccionar provincia
+                        for (Arccpr prov : cbxProvincia.getItems()) {
+                            if (prov.getCodiProv().equals(cliente.getCodiProv())) {
+                                cbxProvincia.setValue(prov);
+
+                                // Cargar distritos
+                                ArccdiDao distDao = new ArccdiDao();
+                                List<Arccdi> distritos = distDao.listaDistrito(NO_CIA, cliente.getCodiDepa(), cliente.getCodiProv());
+                                if (distritos != null) {
+                                    cbxDistrito.getItems().setAll(distritos);
+
+                                    // Configurar converter
+                                    cbxDistrito.setConverter(new StringConverter<>() {
+                                        @Override
+                                        public String toString(Arccdi item) {
+                                            return item == null ? "" : item.getDescDist();
+                                        }
+                                        @Override
+                                        public Arccdi fromString(String string) {
+                                            return null;
+                                        }
+                                    });
+
+                                    // Seleccionar distrito
+                                    for (Arccdi dist : cbxDistrito.getItems()) {
+                                        if (dist.getCodiDist().equals(cliente.getCodiDist())) {
+                                            cbxDistrito.setValue(dist);
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
             }
-            case "1" -> {
-                cbxTipDoc.setValue("DNI");
-                // Aquí se deberían parsear los nombres si están disponibles
-            }
-            case "7" -> {
-                cbxTipDoc.setValue("CE");
-                // Aquí se deberían parsear los nombres si están disponibles
-            }
+        });
+    }
+
+    /**
+     * Establece el modo de edición
+     */
+    public void setModoEdicion(boolean edicion) {
+        this.modoEdicion = edicion;
+        if (txtNumDoc != null) {
+            txtNumDoc.setDisable(edicion);
+        }
+        if (btnRegistrar != null) {
+            btnRegistrar.setText(edicion ? "Actualizar" : "Registrar");
         }
     }
 }

@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Cliente {
-
+    private final StringProperty noCia = new SimpleStringProperty();
     private final StringProperty noCliente = new SimpleStringProperty();
     private final StringProperty nombre = new SimpleStringProperty();
     private final StringProperty telefono = new SimpleStringProperty();
@@ -19,6 +19,52 @@ public class Cliente {
     private final StringProperty codiProv = new SimpleStringProperty();
     private final StringProperty codiDist = new SimpleStringProperty();
     private final StringProperty estabSunat = new SimpleStringProperty();
+
+    private final StringProperty activo = new SimpleStringProperty();
+    private final StringProperty extranjero = new SimpleStringProperty();
+
+    private final StringProperty telefono2 = new SimpleStringProperty();
+
+    public String getNoCia() {
+        return noCia.get();
+    }
+    public StringProperty noCiaProperty() {
+        return noCia;
+    }
+
+    public void setNoCia(String noCia) {
+        this.noCia.set(noCia);
+    }
+
+    public String getActivo() {
+        return activo.get();
+    }
+    public StringProperty activoProperty() {
+        return activo;
+    }
+    public void setActivo(String activo) {
+        this.activo.set(activo);
+    }
+    public String getExtranjero() {
+        return extranjero.get();
+    }
+    public StringProperty extranjeroProperty() {
+        return extranjero;
+    }
+    public void setExtranjero(String extranjero) {
+        this.extranjero.set(extranjero);
+    }
+
+    public String getTelefono2() {
+        return telefono2.get();
+    }
+    public StringProperty telefono2Property() {
+        return telefono2;
+    }
+    public void setTelefono2(String telefono2) {
+        this.telefono2.set(telefono2);
+    }
+
 
     public String getNoCliente() {
         return noCliente.get();

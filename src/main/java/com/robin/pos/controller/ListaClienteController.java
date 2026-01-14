@@ -1,7 +1,8 @@
 package com.robin.pos.controller;
 
-import com.robin.pos.dao.ArccmcDao;
-import com.robin.pos.model.Arccmc;
+import com.robin.pos.dao.ClienteDao;
+import com.robin.pos.model.Cliente;
+import com.robin.pos.util.Mensaje;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -14,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -27,35 +29,37 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Controlador mejorado para la Lista de Clientes
- * Incluye búsqueda avanzada, atajos de teclado y mejor UX
+ * Incluye búsqueda avanzada, atajos de teclado, edición mediante doble clic
  *
  * @author Robin POS
- * @version 2.0
+ * @version 2.1
  */
 public class ListaClienteController implements Initializable {
 
+    private static final Logger LOGGER = Logger.getLogger(ListaClienteController.class.getName());
+
     // === COMPONENTES FXML ===
     @FXML private BorderPane root;
-    @FXML private TableView<Arccmc> tListaCliente;
+    @FXML private TableView<Cliente> tListaCliente;
     @FXML private TextField txtBuscarCliente;
 
     // Columnas de la tabla
-    @FXML private TableColumn<Arccmc, String> colCodigo;
-    @FXML private TableColumn<Arccmc, String> colNombre;
-    @FXML private TableColumn<Arccmc, String> colDocumento;
-    @FXML private TableColumn<Arccmc, String> colTipCliente;
-    @FXML private TableColumn<Arccmc, String> colTipPersona;
-    @FXML private TableColumn<Arccmc, String> colEstado;
+    @FXML private TableColumn<Cliente, String> colCodigo;
+    @FXML private TableColumn<Cliente, String> colNombre;
+    @FXML private TableColumn<Cliente, String> colDocumento;
+    @FXML private TableColumn<Cliente, String> colTipCliente;
+    @FXML private TableColumn<Cliente, String> colTipPersona;
+    @FXML private TableColumn<Cliente, String> colEstado;
 
     // Labels
     @FXML private Label lblContador;
@@ -73,9 +77,9 @@ public class ListaClienteController implements Initializable {
     @FXML private HBox hbxCabecera;
 
     // === DATOS ===
-    private final ObservableList<Arccmc> listaClientes = FXCollections.observableArrayList();
-    private FilteredList<Arccmc> filteredData;
-    private SortedList<Arccmc> sortedData;
+    private final ObservableList<Cliente> listaClientes = FXCollections.observableArrayList();
+    private FilteredList<Cliente> filteredData;
+    private SortedList<Cliente> sortedData;
 
     // === CONSTANTES ===
     private static final String NO_CIA = "01";
@@ -96,77 +100,52 @@ public class ListaClienteController implements Initializable {
      * Configura las columnas de la tabla con sus respectivos valores
      */
     private void configurarColumnas() {
-        // Columnas básicas
+        // Columna código
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("noCliente"));
-        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colTipCliente.setCellValueFactory(new PropertyValueFactory<>("tipoCliente"));
-        colTipPersona.setCellValueFactory(new PropertyValueFactory<>("tipoPersona"));
-
-        // Columna de documento (si existe el campo)
-        if (colDocumento != null) {
-            colDocumento.setCellValueFactory(new PropertyValueFactory<>("nuDocumento"));
-        }
-
-        // Columna de estado con formato personalizado
-        colEstado.setCellValueFactory(new PropertyValueFactory<>("activo"));
-        colEstado.setCellFactory(column -> new TableCell<>() {
+        colCodigo.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
-                    setGraphic(null);
                     setStyle("");
                 } else {
-                    Label badge = new Label();
-                    badge.setAlignment(Pos.CENTER);
-                    badge.setMaxWidth(Double.MAX_VALUE);
+                    setText(item);
+                    setStyle("-fx-font-family: 'Consolas'; -fx-text-fill: #6366f1; -fx-font-weight: bold;");
+                }
+            }
+        });
 
-                    if ("S".equalsIgnoreCase(item)) {
-                        badge.setText("Activo");
-                        badge.setStyle(
-                                "-fx-background-color: #dcfce7;" +
-                                        "-fx-background-radius: 12;" +
-                                        "-fx-padding: 4 10;" +
-                                        "-fx-text-fill: #166534;" +
-                                        "-fx-font-size: 11px;" +
-                                        "-fx-font-weight: bold;"
-                        );
+        // Columna nombre
+        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+
+        // Columna documento (tipo)
+        colDocumento.setCellValueFactory(cellData -> {
+            String tipoDoc = cellData.getValue().getTipoDocumento();
+            String descripcion = obtenerDescripcionTipoDoc(tipoDoc);
+            return new SimpleStringProperty(descripcion);
+        });
+        colDocumento.setStyle("-fx-alignment: CENTER;");
+
+        // Columna tipo cliente
+        if (colTipCliente != null) {
+            colTipCliente.setCellValueFactory(new PropertyValueFactory<>("tipoCliente"));
+            colTipCliente.setCellFactory(col -> new TableCell<>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
                     } else {
-                        badge.setText("Inactivo");
-                        badge.setStyle(
-                                "-fx-background-color: #fee2e2;" +
-                                        "-fx-background-radius: 12;" +
-                                        "-fx-padding: 4 10;" +
-                                        "-fx-text-fill: #991b1b;" +
-                                        "-fx-font-size: 11px;" +
-                                        "-fx-font-weight: bold;"
-                        );
+                        setText(formatTipoCliente(item));
                     }
-
-                    HBox container = new HBox(badge);
-                    container.setAlignment(Pos.CENTER);
-                    setGraphic(container);
-                    setText(null);
                 }
-            }
-        });
+            });
+        }
 
-        // Columna de tipo cliente con formato legible
-        colTipCliente.setCellFactory(column -> new TableCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(formatTipoCliente(item));
-                }
-            }
-        });
-
-        // Columna de tipo persona con formato legible
-        colTipPersona.setCellFactory(column -> new TableCell<>() {
+        // Columna tipo persona
+        colTipPersona.setCellValueFactory(new PropertyValueFactory<>("tipoPersona"));
+        colTipPersona.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -177,6 +156,74 @@ public class ListaClienteController implements Initializable {
                 }
             }
         });
+
+        // Columna estado con badge visual
+        colEstado.setCellValueFactory(new PropertyValueFactory<>("activo"));
+        colEstado.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                    setStyle("");
+                } else {
+                    Label badge = crearBadgeEstado(item);
+                    HBox container = new HBox(badge);
+                    container.setAlignment(Pos.CENTER);
+                    setGraphic(container);
+                    setText(null);
+                }
+            }
+        });
+    }
+
+    /**
+     * Obtiene la descripción del tipo de documento
+     */
+    private String obtenerDescripcionTipoDoc(String tipo) {
+        if (tipo == null) return "";
+        return switch (tipo) {
+            case "6" -> "RUC";
+            case "1" -> "DNI";
+            case "7" -> "CE";
+            case "4" -> "CARNET EXT.";
+            case "0" -> "OTROS";
+            default -> tipo;
+        };
+    }
+
+    /**
+     * Crea un badge visual para el estado
+     */
+    private Label crearBadgeEstado(String activo) {
+        Label badge = new Label();
+        badge.setAlignment(Pos.CENTER);
+        badge.setMaxWidth(Double.MAX_VALUE);
+
+        if ("S".equalsIgnoreCase(activo)) {
+            badge.setText("Activo");
+            badge.setStyle(
+                    "-fx-background-color: #dcfce7;" +
+                            "-fx-background-radius: 12;" +
+                            "-fx-padding: 4 10;" +
+                            "-fx-text-fill: #166534;" +
+                            "-fx-font-size: 11px;" +
+                            "-fx-font-weight: bold;"
+            );
+        } else {
+            badge.setText("Inactivo");
+            badge.setStyle(
+                    "-fx-background-color: #fee2e2;" +
+                            "-fx-background-radius: 12;" +
+                            "-fx-padding: 4 10;" +
+                            "-fx-text-fill: #991b1b;" +
+                            "-fx-font-size: 11px;" +
+                            "-fx-font-weight: bold;"
+            );
+        }
+
+        return badge;
     }
 
     /**
@@ -187,7 +234,6 @@ public class ListaClienteController implements Initializable {
 
         txtBuscarCliente.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredData.setPredicate(cliente -> {
-                // Si el filtro está vacío, mostrar todos
                 if (newValue == null || newValue.trim().isEmpty()) {
                     return true;
                 }
@@ -197,10 +243,9 @@ public class ListaClienteController implements Initializable {
                 // Buscar en múltiples campos
                 if (safeContains(cliente.getNoCliente(), filtroLower)) return true;
                 if (safeContains(cliente.getNombre(), filtroLower)) return true;
-                /*
                 if (safeContains(cliente.getRuc(), filtroLower)) return true;
                 if (safeContains(cliente.getNuDocumento(), filtroLower)) return true;
-                */
+
                 return false;
             });
 
@@ -221,10 +266,7 @@ public class ListaClienteController implements Initializable {
 
         // Placeholder personalizado cuando no hay datos
         Label placeholder = new Label("No se encontraron clientes");
-        placeholder.setStyle(
-                "-fx-font-size: 14px;" +
-                        "-fx-text-fill: #94a3b8;"
-        );
+        placeholder.setStyle("-fx-font-size: 14px; -fx-text-fill: #94a3b8;");
         tListaCliente.setPlaceholder(placeholder);
 
         // Selección de fila completa
@@ -290,11 +332,11 @@ public class ListaClienteController implements Initializable {
         progress.setMaxSize(50, 50);
         tListaCliente.setPlaceholder(progress);
 
-        Task<List<Arccmc>> task = new Task<>() {
+        Task<List<Cliente>> task = new Task<>() {
             @Override
-            protected List<Arccmc> call() throws Exception {
-                ArccmcDao dao = new ArccmcDao();
-                return dao.listar(NO_CIA);
+            protected List<Cliente> call() throws Exception {
+                ClienteDao dao = new ClienteDao();
+                return dao.listarTodos(NO_CIA);
             }
         };
 
@@ -311,6 +353,7 @@ public class ListaClienteController implements Initializable {
 
             Throwable ex = task.getException();
             if (ex != null) {
+                LOGGER.log(Level.SEVERE, "Error al cargar clientes", ex);
                 mostrarError("Error de conexión",
                         "No se pudieron cargar los clientes: " + ex.getMessage());
             }
@@ -328,14 +371,14 @@ public class ListaClienteController implements Initializable {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/com/robin/pos/fxml/Cliente.fxml")
         );
-        VBox vbox = loader.load();
+        Parent root = loader.load();
 
-        Scene scene = new Scene(vbox);
+        Scene scene = new Scene(root);
         Stage stage = new Stage();
 
         stage.setTitle("Nuevo Cliente");
         stage.setScene(scene);
-        stage.initOwner(root.getScene().getWindow());
+        stage.initOwner(this.root.getScene().getWindow());
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setResizable(false);
 
@@ -380,8 +423,11 @@ public class ListaClienteController implements Initializable {
 
     // === MÉTODOS AUXILIARES ===
 
+    /**
+     * Edita el cliente seleccionado - se abre modal con datos cargados
+     */
     private void editarClienteSeleccionado() {
-        Arccmc clienteSeleccionado = tListaCliente.getSelectionModel().getSelectedItem();
+        Cliente clienteSeleccionado = tListaCliente.getSelectionModel().getSelectedItem();
 
         if (clienteSeleccionado == null) {
             mostrarAdvertencia("Selección requerida",
@@ -390,33 +436,48 @@ public class ListaClienteController implements Initializable {
         }
 
         try {
+            // Primero obtener los datos completos del cliente
+            ClienteDao dao = new ClienteDao();
+            Cliente clienteCompleto = dao.buscarPorNumId(NO_CIA, clienteSeleccionado.getNoCliente());
+
+            if (clienteCompleto == null) {
+                mostrarError("Error", "No se encontró el cliente seleccionado.");
+                return;
+            }
+
+            // Cargar el formulario
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/robin/pos/fxml/Cliente.fxml")
             );
-            VBox vbox = loader.load();
+            Parent root = loader.load();
 
-            // Obtener el controlador y pasar el cliente a editar
-            // ClienteController controller = loader.getController();
-            // controller.setCliente(clienteSeleccionado);
+            // Obtener el controlador y cargar los datos del cliente
+            ClienteController controller = loader.getController();
+            controller.cargarClienteParaEditar(clienteCompleto);
 
-            Scene scene = new Scene(vbox);
+            Scene scene = new Scene(root);
             Stage stage = new Stage();
 
-            stage.setTitle("Editar Cliente - " + clienteSeleccionado.getNombre());
+            stage.setTitle("Editar Cliente - " + clienteCompleto.getNombre());
             stage.setScene(scene);
-            stage.initOwner(root.getScene().getWindow());
+            stage.initOwner(this.root.getScene().getWindow());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setResizable(false);
 
+            // Recargar lista al cerrar el formulario
             stage.setOnHidden(e -> cargarClientes());
 
             stage.showAndWait();
 
         } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Error al abrir formulario de edición", e);
             mostrarError("Error", "No se pudo abrir el formulario de edición: " + e.getMessage());
         }
     }
 
+    /**
+     * Maneja el clic en la tabla - doble clic para editar
+     */
     private void handleTableClick(MouseEvent event) {
         if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
             editarClienteSeleccionado();
@@ -464,6 +525,7 @@ public class ListaClienteController implements Initializable {
             case "E" -> "Especial";
             case "M" -> "Mayorista";
             case "V" -> "VIP";
+            case "B" -> "Básico";
             default -> tipo;
         };
     }
@@ -528,7 +590,7 @@ public class ListaClienteController implements Initializable {
      * Obtiene el cliente actualmente seleccionado
      * @return cliente seleccionado o null
      */
-    public Arccmc getClienteSeleccionado() {
+    public Cliente getClienteSeleccionado() {
         return tListaCliente.getSelectionModel().getSelectedItem();
     }
 }

@@ -127,6 +127,7 @@
                                 <!-- Sub-menú Clientes -->
                                 <VBox fx:id="clientesSubmenu" managed="false" spacing="2" style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 5;" visible="false">
                                     <children>
+                                        <!--
                                         <Button fx:id="btnNuevoCliente" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarNuevoCliente" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Nuevo">
                                             <cursor>
                                                 <Cursor fx:constant="HAND" />
@@ -135,7 +136,8 @@
                                                 <Insets left="50.0" />
                                             </padding>
                                         </Button>
-                                        <Button fx:id="btnListaClientes" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarListaClientes" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Lista">
+                                         -->
+                                        <Button fx:id="btnListaClientes" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarListaClientes" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Ficha de Cliente">
                                             <cursor>
                                                 <Cursor fx:constant="HAND" />
                                             </cursor>

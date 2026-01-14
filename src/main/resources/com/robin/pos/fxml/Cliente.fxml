@@ -3,261 +3,245 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
-
 <?import javafx.scene.control.TextField?>
-
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-
 <?import javafx.scene.layout.Region?>
-
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<VBox fx:id="vbxPrincipal"
-      styleClass="root-container"
-      stylesheets="@../css/Cliente.css"
-      xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.robin.pos.controller.ClienteController"
-      VBox.vgrow="ALWAYS"
-      HBox.hgrow="ALWAYS">
+<VBox fx:id="vbxPrincipal" maxHeight="700" prefHeight="650" prefWidth="520" styleClass="root-container" stylesheets="@../css/Cliente.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.ClienteController">
 
-    <!-- ==================== CABECERA (FIJA) ==================== -->
-    <HBox styleClass="header-container" alignment="CENTER_LEFT" spacing="15" minHeight="80" maxHeight="80">
+    <!-- ==================== CABECERA (FIJA - NO SCROLL) ==================== -->
+    <HBox alignment="CENTER_LEFT" maxHeight="70" minHeight="70" prefHeight="70" spacing="15" styleClass="header-container">
         <padding>
-            <Insets top="15" right="20" bottom="15" left="20"/>
+            <Insets bottom="12" left="20" right="20" top="12" />
         </padding>
 
         <!-- Icono de usuario -->
-        <StackPane styleClass="header-icon-container" minWidth="45" minHeight="45" maxWidth="45" maxHeight="45">
-            <SVGPath content="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-                     styleClass="header-icon"
-                     scaleX="1.2" scaleY="1.2"/>
+        <StackPane maxHeight="40" maxWidth="40" minHeight="40" minWidth="40" styleClass="header-icon-container">
+            <SVGPath content="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" scaleX="1.1" scaleY="1.1" styleClass="header-icon" />
         </StackPane>
 
-        <VBox spacing="2" alignment="CENTER_LEFT">
-            <Label fx:id="lblTitulo" text="Registro de Cliente" styleClass="header-title"/>
-            <Label fx:id="lblSubtitulo" text="Complete los datos del cliente" styleClass="header-subtitle"/>
+        <VBox alignment="CENTER_LEFT" spacing="2" HBox.hgrow="ALWAYS">
+            <Label fx:id="lblTitulo" styleClass="header-title" text="Registro de Cliente" />
+            <Label fx:id="lblSubtitulo" styleClass="header-subtitle" text="Complete los datos del cliente" />
         </VBox>
+
+        <!-- Checkbox Activo -->
+        <CheckBox fx:id="chkActivo" selected="true" styleClass="modern-checkbox" text="Cliente Activo">
+            <cursor><Cursor fx:constant="HAND" /></cursor>
+        </CheckBox>
     </HBox>
 
     <!-- ==================== CONTENIDO CON SCROLL ==================== -->
-    <ScrollPane fitToWidth="true"
-                styleClass="content-scroll"
-                VBox.vgrow="ALWAYS"
-                hbarPolicy="NEVER"
-                vbarPolicy="AS_NEEDED">
+    <ScrollPane fx:id="scrollContent" fitToHeight="false" fitToWidth="true" hbarPolicy="NEVER" pannable="true" styleClass="content-scroll" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
 
-        <VBox fx:id="vbxCuerpo" styleClass="form-container" spacing="12">
+        <VBox fx:id="vbxCuerpo" spacing="15" styleClass="form-container">
             <padding>
-                <Insets top="15" right="20" bottom="15" left="20"/>
+                <Insets bottom="20" left="20" right="20" top="15" />
             </padding>
 
             <!-- ===== SECCIÓN: DOCUMENTO ===== -->
-            <VBox styleClass="section-container" spacing="12">
-                <Label text="Información del Documento" styleClass="section-title"/>
+            <VBox spacing="10" styleClass="section-container">
+                <Label styleClass="section-title" text="Información del Documento" />
 
                 <GridPane fx:id="gpDocumento" hgap="15" vgap="8">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="35"/>
-                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="65"/>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="35" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="65" />
                     </columnConstraints>
 
                     <!-- Tipo Documento -->
                     <VBox spacing="5">
-                        <Label text="Tipo Documento" styleClass="field-label"/>
-                        <ComboBox fx:id="cbxTipDoc" maxWidth="Infinity" styleClass="modern-combo">
-                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        <Label styleClass="field-label" text="Tipo Documento" />
+                        <ComboBox fx:id="cbxTipDoc" maxWidth="Infinity" prefHeight="36" styleClass="modern-combo">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
                         </ComboBox>
                     </VBox>
 
                     <!-- Número Documento -->
                     <VBox spacing="5" GridPane.columnIndex="1">
-                        <Label fx:id="lblTipNum" text="Número de Documento" styleClass="field-label"/>
-                        <TextField fx:id="txtNumDoc" promptText="Ingrese el número" styleClass="modern-field"/>
+                        <Label fx:id="lblTipNum" styleClass="field-label" text="Número de Documento" />
+                        <TextField fx:id="txtNumDoc" prefHeight="36" promptText="Ingrese el número" styleClass="modern-field" />
                     </VBox>
+               <rowConstraints>
+                  <RowConstraints />
+               </rowConstraints>
                 </GridPane>
             </VBox>
 
             <!-- ===== SECCIÓN: TIPO PERSONA Y NACIONALIDAD ===== -->
             <GridPane fx:id="gpDos" hgap="15" vgap="8">
                 <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" percentWidth="50"/>
-                    <ColumnConstraints hgrow="SOMETIMES" percentWidth="50"/>
+                    <ColumnConstraints hgrow="SOMETIMES" percentWidth="50" />
+                    <ColumnConstraints hgrow="SOMETIMES" percentWidth="50" />
                 </columnConstraints>
 
                 <!-- Tipo Persona -->
                 <VBox spacing="6">
-                    <Label fx:id="lblTipPersona" text="Tipo de Persona" styleClass="field-label"/>
-                    <HBox styleClass="radio-group" spacing="15" alignment="CENTER_LEFT">
+                    <Label fx:id="lblTipPersona" styleClass="field-label" text="Tipo de Persona" />
+                    <HBox alignment="CENTER_LEFT" prefHeight="36" spacing="15" styleClass="radio-group">
                         <padding>
-                            <Insets top="8" right="12" bottom="8" left="12"/>
+                            <Insets bottom="6" left="12" right="12" top="6" />
                         </padding>
-                        <RadioButton fx:id="rbnJuridico" text="Jurídico" styleClass="modern-radio">
-                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        <RadioButton fx:id="rbnJuridico" styleClass="modern-radio" text="Jurídico">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
                         </RadioButton>
-                        <RadioButton fx:id="rbnNatural" text="Natural" styleClass="modern-radio">
-                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        <RadioButton fx:id="rbnNatural" styleClass="modern-radio" text="Natural">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
                         </RadioButton>
                     </HBox>
                 </VBox>
 
                 <!-- Nacionalidad -->
-                <VBox spacing="6" GridPane.columnIndex="1">
-                    <Label fx:id="lblNacionalidad" text="Nacionalidad" styleClass="field-label"/>
-                    <HBox styleClass="radio-group" spacing="15" alignment="CENTER_LEFT">
+                <VBox fx:id="vbxNacionalidad" spacing="6" GridPane.columnIndex="1">
+                    <Label fx:id="lblNacionalidad" styleClass="field-label" text="Nacionalidad" />
+                    <HBox alignment="CENTER_LEFT" prefHeight="36" spacing="15" styleClass="radio-group">
                         <padding>
-                            <Insets top="8" right="12" bottom="8" left="12"/>
+                            <Insets bottom="6" left="12" right="12" top="6" />
                         </padding>
-                        <RadioButton fx:id="rbnNacional" text="Nacional" styleClass="modern-radio">
-                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        <RadioButton fx:id="rbnNacional" styleClass="modern-radio" text="Nacional">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
                         </RadioButton>
-                        <RadioButton fx:id="rbnExtranjero" text="Extranjero" styleClass="modern-radio">
-                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        <RadioButton fx:id="rbnExtranjero" styleClass="modern-radio" text="Extranjero">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
                         </RadioButton>
                     </HBox>
                 </VBox>
+            <rowConstraints>
+               <RowConstraints />
+            </rowConstraints>
             </GridPane>
 
-            <!-- ===== SECCIÓN: DATOS PERSONA NATURAL (DNI/CE) ===== -->
-            <VBox fx:id="gpTres" styleClass="section-container" spacing="12">
-                <Label text="Datos Personales" styleClass="section-title"/>
-
-                <!-- Apellidos -->
-                <GridPane hgap="15" vgap="8">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50"/>
-                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50"/>
-                    </columnConstraints>
-
-                    <VBox spacing="5">
-                        <Label text="Apellido Paterno *" styleClass="field-label"/>
-                        <TextField fx:id="txtApePat" promptText="Ingrese apellido paterno" styleClass="modern-field"/>
-                    </VBox>
-
-                    <VBox spacing="5" GridPane.columnIndex="1">
-                        <Label text="Apellido Materno *" styleClass="field-label"/>
-                        <TextField fx:id="txtApeMat" promptText="Ingrese apellido materno" styleClass="modern-field"/>
-                    </VBox>
-                </GridPane>
-
-                <!-- Nombres -->
-                <GridPane hgap="15" vgap="8">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50"/>
-                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50"/>
-                    </columnConstraints>
-
-                    <VBox spacing="5">
-                        <Label text="Primer Nombre *" styleClass="field-label"/>
-                        <TextField fx:id="txtPriNom" promptText="Ingrese primer nombre" styleClass="modern-field"/>
-                    </VBox>
-
-                    <VBox spacing="5" GridPane.columnIndex="1">
-                        <Label text="Segundo Nombre" styleClass="field-label"/>
-                        <TextField fx:id="txtSegNom" promptText="Ingrese segundo nombre" styleClass="modern-field"/>
-                    </VBox>
-                </GridPane>
-            </VBox>
-
             <!-- ===== SECCIÓN: RAZÓN SOCIAL (RUC) ===== -->
-            <VBox fx:id="gpCuatro" styleClass="section-container" spacing="10">
-                <Label text="Datos de la Empresa" styleClass="section-title"/>
+            <VBox fx:id="gpCuatro" spacing="10" styleClass="section-container">
+                <Label fx:id="lblEmpresa" styleClass="section-title" text="Datos de la Empresa" />
 
                 <VBox spacing="5">
-                    <Label text="Razón Social *" styleClass="field-label"/>
-                    <TextField fx:id="txtRazSocial" promptText="Ingrese la razón social" styleClass="modern-field"/>
+                    <Label fx:id="lblNombre" styleClass="field-label" text="Razón Social *" />
+                    <TextField fx:id="txtRazSocial" prefHeight="36" promptText="Ingrese la razón social" styleClass="modern-field" />
                 </VBox>
             </VBox>
 
+            <!-- ===== SECCIÓN: CONTACTO ===== -->
+            <VBox fx:id="gpContacto" spacing="10" styleClass="section-container">
+                <Label styleClass="section-title" text="Información de Contacto" />
+
+                <GridPane hgap="15" vgap="8">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50" />
+                    </columnConstraints>
+
+                    <!-- Teléfono / Celular -->
+                    <VBox spacing="5">
+                        <Label styleClass="field-label" text="Teléfono / Celular" />
+                        <TextField fx:id="txtTelefono" prefHeight="36" promptText="Ej: 999888777" styleClass="modern-field" />
+                    </VBox>
+
+                    <!-- Email -->
+                    <VBox spacing="5" GridPane.columnIndex="1">
+                        <Label styleClass="field-label" text="Correo Electrónico" />
+                        <TextField fx:id="txtEmail" prefHeight="36" promptText="Ej: cliente@email.com" styleClass="modern-field" />
+                    </VBox>
+               <rowConstraints>
+                  <RowConstraints />
+               </rowConstraints>
+                </GridPane>
+            </VBox>
+
             <!-- ===== SECCIÓN: DIRECCIÓN ===== -->
-            <VBox fx:id="gpCinco" styleClass="section-container" spacing="10">
-                <Label text="Dirección" styleClass="section-title"/>
+            <VBox fx:id="gpCinco" spacing="10" styleClass="section-container">
+                <Label styleClass="section-title" text="Dirección" />
 
                 <VBox spacing="5">
-                    <Label text="Dirección Completa *" styleClass="field-label"/>
-                    <TextField fx:id="txtDirec" promptText="Ingrese la dirección completa" styleClass="modern-field"/>
+                    <Label styleClass="field-label" text="Dirección Completa *" />
+                    <TextField fx:id="txtDirec" prefHeight="36" promptText="Ingrese la dirección completa" styleClass="modern-field" />
                 </VBox>
             </VBox>
 
             <!-- ===== SECCIÓN: UBIGEO ===== -->
-            <VBox fx:id="gpSeis" styleClass="section-container" spacing="10">
-                <Label text="Ubicación Geográfica" styleClass="section-title"/>
+            <VBox fx:id="gpSeis" spacing="10" styleClass="section-container">
+                <Label styleClass="section-title" text="Ubicación Geográfica" />
 
                 <GridPane hgap="12" vgap="8">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="33"/>
-                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="34"/>
-                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="33"/>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="33" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="34" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="33" />
                     </columnConstraints>
 
                     <!-- Departamento -->
                     <VBox spacing="5">
-                        <Label text="Departamento *" styleClass="field-label"/>
-                        <ComboBox fx:id="cbxDepartamento" maxWidth="Infinity" onAction="#buscarProvincias" styleClass="modern-combo">
-                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        <Label styleClass="field-label" text="Departamento *" />
+                        <ComboBox fx:id="cbxDepartamento" maxWidth="Infinity" onAction="#buscarProvincias" prefHeight="36" styleClass="modern-combo">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
                         </ComboBox>
                     </VBox>
 
                     <!-- Provincia -->
                     <VBox spacing="5" GridPane.columnIndex="1">
-                        <Label text="Provincia *" styleClass="field-label"/>
-                        <ComboBox fx:id="cbxProvincia" maxWidth="Infinity" onAction="#buscarDistrito" styleClass="modern-combo">
-                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        <Label styleClass="field-label" text="Provincia *" />
+                        <ComboBox fx:id="cbxProvincia" maxWidth="Infinity" onAction="#buscarDistrito" prefHeight="36" styleClass="modern-combo">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
                         </ComboBox>
                     </VBox>
 
                     <!-- Distrito -->
                     <VBox spacing="5" GridPane.columnIndex="2">
-                        <Label text="Distrito *" styleClass="field-label"/>
-                        <ComboBox fx:id="cbxDistrito" maxWidth="Infinity" styleClass="modern-combo">
-                            <cursor><Cursor fx:constant="HAND"/></cursor>
+                        <Label styleClass="field-label" text="Distrito *" />
+                        <ComboBox fx:id="cbxDistrito" maxWidth="Infinity" prefHeight="36" styleClass="modern-combo">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
                         </ComboBox>
                     </VBox>
+               <rowConstraints>
+                  <RowConstraints />
+               </rowConstraints>
                 </GridPane>
             </VBox>
+
+            <!-- Espaciador para asegurar que el scroll llegue hasta el final -->
+            <Region minHeight="10" />
+
         </VBox>
     </ScrollPane>
 
-    <!-- ==================== PIE / BOTONES (FIJO) ==================== -->
-    <HBox fx:id="hbxPie" styleClass="footer-container" alignment="CENTER_RIGHT" spacing="12"
-          minHeight="60" maxHeight="60">
+    <!-- ==================== PIE / BOTONES (FIJO - NO SCROLL) ==================== -->
+    <HBox fx:id="hbxPie" alignment="CENTER_RIGHT" maxHeight="60" minHeight="60" prefHeight="60" spacing="12" styleClass="footer-container">
         <padding>
-            <Insets top="12" right="20" bottom="12" left="20"/>
+            <Insets bottom="12" left="20" right="20" top="12" />
         </padding>
 
         <!-- Indicador de campos requeridos -->
         <HBox alignment="CENTER_LEFT" spacing="5">
-            <Label text="*" styleClass="required-indicator"/>
-            <Label text="Campos obligatorios" styleClass="required-text"/>
+            <Label styleClass="required-indicator" text="*" />
+            <Label styleClass="required-text" text="Campos obligatorios" />
         </HBox>
 
-        <Region HBox.hgrow="ALWAYS"/>
+        <Region HBox.hgrow="ALWAYS" />
 
         <!-- Botón Cancelar -->
-        <Button fx:id="btnSalir" text="Cancelar" onAction="#cerrarModal"
-                styleClass="btn-secondary" prefWidth="110" prefHeight="36">
-            <cursor><Cursor fx:constant="HAND"/></cursor>
+        <Button fx:id="btnSalir" onAction="#cerrarModal" prefHeight="36" prefWidth="110" styleClass="btn-secondary" text="Cancelar">
+            <cursor><Cursor fx:constant="HAND" /></cursor>
             <graphic>
-                <SVGPath content="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                         styleClass="btn-icon-secondary" scaleX="0.65" scaleY="0.65"/>
+                <SVGPath content="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" scaleX="0.65" scaleY="0.65" styleClass="btn-icon-secondary" />
             </graphic>
         </Button>
 
         <!-- Botón Registrar -->
-        <Button fx:id="btnRegistrar" text="Registrar" onAction="#guardarCliente"
-                styleClass="btn-primary" prefWidth="120" prefHeight="36">
-            <cursor><Cursor fx:constant="HAND"/></cursor>
+        <Button fx:id="btnRegistrar" onAction="#guardarCliente" prefHeight="36" prefWidth="120" styleClass="btn-primary" text="Registrar">
+            <cursor><Cursor fx:constant="HAND" /></cursor>
             <graphic>
-                <SVGPath content="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
-                         styleClass="btn-icon-primary" scaleX="0.7" scaleY="0.7"/>
+                <SVGPath content="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" scaleX="0.7" scaleY="0.7" styleClass="btn-icon-primary" />
             </graphic>
         </Button>
     </HBox>
