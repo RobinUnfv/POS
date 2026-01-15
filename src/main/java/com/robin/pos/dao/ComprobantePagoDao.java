@@ -218,7 +218,8 @@ public class ComprobantePagoDao {
         xml.append("                <operInafectas>0</operInafectas>\n");
         xml.append("                <tipoAfectacion>10</tipoAfectacion>\n");
         xml.append("                <precIgv>").append(formatearNumero(precioConIgv)).append("</precIgv>\n");
-        xml.append("                <medida>NIU</medida>\n");
+        //xml.append("                <medida>NIU</medida>\n");
+        xml.append("                <medida>").append(detalle.getCodSunat()).append("</medida>\n");
         xml.append("            </arpfol>\n");
 
         return xml.toString();

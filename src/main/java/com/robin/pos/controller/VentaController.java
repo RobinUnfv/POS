@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -46,10 +47,7 @@ public class VentaController implements Initializable {
 
     @FXML
     private Button btnBuscarCliente;
-    /*
-    @FXML
-    private Button btnFactura;
-    */
+
     @FXML
     private Button btnNuevoCliente;
 
@@ -85,6 +83,9 @@ public class VentaController implements Initializable {
 
     @FXML
     private TableColumn<DetalleVenta, String> colDescripcion;
+
+    @FXML
+    private TableColumn<DetalleVenta, String> colUM;
 
     @FXML
     private TableColumn<DetalleVenta, Double> colCantidad;
@@ -130,10 +131,7 @@ public class VentaController implements Initializable {
 
     @FXML
     private Button btnEliminarProducto;
-    /*
-    @FXML
-    private Label lblNumDoc;
-    */
+
     @FXML
     private Label lblRazSocNom;
     @FXML
@@ -345,7 +343,7 @@ public class VentaController implements Initializable {
         // COLUMNA CANTIDAD
         // ===============================================
         colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
-        colCantidad.setStyle("-fx-alignment: CENTER-RIGHT;");
+        colCantidad.setStyle("-fx-alignment: CENTER;");
         colCantidad.setCellFactory(tc -> new DoubleCell<>());
         colCantidad.setOnEditCommit(event -> {
             if (!Objects.equals(event.getNewValue(), event.getOldValue())) {
@@ -404,6 +402,17 @@ public class VentaController implements Initializable {
         colTotal.setSortable(false);
         colTotal.setMinWidth(100);
         colTotal.setMaxWidth(130);
+
+
+        colUM.setCellValueFactory(new PropertyValueFactory<>("codSunat"));
+        colUM.setStyle("-fx-alignment: CENTER;");
+        colUM.setEditable(false);
+        colUM.setResizable(false);
+        colUM.setReorderable(false);
+        colUM.setSortable(false);
+        colUM.setMinWidth(50);
+        colUM.setMaxWidth(50);
+
     }
 
     @FXML
@@ -657,8 +666,10 @@ public class VentaController implements Initializable {
                             dv.setItem(this.listaDetalleVentas.size() + 1);
                             dv.setArinda1(arinda1);
                             dv.setCantidad(1.0);
-                            dv.setPrecio(0.0);
+                            BigDecimal precio = arinda1.getCostoUni() != null ? arinda1.getCostoUni() : BigDecimal.ZERO;
+                            dv.setPrecio(precio.doubleValue());
                             dv.setIgv(0.0);
+                            dv.setCodSunat(arinda1.getMedida());
 
                             this.listaDetalleVentas.add(dv);
 
@@ -761,9 +772,10 @@ public class VentaController implements Initializable {
         dv.setItem(this.listaDetalleVentas.size() + 1);
 
         Arinda1 arinda1 = new Arinda1();
-        arinda1.setCodigo(Metodos.generarTextoAleatorio(6));
+        arinda1.setCodigo(Metodos.generarTextoAleatorio(8));
         arinda1.setDescripcion("");
         dv.setArinda1(arinda1);
+        dv.setCodSunat("NIU");
         dv.setCantidad(1.0);
         dv.setPrecio(0.0);
         dv.setIgv(0.0);

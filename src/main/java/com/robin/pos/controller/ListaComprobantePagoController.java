@@ -508,11 +508,12 @@ public class ListaComprobantePagoController implements Initializable {
                 }
 
                 List<Arfafl> detalle = arfaflDao.listarDetallePorFactura(NO_CIA, tipoDoc, noFactu);
+                /*
                 if (detalle == null || detalle.isEmpty()) {
-                    // Intentar con método alternativo
+
                     detalle = arfaflDao.listarDetalleConArticulo(NO_CIA, tipoDoc, noFactu);
                 }
-
+                */
                 if (detalle == null || detalle.isEmpty()) {
                     throw new Exception("No se encontró el detalle del comprobante: " + noFactu);
                 }

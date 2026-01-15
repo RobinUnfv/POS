@@ -164,8 +164,8 @@ public class ReporteComprobantePago {
         params.put("MONEDA", venta.getMoneda());
         params.put("VENDEDOR", venta.getVendedor());
         // params.put("ORDEN_COMPRA", venta.getOrdenCompra() != null ? venta.getOrdenCompra() : "");
-        params.put("ORDEN_COMPRA", resultado.getNoOrden() != null ? resultado.getNoOrden() : "");
-        params.put("GUIA_REMISION", resultado.getNoGuia() != null ? resultado.getNoGuia() : "----------");
+        params.put("ORDEN_COMPRA", resultado.getNoOrden() != null ? resultado.getNoOrden() : "-----");
+        params.put("GUIA_REMISION", resultado.getNoGuia() != null ? resultado.getNoGuia() : "-----");
         // params.put("ENTREGA_DIRECCION", cliente.getDireccion());
 
         // Calcular totales

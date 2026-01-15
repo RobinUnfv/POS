@@ -12,6 +12,7 @@ public class DetalleVenta {
     private final DoubleProperty precio = new SimpleDoubleProperty();
     private final DoubleProperty igv = new SimpleDoubleProperty();
     private final DoubleProperty total = new SimpleDoubleProperty();
+    private final StringProperty codSunat = new SimpleStringProperty();
 
     private BooleanProperty resaltado = new SimpleBooleanProperty(false);
 
@@ -21,6 +22,8 @@ public class DetalleVenta {
 
         this.resaltado.set(false);
     }
+
+
 
     public Integer getItem() {
         return item.get();
@@ -82,5 +85,15 @@ public class DetalleVenta {
 
     public void setResaltado(boolean resaltado) {
         this.resaltado.set(resaltado);
+    }
+
+    public String getCodSunat() {
+        return codSunat.get();
+    }
+    public StringProperty codSunatProperty() {
+        return codSunat;
+    }
+    public void setCodSunat(String codSunat) {
+        this.codSunat.set(codSunat);
     }
 }

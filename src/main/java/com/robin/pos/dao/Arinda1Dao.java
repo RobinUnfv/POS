@@ -234,11 +234,13 @@ public class Arinda1Dao {
         List<Arinda1> listArinda1 = new ArrayList<>();
 
         String sql = """
-            SELECT NO_ARTI AS CODIGO, DESCRIPCION
-            FROM INVE.ARINDA1
-            WHERE NO_CIA = ?
-            AND VIGENTE = ?
-            ORDER BY DESCRIPCION
+            SELECT I.NO_ARTI AS CODIGO, I.DESCRIPCION, I.COSTO_UNI, M.COD_SUNAT1
+            FROM INVE.ARINDA1 I, INVE.ARINUM M
+            WHERE I.NO_CIA = ?
+            AND I.VIGENTE = ?
+            AND M.NO_CIA = I.NO_CIA
+            AND M.UNIDAD = I.MEDIDA
+            ORDER BY I.DESCRIPCION
             """;
 
         Connection cx = null;
@@ -253,9 +255,10 @@ public class Arinda1Dao {
                 Arinda1 arinda1 = new Arinda1();
                 arinda1.setCodigo(rs.getString("CODIGO"));
                 arinda1.setDescripcion(rs.getString("DESCRIPCION"));
+                arinda1.setMedida(rs.getString("COD_SUNAT1"));
+                arinda1.setCostoUni(rs.getBigDecimal("COSTO_UNI"));
                 listArinda1.add(arinda1);
             }
-
             rs.close();
             ps.close();
         } catch (SQLException ex) {

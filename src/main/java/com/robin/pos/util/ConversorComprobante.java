@@ -174,6 +174,8 @@ public class ConversorComprobante {
         articulo.setMedida(arfafl.getMedida());
         detalle.setArinda1(articulo);
 
+        detalle.setCodSunat(arfafl.getMedida());
+
         // Cantidad
         BigDecimal cantidad = arfafl.getCantidadFact();
         if (cantidad != null) {

@@ -184,7 +184,7 @@ public class ArfaflDao {
         String sql = """
             SELECT F.NO_CIA, F.TIPO_DOC, F.NO_FACTU, F.NO_ARTI, P.DESCRIPCION, 
                    F.MEDIDA, F.CONSECUTIVO, F.CANTIDAD_FACT, F.PRECIO_UNIT, 
-                   F.IMP_IGV, F.TOTAL, F.TOTAL_LIN, F.PREC_IGV
+                   F.IMP_IGV, F.TOTAL, F.TOTAL_LIN, F.PREC_IGV, F.MEDIDA
             FROM FACTU.ARFAFL F, FACTU.ARFAFE X, FACTU.ARPFOL P 
             WHERE F.NO_CIA = ?
             AND F.TIPO_DOC = ?
@@ -285,6 +285,8 @@ public class ArfaflDao {
         arfafl.setTotal(rs.getBigDecimal("TOTAL"));
         arfafl.setTotalLin(rs.getBigDecimal("TOTAL_LIN"));
         arfafl.setPrecIgv(rs.getBigDecimal("PREC_IGV"));
+
+        System.out.println("FACTU => "+arfafl.getMedida());
 
         return arfafl;
     }

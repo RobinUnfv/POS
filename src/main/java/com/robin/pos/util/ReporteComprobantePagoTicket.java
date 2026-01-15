@@ -224,9 +224,9 @@ public class ReporteComprobantePagoTicket {
         // Condición de pago y otros
         params.put("CONDICION_PAGO", venta.getCondicionPago() != null ? venta.getCondicionPago() : "CONTADO");
         params.put("MONEDA", "S/");
-        params.put("VENDEDOR", venta.getVendedor() != null ? venta.getVendedor() : "");
-        params.put("ORDEN_COMPRA", resultado.getNoOrden() != null ? resultado.getNoOrden() : "");
-        params.put("GUIA_REMISION", resultado.getNoGuia() != null ? resultado.getNoGuia() : "");
+        params.put("VENDEDOR", venta.getVendedor() != null ? venta.getVendedor() : "--");
+        params.put("ORDEN_COMPRA", resultado.getNoOrden() != null ? resultado.getNoOrden() : "-----");
+        params.put("GUIA_REMISION", resultado.getNoGuia() != null ? resultado.getNoGuia() : "-----");
 
         // Calcular totales
         BigDecimal totalConIgv = calcularTotalConIgv(detalles);

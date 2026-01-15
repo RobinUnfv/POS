@@ -139,11 +139,12 @@
                 <!-- Tabla de Venta -->
                 <TableView fx:id="tVenta" onKeyPressed="#tVentaKeyPressed" styleClass="tabla-venta" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colItem" minWidth="37.599915742874146" prefWidth="42.399964570999146" resizable="false" text="Item" />
-                        <TableColumn fx:id="colDescripcion" minWidth="180.00000381469727" prefWidth="402.4000053405762" text="Descripción" />
-                        <TableColumn fx:id="colCantidad" minWidth="0.0" prefWidth="59.199981689453125" text="Cant." />
-                        <TableColumn fx:id="colPrecio" minWidth="89.59991455078125" prefWidth="97.59991455078125" text="Precio Unit." />
-                        <TableColumn fx:id="colTotal" minWidth="94.39990234375" prefWidth="112.0" text="Total" />
+                        <TableColumn fx:id="colItem" minWidth="36.80001950263977" prefWidth="41.600037813186646" resizable="false" text="Item" />
+                        <TableColumn fx:id="colDescripcion" minWidth="180.00000381469727" prefWidth="356.0000114440918" text="Descripción" />
+                  <TableColumn fx:id="colUM" minWidth="0.0" prefWidth="38.4000244140625" text="UM" />
+                        <TableColumn fx:id="colCantidad" minWidth="0.0" prefWidth="52.0" text="Cant." />
+                        <TableColumn fx:id="colPrecio" minWidth="89.59991455078125" prefWidth="110.39999389648438" text="Precio Unit." />
+                        <TableColumn fx:id="colTotal" minWidth="94.39990234375" prefWidth="117.5999755859375" text="Total" />
                     </columns>
                     <placeholder>
                         <Label styleClass="placeholder-text" text="No hay productos agregados" />

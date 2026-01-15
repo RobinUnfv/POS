@@ -40,7 +40,8 @@ public class DetalleComprobante {
         dc.setLinea(String.valueOf(dv.getItem()));
         dc.setCodigo(dv.getArinda1().getCodigo());
         dc.setDescripcion(dv.getArinda1().getDescripcion());
-        dc.setUnidad("NIU"); // Unidad por defecto
+        //dc.setUnidad("NIU"); // Unidad por defecto
+        dc.setUnidad(dv.getCodSunat());
         dc.setCantidad(BigDecimal.valueOf(dv.getCantidad()));
 
         // Calcular valores
