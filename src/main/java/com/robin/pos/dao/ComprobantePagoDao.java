@@ -550,14 +550,14 @@ public class ComprobantePagoDao {
         List<ComprobantePago> lista = new ArrayList<>();
 
         String sql = """
-            SELECT NO_FACTU, TRUNC(FECHA) AS FECHA, TIPO_DOC_CLI, NUM_DOC_CLI,
+            SELECT NO_FACTU, FECHA, TIPO_DOC_CLI, NUM_DOC_CLI,
                    NBR_CLIENTE, MONEDA, TOTAL
             FROM FACTU.ARFAFE
             WHERE NO_CIA = ?
             AND TIPO_DOC = ?
             AND ESTADO = ?
             AND TRUNC(FECHA) BETWEEN ? AND ?
-            ORDER BY FECHA DESC
+            ORDER BY NO_FACTU DESC
             """;
 
         Connection cx = null;

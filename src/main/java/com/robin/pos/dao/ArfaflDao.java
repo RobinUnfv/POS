@@ -286,8 +286,6 @@ public class ArfaflDao {
         arfafl.setTotalLin(rs.getBigDecimal("TOTAL_LIN"));
         arfafl.setPrecIgv(rs.getBigDecimal("PREC_IGV"));
 
-        System.out.println("FACTU => "+arfafl.getMedida());
-
         return arfafl;
     }
 }

@@ -196,7 +196,8 @@ public class ReporteComprobantePago {
                     cliente.getTipoDocumento(),
                     cliente.getNumeroDocumento()
             );
-            params.put("QR_CODE_IMAGE", qrImage);
+            //params.put("QR_CODE_IMAGE", qrImage); // Se muestra el QR
+            params.put("QR_CODE_IMAGE", null); //Nexer no quiere el QR
         } catch (Exception e) {
             LOGGER.warning("No se pudo generar código QR: " + e.getMessage());
         }
