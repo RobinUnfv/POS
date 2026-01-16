@@ -184,7 +184,8 @@ public class VentaController implements Initializable {
         txtPago.setTextFormatter(new TextFormatter<String>(change ->
                 change.getControlNewText().matches("\\d*(\\.\\d{0,2})?") ? change : null));
 
-        this.mostrarGuiaRemision(false);
+        //this.mostrarGuiaRemision(false);
+        this.mostrarGuiaRemision(true);
         // Configurar botón de boleta como seleccionado por defecto
         tipoComprobante = "B";
         btnBoleta.setSelected(true);
@@ -1039,7 +1040,8 @@ public class VentaController implements Initializable {
         lblTotal.setText("S/ 0.00");
 
         // Ocultar guía de remisión
-        mostrarGuiaRemision(false);
+        //mostrarGuiaRemision(false);
+        mostrarGuiaRemision(true);
 
         // Actualizar fecha
         txtFechaVenta.setValue(LocalDate.now());
@@ -1165,7 +1167,8 @@ public class VentaController implements Initializable {
             tipoComprobante = "B";
             cbxDocIdentidad.setValue("OTR");
             validarTipoDocumento();
-            this.mostrarGuiaRemision(false);
+            //this.mostrarGuiaRemision(false);
+            mostrarGuiaRemision(true);
 
             // Estilo seleccionado para BOLETA
             btnBoleta.setStyle(
