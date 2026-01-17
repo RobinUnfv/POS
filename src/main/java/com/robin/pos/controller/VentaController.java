@@ -1093,7 +1093,8 @@ public class VentaController implements Initializable {
                 txtFechaVenta.getValue() : LocalDate.now());
 
         // Guía de remisión (solo para facturas)
-        if ("F".equals(tipoComprobante) && txtGuiaRemision.getText() != null
+        //if ("F".equals(tipoComprobante) && txtGuiaRemision.getText() != null
+        if ( txtGuiaRemision.getText() != null
                 && !txtGuiaRemision.getText().trim().isEmpty()) {
             params.setGuiaRemision(txtGuiaRemision.getText().trim());
         }
