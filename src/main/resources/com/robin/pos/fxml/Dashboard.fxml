@@ -291,7 +291,7 @@
                         <Tooltip text="Colapsar/Expandir Menú" />
                     </tooltip>
                 </Button>
-            <Label prefHeight="38.0" prefWidth="398.0" text="CORPORACION TEXTIL CELIA E.I.R.L.">
+            <Label prefHeight="38.0" prefWidth="398.0" text="CORPORACION DICO E.I.R.L.">
                <font>
                   <Font name="Calibri Light" size="18.0" />
                </font>

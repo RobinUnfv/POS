@@ -26,13 +26,13 @@ public class ReporteComprobantePago {
     private static final String JASPER_PATH = "/com/robin/pos/reportes/comprobantePago.jasper";
     private static final String LOGO_PATH = "/com/robin/pos/imagenes/logos-nexer.png";
 
-    private String empresaNombre = "CORPORACION TEXTIL CELIA E.I.R.L.";
-    private String empresaActividad = "EN DISEÑO Y MODELOS EXCLUSIVOS EN PRODUCTOS TEXTILES - \nPRENDAS DE VESTIR - CON PRECIOS ESPECIALES PARA PROVINCIA - \nVENTAS POR MAYOR Y MENOR";
-    private String empresaDireccion = "JR. MARISCAL AGUSTIN GAMARRA NRO. 676 INT. 262 URB. EL PORVENIR - LA VICTORIA - LIMA - LIMA";
-    private String empresaRuc = "20609272016";
-    private String empresaTelefonos = "/";
+    private String empresaNombre = "CORPORACION DICO E.I.R.L.";
+    private String empresaActividad = "EN DISEÑO Y MODELOS EXCLUSIVOS ROPA PARA BEBES - \nCAMPAÑA ESCOLAR PRECIOS ESPECIALES PARA PROVINCIAS - \nVENTA POR MAYOR Y MENOR";
+    private String empresaDireccion = "JR. GAMARRA NRO. 676 INT. 132A - LA VICTORIA - LIMA - LIMA";
+    private String empresaRuc = "20548167150";
+    private String empresaTelefonos = "473-1175";
     private String empresaWeb = "";
-    private String empresaEmail = "";
+    private String empresaEmail = "DICO.001@GMAIL.COM";
     private String bancoCuentaSoles = "191-9409603-0-93";
     private String bancoCuentaDolares = "00219100940960309350";
 
@@ -196,8 +196,8 @@ public class ReporteComprobantePago {
                     cliente.getTipoDocumento(),
                     cliente.getNumeroDocumento()
             );
-            //params.put("QR_CODE_IMAGE", qrImage); // Se muestra el QR
-            params.put("QR_CODE_IMAGE", null); //Nexer no quiere el QR
+           params.put("QR_CODE_IMAGE", qrImage); // Se muestra el QR
+
         } catch (Exception e) {
             LOGGER.warning("No se pudo generar código QR: " + e.getMessage());
         }

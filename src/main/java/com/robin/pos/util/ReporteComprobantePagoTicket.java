@@ -39,10 +39,10 @@ public class ReporteComprobantePagoTicket {
     private static final String LOGO_PATH = "/com/robin/pos/imagenes/logos-nexer.png";
 
     // Datos de la empresa (pueden ser configurables)
-    private String empresaNombre = "CORPORACION TEXTIL CELIA E.I.R.L.";
-    private String empresaActividad = "EN DISEÑO Y MODELOS EXCLUSIVOS EN PRODUCTOS TEXTILES - \nPRENDAS DE VESTIR - CON PRECIOS ESPECIALES PARA PROVINCIA - \nVENTAS POR MAYOR Y MENOR";
-    private String empresaDireccion = "JR. GAMARRA NRO. 676 INT. 262\nLA VICTORIA - LIMA - LIMA";
-    private String empresaRuc = "20609272016";
+    private String empresaNombre = "CORPORACION DICO E.I.R.L.";
+    private String empresaActividad = "EN DISEÑO Y MODELOS EXCLUSIVOS ROPA PARA BEBES - \nCAMPAÑA ESCOLAR PRECIOS ESPECIALES PARA PROVINCIAS - \nVENTA POR MAYOR Y MENOR";
+    private String empresaDireccion = "JR. GAMARRA NRO. 676 INT. 132A - LA VICTORIA - LIMA - LIMA";
+    private String empresaRuc = "20548167150";
     private String empresaTelefonos = "";
     private String empresaEmail = "";
     private String bancoCuentaSoles = "191-9409603-0-93";
