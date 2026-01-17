@@ -295,7 +295,7 @@ Operaciones Gravadas]]></text>
 		<element kind="textField" uuid="f6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9a0b1c" x="476" y="52" width="74" height="15" fontSize="8.0" pattern="#,##0.00" hTextAlign="Right" vTextAlign="Middle">
 			<expression><![CDATA[$P{IGV_TOTAL}]]></expression>
 		</element>
-		<element kind="staticText" uuid="a7b8c9d0-e1f2-3a4b-5c6d-7e8f9a0b1c2d" x="383" y="74" width="70" height="15" fontSize="10.0" underline="false" bold="true" hTextAlign="Right" vTextAlign="Middle">
+		<element kind="staticText" uuid="a7b8c9d0-e1f2-3a4b-5c6d-7e8f9a0b1c2d" x="383" y="74" width="70" height="15" fontSize="10.0" bold="true" underline="false" hTextAlign="Right" vTextAlign="Middle">
 			<text><![CDATA[Importe Total]]></text>
 		</element>
 		<element kind="staticText" uuid="b8c9d0e1-f2a3-4b5c-6d7e-8f9a0b1c2d3e" x="457" y="74" width="20" height="15" forecolor="#080707" fontSize="9.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
@@ -320,7 +320,7 @@ Operaciones Gravadas]]></text>
 			<text><![CDATA[Sus Pagos:]]></text>
 		</element>
 		<element kind="textField" uuid="f8a9b0c1-d2e3-4f5a-6b7c-8d9e0f1a2b3c" x="61" y="134" width="495" height="16" fontSize="7.0" vTextAlign="Top">
-			<expression><![CDATA["Depositar en: Bco. BANCO DE CREDITO - Cuenta Soles: " + $P{BANCO_CUENTA_SOLES} + " - Cuenta Dolares: " + $P{BANCO_CUENTA_DOLARES}]]></expression>
+			<expression><![CDATA["Depositar en: Bco. BANCO DE CREDITO - Cuenta Soles: " + $P{BANCO_CUENTA_SOLES} + " - CCI : " + $P{BANCO_CUENTA_DOLARES}]]></expression>
 		</element>
 		<element kind="textField" uuid="b6c7d8e9-f0a1-2b3c-4d5e-6f7a8b9c0d1e" x="-1" y="1" width="550" height="15" fontSize="9.0" bold="true" vTextAlign="Middle">
 			<expression><![CDATA["SON : " + $P{SON}]]></expression>

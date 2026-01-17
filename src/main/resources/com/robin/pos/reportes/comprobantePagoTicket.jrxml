@@ -136,14 +136,17 @@
 		<element kind="textField" uuid="e0f1a2b3-c4d5-6e7f-8a9b-012345678901" x="0" y="151" width="206" height="12" fontSize="6.0" textAdjust="StretchHeight" hTextAlign="Center" vTextAlign="Middle">
 			<expression><![CDATA[$P{CLIENTE_NOMBRE}]]></expression>
 		</element>
-		<element kind="staticText" uuid="f1a2b3c4-d5e6-7f8a-9b0c-123456789012" x="0" y="163" width="206" height="8" fontSize="5.0" hTextAlign="Center" vTextAlign="Middle">
-			<text><![CDATA[---]]></text>
-		</element>
-		<element kind="textField" uuid="a2b3c4d5-e6f7-8a9b-0c1d-234567890123" x="0" y="171" width="206" height="10" fontSize="6.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+		<element kind="textField" uuid="a2b3c4d5-e6f7-8a9b-0c1d-234567890123" x="0" y="176" width="206" height="9" fontSize="6.0" bold="true" hTextAlign="Center" vTextAlign="Bottom">
 			<expression><![CDATA[$P{TIP_DOC_CLI} + " " + $P{CLIENTE_RUC}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
-		<element kind="textField" uuid="b3c4d5e6-f7a8-9b0c-1d2e-345678901234" x="0" y="183" width="206" height="10" fontSize="6.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+		<element kind="textField" uuid="b3c4d5e6-f7a8-9b0c-1d2e-345678901234" x="0" y="185" width="206" height="9" fontSize="6.0" bold="true" hTextAlign="Center" vTextAlign="Bottom">
 			<expression><![CDATA["FECHA: " + $P{FECHA_EMISION}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="textField" uuid="9494aa34-c54b-43f3-b656-93002fc6109d" x="0" y="164" width="206" height="10" fontSize="6.0" textAdjust="StretchHeight" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$P{CLIENTE_DIRECCION}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
 	</title>
 	<columnHeader height="25" splitType="Stretch">
