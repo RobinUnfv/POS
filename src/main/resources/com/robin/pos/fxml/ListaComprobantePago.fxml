@@ -11,6 +11,8 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
@@ -83,19 +85,34 @@
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
             
-            <Region prefHeight="46.0" prefWidth="134.0" HBox.hgrow="ALWAYS" />
+            <Region prefHeight="46.0" prefWidth="39.0" HBox.hgrow="ALWAYS" />
             
             <!-- Botones de acción -->
             <HBox alignment="CENTER_RIGHT" spacing="8">
                 
                 <!-- Botón Actualizar -->
-                <Button fx:id="btnActualizar" onAction="#actualizarLista" styleClass="btn-action btn-refresh">
-                    <graphic>
-                        <SVGPath content="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" scaleX="0.7" scaleY="0.7" styleClass="btn-icon" />
-                    </graphic>
-                    <tooltip><Tooltip text="Actualizar lista (F5)" /></tooltip>
+                <Button fx:id="btnDescargaPdf" onAction="#descargarPdf" prefHeight="25.0" prefWidth="34.0" styleClass="btn-pfd">
+                    <tooltip><Tooltip text="Descarga PDF" /></tooltip>
                     <cursor><Cursor fx:constant="HAND" /></cursor>
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../imagenes/PDF.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
                 </Button>
+            <Button fx:id="btnActualizar1" onAction="#actualizarLista" styleClass="btn-action btn-refresh">
+               <graphic>
+                  <SVGPath content="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" scaleX="0.7" scaleY="0.7" styleClass="btn-icon" />
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Actualizar lista (F5)" />
+               </tooltip>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
             </HBox>
         </HBox>
     </VBox>

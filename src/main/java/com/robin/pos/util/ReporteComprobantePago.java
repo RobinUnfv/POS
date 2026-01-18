@@ -94,6 +94,35 @@ public class ReporteComprobantePago {
         }
     }
 
+    public void generarReportePDf(ResultadoEmision resultado,
+                               List<DetalleVenta> detalles,
+                               DatosCliente datosCliente,
+                               DatosVenta datosVenta) {
+        try {
+            // Cargar el reporte compilado o compilarlo desde JRXML
+            JasperReport jasperReport = cargarReporte();
+
+            // Preparar los parámetros
+            Map<String, Object> parametros = prepararParametros(resultado, datosCliente, datosVenta, detalles);
+
+            // Convertir detalles a DetalleComprobante para el datasource
+            List<DetalleComprobante> listaDetalles = convertirDetalles(detalles, datosVenta.getPorcentajeIgv());
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(listaDetalles);
+
+            // Llenar el reporte
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
+            //String tipoComprobante = Metodos.getTipoComprobante(resultado.getNoFactu());
+            String carpetaDescargas = GestorDescargas.getCarpetaDescargas();
+            String nombreArchivo = carpetaDescargas + "/" + resultado.getNoFactu()+ ".pdf";
+            JasperExportManager.exportReportToPdfFile(jasperPrint, nombreArchivo);
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al generar PDF", e);
+            Mensaje.error(null, "Error de Reporte",
+                    "No se pudo generar el PDF: " + e.getMessage());
+        }
+    }
+
     /**
      * Convierte la lista de DetalleVenta a DetalleComprobante
      */

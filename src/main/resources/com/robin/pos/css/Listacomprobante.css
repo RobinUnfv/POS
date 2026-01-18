@@ -128,6 +128,13 @@
     -fx-fill: white;
 }
 
+.btn-pfd {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-border-color: red;
+    -fx-border-radius: 4px;
+}
+
 /* === CONTADOR === */
 .counter-container {
     -fx-background-color: #ecfdf5;
@@ -157,6 +164,7 @@
     -fx-font-size: 12px;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
+    -fx-background-color: transparent;
 }
 
 .btn-action:hover {

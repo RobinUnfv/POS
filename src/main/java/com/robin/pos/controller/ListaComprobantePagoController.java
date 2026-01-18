@@ -79,6 +79,8 @@ public class ListaComprobantePagoController implements Initializable {
     @FXML private Button btnCopiaPOS;
     @FXML private Button btnActualizar;
     @FXML private Button btnBuscarFechas;
+    @FXML
+    private Button btnDescargaPdf;
 
     // === DATOS ===
     private final ObservableList<ComprobantePago> listaComprobantes = FXCollections.observableArrayList();
@@ -774,4 +776,86 @@ public class ListaComprobantePagoController implements Initializable {
     public ComprobantePago getComprobanteSeleccionado() {
         return tblComprobantes.getSelectionModel().getSelectedItem();
     }
+
+    @FXML
+    void descargarPdf(ActionEvent event) {
+        ComprobantePago seleccionado = tblComprobantes.getSelectionModel().getSelectedItem();
+
+        if (seleccionado == null) {
+            Mensaje.alerta(null, "Selección requerida",
+                    "Debe seleccionar un comprobante.");
+            return;
+        }
+
+        String noFactu = seleccionado.getNoFactu();
+        String tipoDoc = obtenerCodigoTipoComprobante(cbxTipoDocu.getValue());
+
+        // Mostrar indicador de carga
+        mostrarCargando("Generando PDF...");
+        actualizarEstado("Generando PDF...");
+
+        Task<DatosComprobanteCompleto> task = new Task<>() {
+            @Override
+            protected DatosComprobanteCompleto call() throws Exception {
+                // 1. Obtener datos de la base de datos
+                ArfafeDao arfafeDao = new ArfafeDao();
+                ArfaflDao arfaflDao = new ArfaflDao();
+
+                Arfafe cabecera = arfafeDao.buscarPorNumero(NO_CIA, tipoDoc, noFactu);
+                if (cabecera == null) {
+                    throw new Exception("No se encontró el comprobante: " + noFactu);
+                }
+
+                List<Arfafl> detalle = arfaflDao.listarDetallePorFactura(NO_CIA, tipoDoc, noFactu);
+
+                if (detalle == null || detalle.isEmpty()) {
+                    throw new Exception("No se encontró el detalle del comprobante: " + noFactu);
+                }
+
+                // 2. Convertir datos usando ConversorComprobante
+                return ConversorComprobante.convertirComprobanteCompleto(cabecera, detalle);
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            ocultarCargando();
+            actualizarEstado("Listo");
+
+            try {
+                DatosComprobanteCompleto datos = task.getValue();
+
+                // 3. Generar reporte A4 usando ReporteComprobantePago
+                ReporteComprobantePago reporte = new ReporteComprobantePago();
+                reporte.generarReportePDf (
+                        datos.getResultadoEmision(),
+                        datos.getDetalles(),
+                        datos.getDatosCliente(),
+                        datos.getDatosVenta()
+                );
+                Mensaje.alerta(null, "Descarga Exitosa"," El PDF se ha generado y guardado con el nombre " + noFactu+
+                        " en la carpeta de descargas.");
+                LOGGER.info("PDF generada exitosamente: " + noFactu);
+
+            } catch (Exception ex) {
+                LOGGER.log(Level.SEVERE, "Error al crear el PDF", ex);
+                Mensaje.error(null, "Error", "No se pudo mostrar el reporte: " + ex.getMessage());
+            }
+        });
+
+        task.setOnFailed(e -> {
+            ocultarCargando();
+            actualizarEstado("Error al crear PDF");
+
+            Throwable ex = task.getException();
+            LOGGER.log(Level.SEVERE, "Error al crear PDF", ex);
+            Mensaje.error(null, "Error al crear PDF",
+                    ex != null ? ex.getMessage() : "Error desconocido");
+        });
+
+        // Ejecutar en hilo separado
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+    }
+
 }
