@@ -76,7 +76,7 @@
                                                 <Insets left="50.0" />
                                             </padding>
                                         </Button>
-                                        <Button fx:id="btnProforma" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarProforma" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Proforma">
+                                        <Button fx:id="btnProforma" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarProforma" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Comunicación baja">
                                             <cursor>
                                                 <Cursor fx:constant="HAND" />
                                             </cursor>

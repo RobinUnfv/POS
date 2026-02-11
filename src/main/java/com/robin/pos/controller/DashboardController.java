@@ -79,6 +79,7 @@ public class DashboardController {
     private Tab tabArticulo;
     private Tab tabListaComPago;
     private Tab tabListaArinda1;
+    private Tab tabComuBaja;
 
     @FXML
     public void initialize() {
@@ -391,9 +392,26 @@ public class DashboardController {
     }
 
     @FXML
-    public void ingresarProforma() {
-        System.out.println("Navegando a Proforma");
-        // Cargar vista de proforma
+    public void ingresarProforma() throws IOException {
+        System.out.println("Comunicación de pago");
+        if (this.tabComuBaja == null)  {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/ComunicacionBaja.fxml"));
+            VBox ap = loader.load();
+            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/comuBaja.png").toString());
+            icono.setFitWidth(16);
+            icono.setFitHeight(16);
+            tabComuBaja = new Tab("Comunicación baja", ap);
+            tabComuBaja.setGraphic(icono);
+
+            tabComuBaja.setClosable(true);
+            tabComuBaja.setOnClosed(e -> tabComuBaja = null);
+
+            this.tabPane.getTabs().add(tabComuBaja);
+            this.tabPane.getSelectionModel().select(tabComuBaja);
+        } else {
+            // Si el tab ya existe, solo selecciónalo
+            this.tabPane.getSelectionModel().select(tabComuBaja);
+        }
     }
 
     @FXML

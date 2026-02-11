@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="900.0" styleClass="root-pane" 
+            xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.robin.pos.controller.ComunicacionBajaController">
+   
+   <!-- Panel Principal -->
+   <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" 
+         AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+      
+      <!-- ENCABEZADO -->
+      <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="header-box">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+         </padding>
+         <Label styleClass="header-title" text="COMUNICACIÓN DE BAJA - SUNAT">
+            <font>
+               <Font name="System Bold" size="20.0"/>
+            </font>
+         </Label>
+         <Region HBox.hgrow="ALWAYS"/>
+         <Label fx:id="lblFecha" styleClass="header-date" text="Fecha: 10/01/2025">
+            <font>
+               <Font size="14.0"/>
+            </font>
+         </Label>
+      </HBox>
+      
+      <Separator/>
+      
+      <!-- SECCIÓN: BÚSQUEDA DE COMPROBANTE -->
+      <VBox spacing="10.0" styleClass="section-box">
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+         </padding>
+         
+         <Label styleClass="section-title" text="1. Buscar Comprobante de Pago">
+            <font>
+               <Font name="System Bold" size="14.0"/>
+            </font>
+         </Label>
+         
+         <GridPane hgap="15.0" vgap="12.0">
+            <columnConstraints>
+               <ColumnConstraints hgrow="NEVER" minWidth="150.0" prefWidth="150.0"/>
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0"/>
+               <ColumnConstraints hgrow="NEVER" minWidth="120.0" prefWidth="120.0"/>
+            </columnConstraints>
+            
+            <!-- Tipo de Documento -->
+            <Label text="Tipo de Documento:" GridPane.columnIndex="0" GridPane.rowIndex="0">
+               <font>
+                  <Font name="System Bold" size="13.0"/>
+               </font>
+            </Label>
+            <ComboBox fx:id="cmbTipoDocumento" prefWidth="200.0" 
+                      promptText="Seleccione..." 
+                      GridPane.columnIndex="1" GridPane.rowIndex="0"
+                      onAction="#cambiarTipoDocumento"/>
+            
+            <!-- Número de Comprobante -->
+            <Label text="Nº Comprobante:" GridPane.columnIndex="0" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="13.0"/>
+               </font>
+            </Label>
+            <HBox spacing="10.0" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <TextField fx:id="txtNumeroComprobante" prefWidth="300.0" 
+                         promptText="Ej: F001-00000123"
+                         onKeyPressed="#buscarConEnter">
+                  <font>
+                     <Font size="13.0"/>
+                  </font>
+               </TextField>
+               <Button fx:id="btnBuscar" mnemonicParsing="false" 
+                      onAction="#buscarComprobante" 
+                      styleClass="btn-primary" 
+                      text="Buscar">
+                  <font>
+                     <Font name="System Bold" size="12.0"/>
+                  </font>
+               </Button>
+            </HBox>
+            
+            <!-- Fecha de Emisión -->
+            <Label text="Fecha de Emisión:" GridPane.columnIndex="0" GridPane.rowIndex="2">
+               <font>
+                  <Font name="System Bold" size="13.0"/>
+               </font>
+            </Label>
+            <DatePicker fx:id="dpFechaEmision" prefWidth="200.0" 
+                       promptText="Seleccione fecha..." 
+                       GridPane.columnIndex="1" GridPane.rowIndex="2"
+                       editable="false"/>
+            <Button fx:id="btnBuscarPorFecha" mnemonicParsing="false" 
+                   onAction="#buscarPorFecha" 
+                   text="Buscar por Fecha" 
+                   GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+         </GridPane>
+      </VBox>
+      
+      <Separator/>
+      
+      <!-- SECCIÓN: DATOS DEL COMPROBANTE SELECCIONADO -->
+      <VBox spacing="10.0" styleClass="section-box">
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+         </padding>
+         
+         <Label styleClass="section-title" text="2. Datos del Comprobante">
+            <font>
+               <Font name="System Bold" size="14.0"/>
+            </font>
+         </Label>
+         
+         <GridPane hgap="15.0" vgap="10.0">
+            <columnConstraints>
+               <ColumnConstraints hgrow="NEVER" minWidth="150.0" prefWidth="150.0"/>
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0"/>
+               <ColumnConstraints hgrow="NEVER" minWidth="150.0" prefWidth="150.0"/>
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0"/>
+            </columnConstraints>
+            
+            <!-- Comprobante -->
+            <Label text="Comprobante:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="txtComprobante" editable="false" styleClass="readonly-field"
+                      GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            
+            <!-- Estado -->
+            <Label text="Estado:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <TextField fx:id="txtEstado" editable="false" styleClass="readonly-field"
+                      GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+            
+            <!-- Cliente -->
+            <Label text="Cliente:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="txtCliente" editable="false" styleClass="readonly-field"
+                      GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="3"/>
+            
+            <!-- RUC/DNI -->
+            <Label text="RUC/DNI:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="txtDocumentoCliente" editable="false" styleClass="readonly-field"
+                      GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            
+            <!-- Moneda -->
+            <Label text="Moneda:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <TextField fx:id="txtMoneda" editable="false" styleClass="readonly-field"
+                      GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+            
+            <!-- Total -->
+            <Label text="Importe Total:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <TextField fx:id="txtTotal" editable="false" styleClass="readonly-field, total-field"
+                      GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <font>
+                  <Font name="System Bold" size="14.0"/>
+               </font>
+            </TextField>
+            
+            <!-- Estado SUNAT -->
+            <Label text="Estado SUNAT:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            <TextField fx:id="txtEstadoSunat" editable="false" styleClass="readonly-field"
+                      GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+         </GridPane>
+      </VBox>
+      
+      <Separator/>
+      
+      <!-- SECCIÓN: MOTIVO DE LA BAJA -->
+      <VBox spacing="10.0" styleClass="section-box">
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+         </padding>
+         
+         <Label styleClass="section-title" text="3. Motivo de la Baja">
+            <font>
+               <Font name="System Bold" size="14.0"/>
+            </font>
+         </Label>
+         
+         <GridPane hgap="15.0" vgap="12.0">
+            <columnConstraints>
+               <ColumnConstraints hgrow="NEVER" minWidth="150.0" prefWidth="150.0"/>
+               <ColumnConstraints hgrow="SOMETIMES"/>
+            </columnConstraints>
+            
+            <!-- Tipo de Motivo -->
+            <Label text="Tipo de Motivo:" GridPane.columnIndex="0" GridPane.rowIndex="0">
+               <font>
+                  <Font name="System Bold" size="13.0"/>
+               </font>
+            </Label>
+            <ComboBox fx:id="cmbMotivoTipo" prefWidth="400.0" 
+                     promptText="Seleccione el motivo..." 
+                     GridPane.columnIndex="1" GridPane.rowIndex="0"
+                     onAction="#seleccionarMotivo">
+               <tooltip>
+                  <Tooltip text="Seleccione el motivo según catálogo SUNAT"/>
+               </tooltip>
+            </ComboBox>
+            
+            <!-- Descripción del Motivo -->
+            <Label text="Descripción:" GridPane.columnIndex="0" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="13.0"/>
+               </font>
+            </Label>
+            <TextArea fx:id="txtMotivoDescripcion" prefHeight="100.0" 
+                     promptText="Ingrese una descripción detallada del motivo de la baja (opcional)..."
+                     wrapText="true"
+                     GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font size="12.0"/>
+               </font>
+            </TextArea>
+         </GridPane>
+         
+         <!-- Información adicional -->
+         <HBox spacing="10.0" styleClass="info-box">
+            <padding>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+            <Label styleClass="info-icon" text="ℹ">
+               <font>
+                  <Font size="18.0"/>
+               </font>
+            </Label>
+            <VBox spacing="5.0">
+               <Label styleClass="info-text" text="Importante:" wrapText="true">
+                  <font>
+                     <Font name="System Bold" size="12.0"/>
+                  </font>
+               </Label>
+               <Label styleClass="info-text" 
+                     text="• La comunicación de baja debe enviarse dentro de los 7 días calendario posteriores a la emisión del comprobante."
+                     wrapText="true"/>
+               <Label styleClass="info-text" 
+                     text="• Una vez procesada la baja por SUNAT, el comprobante quedará anulado y no podrá revertirse."
+                     wrapText="true"/>
+               <Label styleClass="info-text" 
+                     text="• El sistema generará automáticamente el archivo XML según formato SUNAT."
+                     wrapText="true"/>
+            </VBox>
+         </HBox>
+      </VBox>
+      
+      <Separator/>
+      
+      <!-- SECCIÓN: LISTA DE COMPROBANTES PARA BAJA -->
+      <VBox spacing="10.0" VBox.vgrow="ALWAYS" styleClass="section-box">
+         <padding>
+            <Insets bottom="10.0" left="15.0" right="15.0" top="10.0"/>
+         </padding>
+         
+         <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <Label styleClass="section-title" text="4. Comprobantes Agregados para Baja">
+               <font>
+                  <Font name="System Bold" size="14.0"/>
+               </font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnAgregar" disable="true" mnemonicParsing="false" 
+                   onAction="#agregarALista" 
+                   styleClass="btn-success" 
+                   text="+ Agregar a Lista">
+               <font>
+                  <Font name="System Bold" size="12.0"/>
+               </font>
+            </Button>
+            <Button fx:id="btnQuitar" disable="true" mnemonicParsing="false" 
+                   onAction="#quitarDeLista" 
+                   styleClass="btn-warning" 
+                   text="- Quitar">
+               <font>
+                  <Font size="12.0"/>
+               </font>
+            </Button>
+         </HBox>
+         
+         <TableView fx:id="tblComprobantesBaja" VBox.vgrow="ALWAYS">
+            <columns>
+               <TableColumn fx:id="colTipoDoc" prefWidth="80.0" text="Tipo"/>
+               <TableColumn fx:id="colNumero" prefWidth="150.0" text="Nº Comprobante"/>
+               <TableColumn fx:id="colFechaEmision" prefWidth="110.0" text="Fecha Emisión"/>
+               <TableColumn fx:id="colCliente" prefWidth="250.0" text="Cliente"/>
+               <TableColumn fx:id="colDocCliente" prefWidth="110.0" text="RUC/DNI"/>
+               <TableColumn fx:id="colTotal" prefWidth="100.0" text="Total" styleClass="column-right"/>
+               <TableColumn fx:id="colMotivo" prefWidth="150.0" text="Motivo"/>
+            </columns>
+            <placeholder>
+               <Label text="No hay comprobantes agregados para dar de baja" styleClass="placeholder-text">
+                  <font>
+                     <Font size="13.0"/>
+                  </font>
+               </Label>
+            </placeholder>
+         </TableView>
+      </VBox>
+      
+      <Separator/>
+      
+      <!-- BOTONES DE ACCIÓN -->
+      <HBox alignment="CENTER_RIGHT" spacing="15.0">
+         <padding>
+            <Insets bottom="10.0" top="10.0"/>
+         </padding>
+         
+         <Label fx:id="lblContador" text="Total: 0 comprobantes" styleClass="counter-label">
+            <font>
+               <Font name="System Bold" size="13.0"/>
+            </font>
+         </Label>
+         
+         <Region HBox.hgrow="ALWAYS"/>
+         
+         <Button fx:id="btnNuevo" mnemonicParsing="false" 
+                onAction="#nuevo" 
+                text="Nuevo">
+            <font>
+               <Font size="12.0"/>
+            </font>
+         </Button>
+         
+         <Button fx:id="btnEnviarSunat" disable="true" mnemonicParsing="false" 
+                onAction="#enviarComunicacionBaja" 
+                prefWidth="180.0"
+                styleClass="btn-danger" 
+                text="Enviar Baja a SUNAT">
+            <font>
+               <Font name="System Bold" size="13.0"/>
+            </font>
+         </Button>
+         
+         <Button fx:id="btnCerrar" mnemonicParsing="false" 
+                onAction="#cerrar" 
+                text="Cerrar">
+            <font>
+               <Font size="12.0"/>
+            </font>
+         </Button>
+      </HBox>
+   </VBox>
+</AnchorPane>
