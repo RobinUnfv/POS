@@ -1,6 +1,8 @@
 package com.robin.pos.controller;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Optional;
 
 import com.robin.pos.MainApp;
 import com.robin.pos.util.Mensaje;
@@ -19,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 
 public class DashboardController {
@@ -375,9 +378,7 @@ public class DashboardController {
             //VentaController ventaController = loader.getController();
             // LocalDateTime.now().format(DateTimeFormatter.ofPattern("EEE dd MMM hh:mm:ss a"))
 
-            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/carritoCompras32.png").toString());
-            icono.setFitWidth(16);
-            icono.setFitHeight(16);
+            ImageView icono = createIcon("/com/robin/pos/imagenes/carritoCompras32.png");
             tabVenta = new Tab("Venta", ap);
             tabVenta.setGraphic(icono);
             tabVenta.setClosable(true);
@@ -397,9 +398,7 @@ public class DashboardController {
         if (this.tabComuBaja == null)  {
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/ComunicacionBaja.fxml"));
             VBox ap = loader.load();
-            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/comuBaja.png").toString());
-            icono.setFitWidth(16);
-            icono.setFitHeight(16);
+            ImageView icono = createIcon("/com/robin/pos/imagenes/comuBaja.png");
             tabComuBaja = new Tab("Comunicación baja", ap);
             tabComuBaja.setGraphic(icono);
 
@@ -421,9 +420,7 @@ public class DashboardController {
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/ListaComprobantePago.fxml"));
             VBox  ap = loader.load();
 
-            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/invoice.png").toString());
-            icono.setFitWidth(16);
-            icono.setFitHeight(16);
+            ImageView icono = createIcon("/com/robin/pos/imagenes/invoice.png");
 
             tabListaComPago = new Tab("Lista Factura/Boleta", ap);
 
@@ -467,7 +464,7 @@ public class DashboardController {
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/ListaCliente.fxml"));
             BorderPane ap = loader.load();
 
-            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/listaClientes.png").toString());
+            ImageView icono = createIcon("/com/robin/pos/imagenes/listaClientes.png");
             icono.setFitWidth(16);
             icono.setFitHeight(16);
             tabListaCliente = new Tab("Ficha Cliente", ap);
@@ -490,9 +487,7 @@ public class DashboardController {
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/Arinda1.fxml"));
             Parent  ap = loader.load();
 
-            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/producto.png").toString());
-            icono.setFitWidth(16);
-            icono.setFitHeight(16);
+            ImageView icono = createIcon("/com/robin/pos/imagenes/producto.png");
             tabArticulo = new Tab("Articulo", ap);
             tabArticulo.setGraphic(icono);
             tabArticulo.setClosable(true);
@@ -513,9 +508,7 @@ public class DashboardController {
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/ListaArinda1.fxml"));
             VBox  ap = loader.load();
 
-            ImageView icono = new ImageView(getClass().getResource("/com/robin/pos/imagenes/listaArti.png").toString());
-            icono.setFitWidth(16);
-            icono.setFitHeight(16);
+            ImageView icono = createIcon("/com/robin/pos/imagenes/listaArti.png");
             tabListaArinda1 = new Tab("Catálogo", ap);
             tabListaArinda1.setGraphic(icono);
             tabListaArinda1.setClosable(true);
@@ -538,9 +531,25 @@ public class DashboardController {
 
     @FXML
     public void salirSistema() {
-    	if (Mensaje.confirmacion(null,"Confirmar","¿Está seguro de salir del sistema?").get() != ButtonType.CANCEL) {
+    	Optional<ButtonType> opt = Mensaje.confirmacion(null,"Confirmar","¿Está seguro de salir del sistema?");
+    	if (opt.isPresent() && opt.get() != ButtonType.CANCEL) {
     		this.btnSalir.getScene().getWindow().hide();
     	}
+    }
+
+    /**
+     * Crear un ImageView desde un recurso de forma segura (evita NPE)
+     */
+    private ImageView createIcon(String resourcePath) {
+        URL url = getClass().getResource(resourcePath);
+        if (url == null) {
+            // Recurso no encontrado: retornar un ImageView vacío para evitar NPE
+            return new ImageView();
+        }
+        ImageView iv = new ImageView(url.toString());
+        iv.setFitWidth(16);
+        iv.setFitHeight(16);
+        return iv;
     }
 
     /**

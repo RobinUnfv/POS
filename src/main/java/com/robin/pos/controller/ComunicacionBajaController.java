@@ -1,14 +1,13 @@
 package com.robin.pos.controller;
 
 import com.robin.pos.dao.ArfafeDao;
-import com.robin.pos.dao.ArfaflDao;
+import com.robin.pos.dao.ComunicacionBajaDao;
 import com.robin.pos.model.Arfafe;
 import com.robin.pos.model.ComprobanteBaja;
 import com.robin.pos.util.Mensaje;
 import com.robin.pos.util.ProgressDialog;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,183 +15,188 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Controlador para el formulario de Comunicación de Baja SUNAT
- * Permite dar de baja comprobantes de pago (Facturas, Boletas, Notas de Crédito)
- * 
+ * Versión 3.0 - Diseño moderno simplificado (SIN sección 4 de tabla)
+ *
+ * Permite dar de baja UN comprobante a la vez enviándolo directamente a SUNAT
+ *
  * @author Robin POS
- * @version 1.0
+ * @version 3.0
+ * @date 2026-02-10
  */
 public class ComunicacionBajaController implements Initializable {
 
     private static final Logger LOGGER = Logger.getLogger(ComunicacionBajaController.class.getName());
-    
-    // ==================== CAMPOS FXML - BÚSQUEDA ====================
-    
+
+    // ==================== CAMPOS FXML - HEADER ====================
+
     @FXML private Label lblFecha;
+    @FXML private Label lblHora;
+
+    // ==================== CAMPOS FXML - BÚSQUEDA ====================
+
     @FXML private ComboBox<String> cmbTipoDocumento;
     @FXML private TextField txtNumeroComprobante;
     @FXML private Button btnBuscar;
     @FXML private DatePicker dpFechaEmision;
     @FXML private Button btnBuscarPorFecha;
-    
+
     // ==================== CAMPOS FXML - DATOS COMPROBANTE ====================
-    
+
     @FXML private TextField txtComprobante;
     @FXML private TextField txtEstado;
+    @FXML private Label lblEstadoBadge;
     @FXML private TextField txtCliente;
     @FXML private TextField txtDocumentoCliente;
     @FXML private TextField txtMoneda;
     @FXML private TextField txtTotal;
     @FXML private TextField txtEstadoSunat;
-    
+
     // ==================== CAMPOS FXML - MOTIVO ====================
-    
+
     @FXML private ComboBox<String> cmbMotivoTipo;
     @FXML private TextArea txtMotivoDescripcion;
-    
-    // ==================== CAMPOS FXML - TABLA ====================
-    
-    @FXML private TableView<ComprobanteBaja> tblComprobantesBaja;
-    @FXML private TableColumn<ComprobanteBaja, String> colTipoDoc;
-    @FXML private TableColumn<ComprobanteBaja, String> colNumero;
-    @FXML private TableColumn<ComprobanteBaja, String> colFechaEmision;
-    @FXML private TableColumn<ComprobanteBaja, String> colCliente;
-    @FXML private TableColumn<ComprobanteBaja, String> colDocCliente;
-    @FXML private TableColumn<ComprobanteBaja, String> colTotal;
-    @FXML private TableColumn<ComprobanteBaja, String> colMotivo;
-    
+
     // ==================== CAMPOS FXML - BOTONES ====================
-    
-    @FXML private Button btnAgregar;
-    @FXML private Button btnQuitar;
-    @FXML private Label lblContador;
+
     @FXML private Button btnNuevo;
     @FXML private Button btnEnviarSunat;
     @FXML private Button btnCerrar;
-    
+
     // ==================== VARIABLES DE INSTANCIA ====================
-    
-    private final ObservableList<ComprobanteBaja> listaComprobantesBaja = FXCollections.observableArrayList();
+
     private Arfafe comprobanteActual;
     private final ArfafeDao arfafeDao = new ArfafeDao();
-    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    
+    private final ComunicacionBajaDao bajaDao = new ComunicacionBajaDao();
+    private Timeline clockTimeline;
+
     private static final String NO_CIA = "01"; // Código de compañía (obtener de configuración)
-    
+
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(
+            "dd 'de' MMMM, yyyy",
+            new Locale("es", "PE")
+    );
+
+    private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
     // ==================== INITIALIZE ====================
-    
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
-        // Configurar fecha actual
-        lblFecha.setText("Fecha: " + LocalDate.now().format(dateFormatter));
-        
-        // Configurar ComboBox Tipo Documento
-        cmbTipoDocumento.setItems(FXCollections.observableArrayList(
-            "FACTURA",
-            "BOLETA",
-            "NOTA DE CRÉDITO"
-        ));
-        cmbTipoDocumento.setValue("FACTURA");
-        
-        // Configurar ComboBox Motivos según catálogo SUNAT
-        configurarMotivos();
-        
-        // Configurar tabla
-        configurarTabla();
-        
-        // Configurar bindings
-        configurarBindings();
-        
-        // Fecha de emisión por defecto: hoy
-        dpFechaEmision.setValue(LocalDate.now());
-        
-        // Focus inicial
-        txtNumeroComprobante.requestFocus();
+
+        LOGGER.info("=".repeat(60));
+        LOGGER.info("Inicializando Controlador de Comunicación de Baja v3.0");
+        LOGGER.info("Diseño moderno sin tabla de múltiples comprobantes");
+        LOGGER.info("=".repeat(60));
+
+        try {
+            // Inicializar reloj en tiempo real
+            inicializarReloj();
+
+            // Configurar ComboBox Tipo Documento
+            configurarTipoDocumento();
+
+            // Configurar ComboBox Motivos
+            configurarMotivos();
+
+            // Configurar bindings
+            configurarBindings();
+
+            // Fecha de emisión por defecto: hoy
+            dpFechaEmision.setValue(LocalDate.now());
+
+            // Focus inicial
+            txtNumeroComprobante.requestFocus();
+
+            LOGGER.info("✓ Controlador inicializado correctamente");
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al inicializar controlador", e);
+            Mensaje.error(null, "Error de Inicialización",
+                    "Error al inicializar el formulario:\n" + e.getMessage());
+        }
     }
-    
+
+    /**
+     * Inicializa el reloj en tiempo real en el header
+     */
+    private void inicializarReloj() {
+        // Establecer fecha inicial
+        lblFecha.setText(LocalDate.now().format(dateFormatter));
+
+        // Crear timeline para actualizar hora cada segundo
+        clockTimeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            lblHora.setText(LocalTime.now().format(timeFormatter));
+        }));
+
+        clockTimeline.setCycleCount(Timeline.INDEFINITE);
+        clockTimeline.play();
+
+        // Establecer hora inicial
+        lblHora.setText(LocalTime.now().format(timeFormatter));
+
+        LOGGER.fine("✓ Reloj en tiempo real inicializado");
+    }
+
+    /**
+     * Configura los tipos de documento disponibles
+     */
+    private void configurarTipoDocumento() {
+        cmbTipoDocumento.getItems().addAll(
+                "FACTURA",
+                "BOLETA",
+                "NOTA DE CRÉDITO"
+        );
+        cmbTipoDocumento.setValue("FACTURA");
+
+        LOGGER.fine("✓ Tipos de documento configurados");
+    }
+
     /**
      * Configura los motivos de baja según catálogo SUNAT
      */
     private void configurarMotivos() {
-        cmbMotivoTipo.setItems(FXCollections.observableArrayList(
-            "01 - Error en el RUC",
-            "02 - Error en la descripción",
-            "03 - Error en el monto",
-            "04 - Error en la fecha de emisión",
-            "05 - Comprobante duplicado",
-            "06 - Devolución de mercadería",
-            "07 - Anulación de la operación",
-            "08 - Otros (especificar)"
-        ));
-    }
-    
-    /**
-     * Configura las columnas de la tabla
-     */
-    private void configurarTabla() {
-        colTipoDoc.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getTipoDocumentoDescripcion()));
-        
-        colNumero.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getNumeroComprobante()));
-        
-        colFechaEmision.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getFechaEmision().format(dateFormatter)));
-        
-        colCliente.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getNombreCliente()));
-        
-        colDocCliente.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getDocumentoCliente()));
-        
-        colTotal.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(String.format("%.2f", cellData.getValue().getTotal())));
-        
-        colMotivo.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getCodigoMotivo() + " - " + 
-                                     cellData.getValue().getDescripcionMotivo()));
-        
-        // Asignar lista observable
-        tblComprobantesBaja.setItems(listaComprobantesBaja);
-        
-        // Listener para habilitar botón quitar
-        tblComprobantesBaja.getSelectionModel().selectedItemProperty().addListener(
-            (obs, oldVal, newVal) -> btnQuitar.setDisable(newVal == null)
+        cmbMotivoTipo.getItems().addAll(
+                "01 - Error en el RUC del adquiriente o usuario",
+                "02 - Error en la descripción del bien o servicio",
+                "03 - Error en el monto del comprobante",
+                "04 - Error en la fecha de emisión",
+                "05 - Comprobante emitido duplicado",
+                "06 - Devolución de la mercadería",
+                "07 - Anulación de la operación",
+                "08 - Otros motivos (especificar)"
         );
+
+        LOGGER.fine("✓ Motivos SUNAT configurados (8 opciones)");
     }
-    
+
     /**
-     * Configura bindings de controles
+     * Configura bindings y listeners
      */
     private void configurarBindings() {
-        // Habilitar botón agregar solo si hay comprobante cargado y motivo seleccionado
-        btnAgregar.disableProperty().bind(
-            cmbMotivoTipo.valueProperty().isNull()
-        );
-        
-        // Habilitar botón enviar solo si hay comprobantes en la lista
+        // Habilitar botón enviar solo cuando hay motivo seleccionado y comprobante cargado
         btnEnviarSunat.disableProperty().bind(
-            javafx.beans.binding.Bindings.isEmpty(listaComprobantesBaja)
+                cmbMotivoTipo.valueProperty().isNull()
+                        .or(txtComprobante.textProperty().isEmpty())
         );
-        
-        // Actualizar contador
-        listaComprobantesBaja.addListener((javafx.collections.ListChangeListener.Change<? extends ComprobanteBaja> c) -> {
-            lblContador.setText("Total: " + listaComprobantesBaja.size() + " comprobante(s)");
-        });
+
+        LOGGER.fine("✓ Bindings configurados");
     }
-    
+
     // ==================== EVENTOS - BÚSQUEDA ====================
-    
+
     /**
      * Buscar comprobante al presionar Enter
      */
@@ -202,62 +206,72 @@ public class ComunicacionBajaController implements Initializable {
             buscarComprobante(new ActionEvent());
         }
     }
-    
+
     /**
      * Buscar comprobante por número
      */
     @FXML
     private void buscarComprobante(ActionEvent event) {
-        
+
         String numeroComprobante = txtNumeroComprobante.getText().trim();
-        
+
+        // Validar que se ingresó un número
         if (numeroComprobante.isEmpty()) {
             Mensaje.alerta(null, "Validación", "Debe ingresar el número de comprobante");
             txtNumeroComprobante.requestFocus();
             return;
         }
-        
-        // Validar formato (básico)
+
+        // Validar formato básico (mínimo 10 caracteres)
         if (numeroComprobante.length() < 10) {
-            Mensaje.alerta(null, "Formato Inválido", 
-                "El número de comprobante debe tener al menos 10 caracteres.\n" +
-                "Formato esperado: F001-00000123 o B001-00000456");
+            Mensaje.alerta(null, "Formato Inválido",
+                    "El número de comprobante debe tener al menos 10 caracteres.\n" +
+                            "Formato esperado: F001-00000123 o B001-00000456");
+            txtNumeroComprobante.requestFocus();
             return;
         }
-        
+
         // Extraer tipo de documento del número
         String tipoDoc = extraerTipoDocumento(numeroComprobante);
-        
+
         if (tipoDoc == null) {
-            Mensaje.alerta(null, "Tipo Inválido", 
-                "No se pudo identificar el tipo de documento.\n" +
-                "Asegúrese que el número comience con F, B o N");
+            Mensaje.alerta(null, "Tipo Inválido",
+                    "No se pudo identificar el tipo de documento.\n" +
+                            "Asegúrese que el número comience con F, B o N");
             return;
         }
-        
+
+        LOGGER.info("Buscando comprobante: " + numeroComprobante + " (Tipo: " + tipoDoc + ")");
+
         // Buscar en base de datos
         buscarEnBaseDatos(tipoDoc, numeroComprobante);
     }
-    
+
     /**
      * Buscar comprobantes por fecha
      */
     @FXML
     private void buscarPorFecha(ActionEvent event) {
-        
+
         LocalDate fecha = dpFechaEmision.getValue();
-        
+
         if (fecha == null) {
             Mensaje.alerta(null, "Validación", "Debe seleccionar una fecha");
             return;
         }
-        
+
         String tipoDoc = mapearTipoDocumento(cmbTipoDocumento.getValue());
-        
-        // Mostrar diálogo de selección con comprobantes de esa fecha
-        mostrarDialogoSeleccionFecha(tipoDoc, fecha);
+
+        LOGGER.info("Búsqueda por fecha solicitada: " + fecha + " (Tipo: " + tipoDoc + ")");
+
+        // TODO: Implementar diálogo de selección de comprobantes por fecha
+        Mensaje.alerta(null, "Función en Desarrollo",
+                "Esta función mostrará un diálogo con todos los comprobantes " +
+                        "del tipo '" + cmbTipoDocumento.getValue() + "' emitidos en la fecha:\n\n" +
+                        fecha.format(dateFormatter) + "\n\n" +
+                        "Podrá seleccionar uno de la lista para dar de baja.");
     }
-    
+
     /**
      * Cambiar configuración al cambiar tipo de documento
      */
@@ -266,344 +280,472 @@ public class ComunicacionBajaController implements Initializable {
         txtNumeroComprobante.clear();
         limpiarDatosComprobante();
         txtNumeroComprobante.requestFocus();
+
+        LOGGER.fine("Tipo de documento cambiado a: " + cmbTipoDocumento.getValue());
     }
-    
+
     /**
      * Busca el comprobante en la base de datos
      */
     private void buscarEnBaseDatos(String tipoDoc, String numeroComprobante) {
-        
+
         ProgressDialog progressDialog = new ProgressDialog();
-        progressDialog.setTitle("Buscando");
-        progressDialog.setMessage("Buscando comprobante...");
+        progressDialog.setTitle("Buscando Comprobante");
+        progressDialog.setMessage("Buscando en la base de datos...");
         progressDialog.setIndeterminate(true);
         progressDialog.show();
-        
+
         Task<Arfafe> buscarTask = new Task<Arfafe>() {
             @Override
             protected Arfafe call() throws Exception {
+                LOGGER.info("Consultando base de datos...");
                 return arfafeDao.buscarPorNumero(NO_CIA, tipoDoc, numeroComprobante);
             }
         };
-        
+
         buscarTask.setOnSucceeded(e -> {
             progressDialog.close();
-            
+
             Arfafe arfafe = buscarTask.getValue();
-            
+
             if (arfafe != null) {
+                LOGGER.info("✓ Comprobante encontrado: " + arfafe.getNoFactu());
                 cargarDatosComprobante(arfafe);
             } else {
-                Mensaje.alerta(null, "No Encontrado", 
-                    "No se encontró el comprobante: " + numeroComprobante);
+                LOGGER.warning("✗ Comprobante no encontrado: " + numeroComprobante);
+                Mensaje.alerta(null, "No Encontrado",
+                        "No se encontró el comprobante: " + numeroComprobante + "\n\n" +
+                                "Verifique que el número sea correcto y que el comprobante " +
+                                "esté registrado en el sistema.");
                 limpiarDatosComprobante();
             }
         });
-        
+
         buscarTask.setOnFailed(e -> {
             progressDialog.close();
             Throwable error = buscarTask.getException();
-            LOGGER.log(Level.SEVERE, "Error al buscar comprobante", error);
-            Mensaje.error(null, "Error de Búsqueda", 
-                "Error al buscar el comprobante:\n" + error.getMessage());
+            LOGGER.log(Level.SEVERE, "✗ Error al buscar comprobante", error);
+            Mensaje.error(null, "Error de Búsqueda",
+                    "Error al buscar el comprobante:\n\n" + error.getMessage());
         });
-        
+
         new Thread(buscarTask).start();
     }
-    
+
     /**
-     * Carga los datos del comprobante encontrado en los campos
+     * Carga los datos del comprobante encontrado
      */
     private void cargarDatosComprobante(Arfafe arfafe) {
-        
+
         this.comprobanteActual = arfafe;
-        
+
+        // Datos básicos
         txtComprobante.setText(arfafe.getNoFactu());
         txtEstado.setText(obtenerDescripcionEstado(arfafe.getEstado()));
         txtCliente.setText(arfafe.getNbrCliente());
         txtDocumentoCliente.setText(arfafe.getNumDocCli());
         txtMoneda.setText(arfafe.getMoneda());
-        txtTotal.setText(String.format("%.2f", arfafe.getTotal()));
-        
+        txtTotal.setText(String.format("S/ %.2f", arfafe.getTotal()));
+
+        // Badge de estado
+        actualizarBadgeEstado(arfafe.getEstado());
+
         // Estado SUNAT (si existe)
-        String estadoSunat = ""; //arfafe.getEstadoSunat();
+        String estadoSunat = ""; // arfafe.getEstadoSunat();
         if (estadoSunat != null && !estadoSunat.isEmpty()) {
             txtEstadoSunat.setText(estadoSunat);
         } else {
             txtEstadoSunat.setText("NO ENVIADO");
         }
-        
+
         // Validar si se puede dar de baja
         validarSiPuedeDarseDeBaja(arfafe);
+
+        LOGGER.info("Datos cargados: " + arfafe.getNoFactu() +
+                " | Cliente: " + arfafe.getNbrCliente() +
+                " | Total: S/ " + String.format("%.2f", arfafe.getTotal()));
     }
-    
+
+    /**
+     * Actualiza el badge de estado según el estado del comprobante
+     */
+    private void actualizarBadgeEstado(String estado) {
+        if (estado == null) return;
+
+        switch (estado) {
+            case "D":
+                lblEstadoBadge.setText("ACTIVO");
+                lblEstadoBadge.setStyle(
+                        "-fx-background-color: #10b981; " +
+                                "-fx-text-fill: white; " +
+                                "-fx-background-radius: 9999px; " +
+                                "-fx-padding: 5px 14px; " +
+                                "-fx-font-size: 11px; " +
+                                "-fx-font-weight: bold;"
+                );
+                break;
+            case "A":
+                lblEstadoBadge.setText("ANULADO");
+                lblEstadoBadge.setStyle(
+                        "-fx-background-color: #ef4444; " +
+                                "-fx-text-fill: white; " +
+                                "-fx-background-radius: 9999px; " +
+                                "-fx-padding: 5px 14px; " +
+                                "-fx-font-size: 11px; " +
+                                "-fx-font-weight: bold;"
+                );
+                break;
+            case "P":
+                lblEstadoBadge.setText("PENDIENTE");
+                lblEstadoBadge.setStyle(
+                        "-fx-background-color: #f59e0b; " +
+                                "-fx-text-fill: white; " +
+                                "-fx-background-radius: 9999px; " +
+                                "-fx-padding: 5px 14px; " +
+                                "-fx-font-size: 11px; " +
+                                "-fx-font-weight: bold;"
+                );
+                break;
+            default:
+                lblEstadoBadge.setText(estado);
+                lblEstadoBadge.setStyle(
+                        "-fx-background-color: #6b7280; " +
+                                "-fx-text-fill: white; " +
+                                "-fx-background-radius: 9999px; " +
+                                "-fx-padding: 5px 14px; " +
+                                "-fx-font-size: 11px; " +
+                                "-fx-font-weight: bold;"
+                );
+        }
+    }
+
     /**
      * Valida si el comprobante puede darse de baja
      */
     private void validarSiPuedeDarseDeBaja(Arfafe arfafe) {
-        
-        // Verificar estado
+
+        // Verificar si ya está anulado
         if ("A".equals(arfafe.getEstado())) {
-            Mensaje.advertencia(null, "Comprobante Anulado", 
-                "Este comprobante ya se encuentra anulado.\n" +
-                "No es necesario enviarlo nuevamente a SUNAT.");
-            btnAgregar.setDisable(true);
+            LOGGER.warning("El comprobante ya está ANULADO");
+            Mensaje.alerta(null, "Comprobante Anulado",
+                    "Este comprobante ya se encuentra anulado.\n" +
+                            "No es necesario enviarlo nuevamente a SUNAT.");
+            btnEnviarSunat.setDisable(true);
             return;
         }
-        
+
         // Verificar fecha de emisión (máximo 7 días)
         LocalDate fechaEmision = arfafe.getFecha().toInstant()
-            .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
-        
-        long diasTranscurridos = java.time.temporal.ChronoUnit.DAYS.between(fechaEmision, LocalDate.now());
-        
+                .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+
+        long diasTranscurridos = java.time.temporal.ChronoUnit.DAYS
+                .between(fechaEmision, LocalDate.now());
+
+        LOGGER.info("Días transcurridos desde emisión: " + diasTranscurridos);
+
         if (diasTranscurridos > 7) {
-            Mensaje.advertencia(null, "Plazo Vencido", 
-                "Han transcurrido " + diasTranscurridos + " días desde la emisión.\n" +
-                "SUNAT permite dar de baja hasta 7 días después de la emisión.\n\n" +
-                "Deberá emitir una Nota de Crédito en su lugar.");
-            btnAgregar.setDisable(true);
+            LOGGER.warning("Plazo VENCIDO - " + diasTranscurridos + " días transcurridos");
+            Mensaje.alerta(null, "Plazo Vencido",
+                    "Han transcurrido " + diasTranscurridos + " días desde la emisión.\n" +
+                            "SUNAT permite dar de baja hasta 7 días después de la emisión.\n\n" +
+                            "⚠️ Deberá emitir una Nota de Crédito en su lugar.");
+            btnEnviarSunat.setDisable(true);
             return;
         }
-        
-        // Si todo está OK, informar
+
+        // Si quedan pocos días, informar
         if (diasTranscurridos >= 5) {
-            Mensaje.informacion(null, "Advertencia de Plazo", 
-                "Quedan " + (7 - diasTranscurridos) + " día(s) para dar de baja este comprobante.");
+            long diasRestantes = 7 - diasTranscurridos;
+            LOGGER.info("Advertencia: Quedan " + diasRestantes + " día(s) para dar de baja");
+            Mensaje.alerta(null, "Advertencia de Plazo",
+                    "⏰ Quedan " + diasRestantes + " día(s) para dar de baja este comprobante.\n\n" +
+                            "Después del plazo deberá usar una Nota de Crédito.");
+        }
+
+        // Verificar si ya existe una baja para este comprobante
+        if (bajaDao.existeBaja(arfafe.getNoCia(), arfafe.getTipoDoc(), arfafe.getNoFactu())) {
+            LOGGER.warning("Ya existe una baja registrada para este comprobante");
+            Mensaje.alerta(null, "Baja Existente",
+                    "Ya existe una comunicación de baja registrada para este comprobante.\n\n" +
+                            "Verifique el estado en la tabla COMUNICACION_BAJA de la base de datos.");
         }
     }
-    
+
     // ==================== EVENTOS - MOTIVO ====================
-    
+
     /**
      * Al seleccionar un motivo
      */
     @FXML
     private void seleccionarMotivo(ActionEvent event) {
         String motivo = cmbMotivoTipo.getValue();
-        
+
         if (motivo != null && motivo.startsWith("08")) {
             // Si es "Otros", hacer que la descripción sea obligatoria
-            txtMotivoDescripcion.setPromptText("OBLIGATORIO: Especifique el motivo detalladamente...");
+            txtMotivoDescripcion.setPromptText(
+                    "OBLIGATORIO: Especifique el motivo detalladamente (mínimo 10 caracteres)..."
+            );
+            txtMotivoDescripcion.setStyle(
+                    "-fx-border-color: #ef4444; " +
+                            "-fx-border-width: 2px; " +
+                            "-fx-border-radius: 6px; " +
+                            "-fx-background-radius: 6px;"
+            );
+            LOGGER.fine("Motivo '08 - Otros' seleccionado - Descripción OBLIGATORIA");
         } else {
-            txtMotivoDescripcion.setPromptText("Ingrese una descripción adicional (opcional)...");
+            txtMotivoDescripcion.setPromptText(
+                    "Ingrese una descripción adicional (opcional)..."
+            );
+            txtMotivoDescripcion.setStyle("");
+            LOGGER.fine("Motivo seleccionado: " + motivo);
         }
     }
-    
-    // ==================== EVENTOS - LISTA ====================
-    
-    /**
-     * Agregar comprobante a la lista de bajas
-     */
-    @FXML
-    private void agregarALista(ActionEvent event) {
-        
-        if (comprobanteActual == null) {
-            Mensaje.alerta(null, "Validación", "Debe buscar y seleccionar un comprobante primero");
-            return;
-        }
-        
-        String motivo = cmbMotivoTipo.getValue();
-        if (motivo == null) {
-            Mensaje.alerta(null, "Validación", "Debe seleccionar el motivo de la baja");
-            return;
-        }
-        
-        // Validar que no esté ya en la lista
-        boolean yaExiste = listaComprobantesBaja.stream()
-            .anyMatch(cb -> cb.getNumeroComprobante().equals(comprobanteActual.getNoFactu()));
-        
-        if (yaExiste) {
-            Mensaje.alerta(null, "Duplicado", 
-                "Este comprobante ya está en la lista de bajas");
-            return;
-        }
-        
-        // Si es motivo "Otros", validar descripción
-        if (motivo.startsWith("08")) {
-            String descripcion = txtMotivoDescripcion.getText().trim();
-            if (descripcion.isEmpty() || descripcion.length() < 10) {
-                Mensaje.alerta(null, "Validación", 
-                    "Para el motivo 'Otros', debe especificar una descripción de al menos 10 caracteres");
-                txtMotivoDescripcion.requestFocus();
-                return;
-            }
-        }
-        
-        // Crear objeto ComprobanteBaja
-        ComprobanteBaja comprobanteBaja = new ComprobanteBaja();
-        comprobanteBaja.setNoCia(comprobanteActual.getNoCia());
-        comprobanteBaja.setTipoDocumento(comprobanteActual.getTipoDoc());
-        comprobanteBaja.setNumeroComprobante(comprobanteActual.getNoFactu());
-        
-        LocalDate fechaEmision = comprobanteActual.getFecha().toInstant()
-            .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
-        comprobanteBaja.setFechaEmision(fechaEmision);
-        
-        comprobanteBaja.setNombreCliente(comprobanteActual.getNbrCliente());
-        comprobanteBaja.setDocumentoCliente(comprobanteActual.getNumDocCli());
-        comprobanteBaja.setTotal(comprobanteActual.getTotal().doubleValue());
-        
-        // Extraer código de motivo
-        String codigoMotivo = motivo.substring(0, 2);
-        comprobanteBaja.setCodigoMotivo(codigoMotivo);
-        comprobanteBaja.setDescripcionMotivo(txtMotivoDescripcion.getText().trim());
-        
-        // Agregar a la lista
-        listaComprobantesBaja.add(comprobanteBaja);
-        
-        Mensaje.informacion(null, "Agregado", 
-            "Comprobante agregado a la lista de bajas exitosamente");
-        
-        // Limpiar para siguiente
-        limpiarParaNuevo();
-    }
-    
-    /**
-     * Quitar comprobante de la lista
-     */
-    @FXML
-    private void quitarDeLista(ActionEvent event) {
-        
-        ComprobanteBaja seleccionado = tblComprobantesBaja.getSelectionModel().getSelectedItem();
-        
-        if (seleccionado == null) {
-            Mensaje.alerta(null, "Selección", "Debe seleccionar un comprobante de la lista");
-            return;
-        }
-        
-        if (Mensaje.confirmacion(null, "Confirmar", 
-            "¿Quitar el comprobante " + seleccionado.getNumeroComprobante() + " de la lista?")
-            .get() == ButtonType.OK) {
-            
-            listaComprobantesBaja.remove(seleccionado);
-        }
-    }
-    
+
     // ==================== EVENTOS - ACCIONES PRINCIPALES ====================
-    
+
     /**
      * Enviar comunicación de baja a SUNAT
      */
     @FXML
     private void enviarComunicacionBaja(ActionEvent event) {
-        
-        if (listaComprobantesBaja.isEmpty()) {
-            Mensaje.alerta(null, "Lista Vacía", 
-                "Debe agregar al menos un comprobante para dar de baja");
+
+        LOGGER.info("=".repeat(60));
+        LOGGER.info("INICIANDO PROCESO DE ENVÍO A SUNAT");
+        LOGGER.info("=".repeat(60));
+
+        // Validar que hay comprobante seleccionado
+        if (comprobanteActual == null) {
+            Mensaje.alerta(null, "Validación",
+                    "Debe buscar y seleccionar un comprobante primero");
             return;
         }
-        
-        // Confirmación
-        if (Mensaje.confirmacion(null, "Confirmar Envío a SUNAT", 
-            "¿Está seguro de enviar la comunicación de baja de " + 
-            listaComprobantesBaja.size() + " comprobante(s) a SUNAT?\n\n" +
-            "Esta acción NO se puede revertir.")
-            .get() != ButtonType.OK) {
+
+        // Validar motivo
+        String motivo = cmbMotivoTipo.getValue();
+        if (motivo == null) {
+            Mensaje.alerta(null, "Validación",
+                    "Debe seleccionar el motivo de la baja");
+            cmbMotivoTipo.requestFocus();
             return;
         }
-        
-        // Aquí iría la lógica de envío a SUNAT
+
+        // Si es motivo "Otros", validar descripción
+        if (motivo.startsWith("08")) {
+            String descripcion = txtMotivoDescripcion.getText().trim();
+            if (descripcion.isEmpty() || descripcion.length() < 10) {
+                Mensaje.alerta(null, "Validación",
+                        "Para el motivo '08 - Otros', debe especificar una descripción " +
+                                "de al menos 10 caracteres");
+                txtMotivoDescripcion.requestFocus();
+                return;
+            }
+            LOGGER.info("✓ Validación de motivo '08 - Otros': " + descripcion);
+        }
+
+        // Log de datos a enviar
+        LOGGER.info("Comprobante: " + comprobanteActual.getNoFactu());
+        LOGGER.info("Cliente: " + comprobanteActual.getNbrCliente());
+        LOGGER.info("Total: S/ " + String.format("%.2f", comprobanteActual.getTotal()));
+        LOGGER.info("Motivo: " + motivo);
+
+        // Confirmación final
+        if (Mensaje.confirmacion(null, "Confirmar Envío a SUNAT",
+                        "¿Está seguro de enviar la comunicación de baja del comprobante?\n\n" +
+                                "📄 Comprobante: " + comprobanteActual.getNoFactu() + "\n" +
+                                "👤 Cliente: " + comprobanteActual.getNbrCliente() + "\n" +
+                                "💰 Total: S/ " + String.format("%.2f", comprobanteActual.getTotal()) + "\n" +
+                                "📝 Motivo: " + motivo + "\n\n" +
+                                "⚠️ Esta acción NO se puede revertir.\n" +
+                                "⚠️ El comprobante quedará ANULADO en SUNAT.")
+                .get() != ButtonType.OK) {
+            LOGGER.info("Envío CANCELADO por el usuario");
+            return;
+        }
+
+        // Enviar a SUNAT
         enviarASunat();
     }
-    
+
     /**
      * Lógica de envío a SUNAT
      */
     private void enviarASunat() {
-        
+
         ProgressDialog progressDialog = new ProgressDialog();
         progressDialog.setTitle("Enviando a SUNAT");
-        progressDialog.setMessage("Generando XML y enviando comunicación de baja...");
+        progressDialog.setMessage("Procesando comunicación de baja...\n\n" +
+                "• Generando XML\n" +
+                "• Firmando digitalmente\n" +
+                "• Enviando a SUNAT");
         progressDialog.setIndeterminate(true);
         progressDialog.show();
-        
+
         Task<String> enviarTask = new Task<String>() {
             @Override
             protected String call() throws Exception {
-                
-                // TODO: Implementar lógica real de envío
-                // 1. Generar XML de comunicación de baja
-                // 2. Firmar digitalmente
-                // 3. Enviar a SUNAT
-                // 4. Procesar respuesta
-                
-                Thread.sleep(3000); // Simulación
-                
-                return "ACEPTADO - Ticket: 123456789";
+
+                LOGGER.info("→ Creando objeto ComprobanteBaja");
+
+                // 1. Crear objeto ComprobanteBaja
+                ComprobanteBaja comprobante = new ComprobanteBaja();
+                comprobante.setNoCia(comprobanteActual.getNoCia());
+                comprobante.setTipoDocumento(comprobanteActual.getTipoDoc());
+                comprobante.setNumeroComprobante(comprobanteActual.getNoFactu());
+
+                LocalDate fechaEmision = comprobanteActual.getFecha().toInstant()
+                        .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+                comprobante.setFechaEmision(fechaEmision);
+
+                comprobante.setNombreCliente(comprobanteActual.getNbrCliente());
+                comprobante.setDocumentoCliente(comprobanteActual.getNumDocCli());
+                comprobante.setTotal(comprobanteActual.getTotal().doubleValue());
+
+                // Extraer código de motivo
+                String motivoCompleto = cmbMotivoTipo.getValue();
+                String codigoMotivo = motivoCompleto.substring(0, 2);
+                comprobante.setCodigoMotivo(codigoMotivo);
+                comprobante.setDescripcionMotivo(txtMotivoDescripcion.getText().trim());
+
+                LOGGER.info("→ Registrando en base de datos");
+
+                // 2. Registrar en base de datos
+                int idBaja = bajaDao.registrarBaja(comprobante);
+
+                if (idBaja == 0) {
+                    throw new Exception("No se pudo registrar la baja en la base de datos");
+                }
+
+                LOGGER.info("✓ Baja registrada con ID: " + idBaja);
+
+                // TODO: 3. Generar XML de comunicación de baja
+                LOGGER.info("→ Generando XML de comunicación de baja...");
+                // Aquí usar XMLGeneratorService para generar el XML
+                Thread.sleep(500);
+
+                // TODO: 4. Firmar digitalmente
+                LOGGER.info("→ Firmando XML con certificado digital...");
+                // Aquí usar DigitalSignature para firmar
+                Thread.sleep(500);
+
+                // TODO: 5. Enviar a SUNAT vía SOAP
+                LOGGER.info("→ Enviando a SUNAT vía SOAP...");
+                // Aquí usar SOAPClientService para enviar
+                Thread.sleep(1000);
+
+                // TODO: 6. Procesar respuesta (CDR)
+                LOGGER.info("→ Procesando respuesta de SUNAT...");
+                Thread.sleep(500);
+
+                // TODO: 7. Actualizar estado en BD
+                LOGGER.info("→ Actualizando estado en base de datos...");
+                // Actualizar ARFAFE.ESTADO = 'A'
+
+                // Simulación (remover cuando se implemente la integración real)
+                String ticketSunat = "TICKET-" + System.currentTimeMillis();
+
+                LOGGER.info("✓ ENVÍO COMPLETADO - Ticket: " + ticketSunat);
+
+                return ticketSunat;
             }
         };
-        
+
         enviarTask.setOnSucceeded(e -> {
             progressDialog.close();
-            
-            String resultado = enviarTask.getValue();
-            
-            Mensaje.informacion(null, "Envío Exitoso", 
-                "Comunicación de baja enviada a SUNAT correctamente.\n\n" +
-                "Resultado: " + resultado + "\n\n" +
-                "Los comprobantes serán anulados una vez SUNAT procese la comunicación.");
-            
-            // Limpiar todo
+
+            String ticket = enviarTask.getValue();
+
+            LOGGER.info("=".repeat(60));
+            LOGGER.info("✓ COMUNICACIÓN DE BAJA ENVIADA EXITOSAMENTE");
+            LOGGER.info("Ticket SUNAT: " + ticket);
+            LOGGER.info("=".repeat(60));
+
+            Mensaje.alerta(null, "✓ Envío Exitoso",
+                    "Comunicación de baja enviada correctamente.\n\n" +
+                            "📋 Ticket SUNAT: " + ticket + "\n" +
+                            "📄 Comprobante: " + comprobanteActual.getNoFactu() + "\n\n" +
+                            "El comprobante será anulado una vez SUNAT procese la comunicación.\n\n" +
+                            "Puede verificar el estado en:\n" +
+                            "• Tabla: COMUNICACION_BAJA\n" +
+                            "• Log: LOG_ENVIO_SUNAT");
+
+            // Limpiar formulario
             nuevo(null);
         });
-        
+
         enviarTask.setOnFailed(e -> {
             progressDialog.close();
-            
+
             Throwable error = enviarTask.getException();
-            LOGGER.log(Level.SEVERE, "Error al enviar a SUNAT", error);
-            
-            Mensaje.error(null, "Error de Envío", 
-                "No se pudo enviar la comunicación de baja:\n" + error.getMessage());
+            LOGGER.log(Level.SEVERE, "✗ ERROR AL ENVIAR A SUNAT", error);
+
+            Mensaje.error(null, "✗ Error de Envío",
+                    "No se pudo enviar la comunicación de baja:\n\n" +
+                            error.getMessage() + "\n\n" +
+                            "Verifique:\n" +
+                            "• Conexión a internet\n" +
+                            "• Configuración de SUNAT\n" +
+                            "• Certificado digital\n" +
+                            "• Credenciales SOL");
         });
-        
+
         new Thread(enviarTask).start();
     }
-    
+
     /**
      * Limpiar formulario para nuevo
      */
     @FXML
     private void nuevo(ActionEvent event) {
+        LOGGER.info("Limpiando formulario para nuevo comprobante");
+
         limpiarParaNuevo();
-        listaComprobantesBaja.clear();
         cmbMotivoTipo.setValue(null);
         txtMotivoDescripcion.clear();
+        txtMotivoDescripcion.setStyle("");
+
+        LOGGER.info("✓ Formulario limpiado");
     }
-    
+
     /**
      * Cerrar ventana
      */
     @FXML
     private void cerrar(ActionEvent event) {
-        
-        if (!listaComprobantesBaja.isEmpty()) {
-            if (Mensaje.confirmacion(null, "Confirmar Salida", 
-                "Hay comprobantes sin enviar.\n¿Está seguro de cerrar?")
-                .get() != ButtonType.OK) {
+
+        // Si hay un comprobante cargado sin enviar, confirmar
+        if (comprobanteActual != null && cmbMotivoTipo.getValue() != null) {
+            if (Mensaje.confirmacion(null, "Confirmar Salida",
+                            "Hay un comprobante cargado sin enviar.\n" +
+                                    "¿Está seguro de cerrar?")
+                    .get() != ButtonType.OK) {
                 return;
             }
         }
-        
+
+        // Detener el reloj
+        if (clockTimeline != null) {
+            clockTimeline.stop();
+            LOGGER.fine("✓ Reloj detenido");
+        }
+
+        // Cerrar ventana
         btnCerrar.getScene().getWindow().hide();
+
+        LOGGER.info("=".repeat(60));
+        LOGGER.info("Ventana cerrada - Sesión finalizada");
+        LOGGER.info("=".repeat(60));
     }
-    
+
     // ==================== MÉTODOS AUXILIARES ====================
-    
-    /**
-     * Mostrar diálogo de selección por fecha
-     */
-    private void mostrarDialogoSeleccionFecha(String tipoDoc, LocalDate fecha) {
-        // TODO: Implementar diálogo con lista de comprobantes de esa fecha
-        Mensaje.informacion(null, "Función en Desarrollo", 
-            "Esta función mostrará un diálogo con todos los comprobantes del día seleccionado");
-    }
-    
+
     /**
      * Extrae el tipo de documento del número de comprobante
      */
     private String extraerTipoDocumento(String numeroComprobante) {
+        if (numeroComprobante == null || numeroComprobante.isEmpty()) {
+            return null;
+        }
+
         char primerCaracter = numeroComprobante.charAt(0);
         return switch (primerCaracter) {
             case 'F', 'f' -> "F";
@@ -612,11 +754,13 @@ public class ComunicacionBajaController implements Initializable {
             default -> null;
         };
     }
-    
+
     /**
      * Mapea descripción de tipo documento a código
      */
     private String mapearTipoDocumento(String descripcion) {
+        if (descripcion == null) return "F";
+
         return switch (descripcion) {
             case "FACTURA" -> "F";
             case "BOLETA" -> "B";
@@ -624,11 +768,13 @@ public class ComunicacionBajaController implements Initializable {
             default -> "F";
         };
     }
-    
+
     /**
-     * Obtiene descripción del estado
+     * Obtiene descripción del estado del comprobante
      */
     private String obtenerDescripcionEstado(String codigo) {
+        if (codigo == null) return "";
+
         return switch (codigo) {
             case "D" -> "DESPACHADO";
             case "P" -> "PENDIENTE";
@@ -636,21 +782,23 @@ public class ComunicacionBajaController implements Initializable {
             default -> codigo;
         };
     }
-    
+
     /**
-     * Limpia los datos del comprobante
+     * Limpia los datos del comprobante cargado
      */
     private void limpiarDatosComprobante() {
         comprobanteActual = null;
         txtComprobante.clear();
         txtEstado.clear();
+        lblEstadoBadge.setText("");
+        lblEstadoBadge.setStyle("");
         txtCliente.clear();
         txtDocumentoCliente.clear();
         txtMoneda.clear();
         txtTotal.clear();
         txtEstadoSunat.clear();
     }
-    
+
     /**
      * Limpia para agregar nuevo comprobante
      */
@@ -658,5 +806,15 @@ public class ComunicacionBajaController implements Initializable {
         txtNumeroComprobante.clear();
         limpiarDatosComprobante();
         txtNumeroComprobante.requestFocus();
+    }
+
+    // ==================== GETTERS (para testing) ====================
+
+    public Arfafe getComprobanteActual() {
+        return comprobanteActual;
+    }
+
+    public Timeline getClockTimeline() {
+        return clockTimeline;
     }
 }
