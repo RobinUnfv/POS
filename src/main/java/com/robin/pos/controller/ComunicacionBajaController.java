@@ -5,6 +5,7 @@ import com.robin.pos.dao.ComunicacionBajaDao;
 import com.robin.pos.model.Arfafe;
 import com.robin.pos.model.ComprobanteBaja;
 import com.robin.pos.util.Mensaje;
+import com.robin.pos.util.Metodos;
 import com.robin.pos.util.ProgressDialog;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -341,9 +342,10 @@ public class ComunicacionBajaController implements Initializable {
         actualizarBadgeEstado(arfafe.getEstado());
 
         // Estado SUNAT (si existe)
-        String estadoSunat =  arfafe.getProceStatus()
+        String estadoSunat =  arfafe.getProceStatus();
         if (estadoSunat != null && !estadoSunat.isEmpty()) {
-            txtEstadoSunat.setText(estadoSunat);
+            //estadoSunat = Metodos.getEstadoSunat(estadoSunat);
+            txtEstadoSunat.setText(Metodos.getEstadoSunat(estadoSunat));
         } else {
             txtEstadoSunat.setText("NO ENVIADO");
         }
@@ -351,9 +353,6 @@ public class ComunicacionBajaController implements Initializable {
         // Validar si se puede dar de baja
         validarSiPuedeDarseDeBaja(arfafe);
 
-        LOGGER.info("Datos cargados: " + arfafe.getNoFactu() +
-                " | Cliente: " + arfafe.getNbrCliente() +
-                " | Total: S/ " + String.format("%.2f", arfafe.getTotal()));
     }
 
     /**

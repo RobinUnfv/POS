@@ -298,9 +298,8 @@ public class ComunicacionBajaDao {
             SELECT COUNT(*) AS TOTAL
             FROM FACTU.COMUNICACION_BAJA
             WHERE NO_CIA = ?
-            AND TIPO_DOC = ?
             AND NO_FACTU = ?
-            AND ESTADO_BAJA IN ('PENDIENTE', 'ENVIADO', 'ACEPTADO')
+            AND ESTADO = 'A'
             """;
 
         Connection cx = null;
@@ -308,8 +307,7 @@ public class ComunicacionBajaDao {
             cx = ConexionBD.oracle();
             PreparedStatement ps = cx.prepareStatement(sql);
             ps.setString(1, noCia);
-            ps.setString(2, tipoDoc);
-            ps.setString(3, noFactu);
+            ps.setString(2, noFactu);
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
