@@ -35,14 +35,11 @@ public class ArfafeDao {
         String sql = """
             SELECT F.NO_CIA, F.TIPO_DOC, F.NO_FACTU, F.NO_CLIENTE,F.TIPO_DOC_CLI, F.NUM_DOC_CLI, F.FECHA, F.NBR_CLIENTE, 
                    F.MONEDA, F.NO_ORDEN, F.SUB_TOTAL, F.IMPUESTO, F.TOTAL, F.ESTADO, F.VALOR_VENTA, F.TOTAL_BRUTO, 
-                   F.OPER_GRAVADAS, F.GUIA_TEMP, CXC.PR_CLIENTE.GET_DIRECCION(F.NO_CIA, F.NO_CLIENTE) AS DIRECCION
-            FROM FACTU.ARFAFE F, CXC.ARCCTDA D
+                   F.OPER_GRAVADAS, F.GUIA_TEMP, CXC.PR_CLIENTE.GET_DIRECCION(F.NO_CIA, F.NO_CLIENTE) AS DIRECCION,
+                   F.CDR, F.PROCE_STATUS
+            FROM FACTU.ARFAFE F
             WHERE F.NO_CIA = ?
-            AND F.TIPO_DOC = ?
             AND F.NO_FACTU = ?
-            AND D.NO_CIA = F.NO_CIA
-            AND D.COD_TIENDA = ?
-            AND D.NO_CLIENTE = F.NO_CLIENTE
             """;
 
         Connection cx = null;
@@ -50,9 +47,8 @@ public class ArfafeDao {
             cx = ConexionBD.oracle();
             PreparedStatement ps = cx.prepareStatement(sql);
             ps.setString(1, noCia);
-            ps.setString(2, tipoDoc);
-            ps.setString(3, noFactu);
-            ps.setString(4, "001");
+            //ps.setString(2, tipoDoc);
+            ps.setString(2, noFactu);
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -62,7 +58,7 @@ public class ArfafeDao {
             rs.close();
             ps.close();
         } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Error al buscar comprobante por número: " + noFactu, ex);
+            LOGGER.log(Level.SEVERE, "Error al buscar comprobante : " + noFactu, ex);
         } finally {
             ConexionBD.cerrarCxOracle(cx);
         }
@@ -323,6 +319,8 @@ public class ArfafeDao {
         arfafe.setOperGravadas(rs.getBigDecimal("OPER_GRAVADAS"));
         arfafe.setGuiaTemp(rs.getString("GUIA_TEMP"));
         arfafe.setDireccion(rs.getString("DIRECCION"));
+        arfafe.setCdr(rs.getString("CDR"));
+        arfafe.setProceStatus(rs.getString("PROCE_STATUS"));
 
         return arfafe;
     }

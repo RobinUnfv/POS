@@ -29,6 +29,9 @@ public class Arfafe {
     private String guiaTemp;
     private String direccion;
 
+    private String cdr;
+    private String proceStatus;
+
     public Arfafe(){}
 
     public Arfafe(String tipoDoc, String tipoCliente, String tipoCambio, String indDoc, String mDsctoGlobal) {
@@ -62,6 +65,49 @@ public class Arfafe {
         this.operGravadas = operGravadas;
         this.guiaTemp = guiaTemp;
         this.direccion = direccion;
+    }
+
+    public Arfafe(String noCia,String tipoDoc, String noFactu, String noCliente, String tipoDocCli, String numDocCli, Date fecha,
+                  String nbrCliente, String moneda, String noOrden, BigDecimal subTotal, BigDecimal impuesto,
+                  BigDecimal total, String estado, BigDecimal valorVenta, BigDecimal totalBruto,
+                  BigDecimal operGravadas, String guiaTemp, String direccion, String cdr, String proceStatus) {
+        this.noCia = noCia;
+        this.tipoDoc = tipoDoc;
+        this.noFactu = noFactu;
+        this.noCliente = noCliente;
+        this.tipoDocCli = tipoDocCli;
+        this.numDocCli = numDocCli;
+        this.fecha = fecha;
+        this.nbrCliente = nbrCliente;
+        this.moneda = moneda;
+        this.noOrden = noOrden;
+        this.subTotal = subTotal;
+        this.impuesto = impuesto;
+        this.total = total;
+        this.estado = estado;
+        this.valorVenta = valorVenta;
+        this.totalBruto = totalBruto;
+        this.operGravadas = operGravadas;
+        this.guiaTemp = guiaTemp;
+        this.direccion = direccion;
+        this.cdr = cdr;
+        this.proceStatus = proceStatus;
+    }
+
+    public String getCdr() {
+        return cdr;
+    }
+
+    public void setCdr(String cdr) {
+        this.cdr = cdr;
+    }
+
+    public String getProceStatus() {
+        return proceStatus;
+    }
+
+    public void setProceStatus(String proceStatus) {
+        this.proceStatus = proceStatus;
     }
 
     public String getDireccion() {

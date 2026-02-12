@@ -26,16 +26,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Controlador para el formulario de Comunicación de Baja SUNAT
- * Versión 3.0 - Diseño moderno simplificado (SIN sección 4 de tabla)
- *
- * Permite dar de baja UN comprobante a la vez enviándolo directamente a SUNAT
- *
- * @author Robin POS
- * @version 3.0
- * @date 2026-02-10
- */
 public class ComunicacionBajaController implements Initializable {
 
     private static final Logger LOGGER = Logger.getLogger(ComunicacionBajaController.class.getName());
@@ -226,7 +216,7 @@ public class ComunicacionBajaController implements Initializable {
         if (numeroComprobante.length() < 10) {
             Mensaje.alerta(null, "Formato Inválido",
                     "El número de comprobante debe tener al menos 10 caracteres.\n" +
-                            "Formato esperado: F001-00000123 o B001-00000456");
+                            "Formato esperado: F00100000123 o B00100000456");
             txtNumeroComprobante.requestFocus();
             return;
         }
@@ -291,7 +281,7 @@ public class ComunicacionBajaController implements Initializable {
 
         ProgressDialog progressDialog = new ProgressDialog();
         progressDialog.setTitle("Buscando Comprobante");
-        progressDialog.setMessage("Buscando en la base de datos...");
+        progressDialog.setMessage("Buscando "+numeroComprobante);
         progressDialog.setIndeterminate(true);
         progressDialog.show();
 
@@ -351,7 +341,7 @@ public class ComunicacionBajaController implements Initializable {
         actualizarBadgeEstado(arfafe.getEstado());
 
         // Estado SUNAT (si existe)
-        String estadoSunat = ""; // arfafe.getEstadoSunat();
+        String estadoSunat =  arfafe.getProceStatus()
         if (estadoSunat != null && !estadoSunat.isEmpty()) {
             txtEstadoSunat.setText(estadoSunat);
         } else {
@@ -374,7 +364,7 @@ public class ComunicacionBajaController implements Initializable {
 
         switch (estado) {
             case "D":
-                lblEstadoBadge.setText("ACTIVO");
+                lblEstadoBadge.setText("DESPACHADO");
                 lblEstadoBadge.setStyle(
                         "-fx-background-color: #10b981; " +
                                 "-fx-text-fill: white; " +

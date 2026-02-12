@@ -135,6 +135,21 @@ public class Metodos {
         }
     }
 
+    /**
+     * Obtiene descripción del estado del comprobante
+     */
+    private String getEstadoSunat(String codigo) {
+        if (codigo == null) return "";
+
+        return switch (codigo) {
+            case "N" -> "NUEVO";
+            case "B" -> "BLOQUEOEADO";
+            case "E" -> "ENVIADO";
+            case "X" -> "ERROR DE ENVIO";
+            default -> codigo;
+        };
+    }
+
     public static String getTipoDocumentoCliente(String noFactu, String nocliente) {
 
         String tipoDocumento = getTipoComprobante(noFactu);
