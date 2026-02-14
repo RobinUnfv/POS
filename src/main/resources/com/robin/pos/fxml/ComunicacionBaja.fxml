@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<VBox fx:id="vbxPrincipal" maxHeight="750" prefHeight="700" prefWidth="950" styleClass="root-container" stylesheets="@../css/comunicacion-baja.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.ComunicacionBajaController">
+<VBox fx:id="vbxPrincipal" maxHeight="750" prefHeight="700" prefWidth="950" styleClass="root-container" stylesheets="@../css/comunicacion-baja.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.ComunicacionBajaController">
 
     <!-- ==================== CABECERA (FIJA - NO SCROLL) ==================== -->
     <HBox alignment="CENTER_LEFT" maxHeight="75" minHeight="75" prefHeight="75" spacing="15" styleClass="header-container">
@@ -70,7 +70,7 @@
                     <!-- Tipo Documento -->
                     <VBox spacing="5">
                         <Label styleClass="field-label" text="Tipo de Documento" />
-                        <ComboBox fx:id="cmbTipoDocumento" maxWidth="Infinity" prefHeight="36" styleClass="modern-combo" onAction="#cambiarTipoDocumento">
+                        <ComboBox fx:id="cmbTipoDocumento" maxWidth="Infinity" onAction="#cambiarTipoDocumento" prefHeight="36" styleClass="modern-combo">
                             <cursor><Cursor fx:constant="HAND" /></cursor>
                         </ComboBox>
                     </VBox>
@@ -78,13 +78,13 @@
                     <!-- Número Comprobante -->
                     <VBox spacing="5" GridPane.columnIndex="1">
                         <Label styleClass="field-label" text="Número de Comprobante" />
-                        <TextField fx:id="txtNumeroComprobante" prefHeight="36" promptText="Ej: F001-00000123" styleClass="modern-field" onKeyPressed="#buscarConEnter" />
+                        <TextField fx:id="txtNumeroComprobante" onKeyPressed="#buscarConEnter" prefHeight="36" promptText="Ej: F001-00000123" styleClass="modern-field" />
                     </VBox>
 
                     <!-- Fecha Emisión -->
                     <VBox spacing="5" GridPane.columnIndex="2">
-                        <Label styleClass="field-label" text="Fecha Emisión" />
-                        <DatePicker fx:id="dpFechaEmision" maxWidth="Infinity" prefHeight="36" promptText="dd/MM/yyyy" styleClass="modern-combo" editable="false">
+                        <Label styleClass="field-label" text="Fecha baja" />
+                        <DatePicker fx:id="dpFechaEmision" editable="false" maxWidth="Infinity" prefHeight="36" promptText="dd/MM/yyyy" styleClass="modern-combo">
                             <cursor><Cursor fx:constant="HAND" /></cursor>
                         </DatePicker>
                     </VBox>
@@ -92,7 +92,7 @@
                     <!-- Botón Buscar -->
                     <VBox spacing="5" GridPane.columnIndex="3">
                         <Label text=" " />
-                        <Button fx:id="btnBuscar" maxWidth="Infinity" prefHeight="36" styleClass="btn-search" text="Buscar" onAction="#buscarComprobante">
+                        <Button fx:id="btnBuscar" maxWidth="Infinity" onAction="#buscarComprobante" prefHeight="36" styleClass="btn-search" text="Buscar">
                             <cursor><Cursor fx:constant="HAND" /></cursor>
                             <graphic>
                                 <SVGPath content="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" scaleX="0.75" scaleY="0.75" styleClass="btn-icon-search" />
@@ -106,7 +106,7 @@
 
                 <!-- Botón Buscar por Fecha -->
                 <HBox spacing="10">
-                    <Button fx:id="btnBuscarPorFecha" prefHeight="36" prefWidth="180" styleClass="btn-secondary" text="Buscar por Fecha" onAction="#buscarPorFecha">
+                    <Button fx:id="btnBuscarPorFecha" onAction="#buscarPorFecha" prefHeight="36" prefWidth="180" styleClass="btn-secondary" text="Buscar por Fecha">
                         <cursor><Cursor fx:constant="HAND" /></cursor>
                         <graphic>
                             <SVGPath content="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z" scaleX="0.7" scaleY="0.7" styleClass="btn-icon-secondary" />
@@ -138,7 +138,7 @@
                     <!-- Estado -->
                     <VBox spacing="5" GridPane.columnIndex="1">
                         <Label styleClass="field-label" text="Estado" />
-                        <HBox spacing="10" alignment="CENTER_LEFT">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
                             <TextField fx:id="txtEstado" editable="false" prefHeight="36" styleClass="modern-field, field-readonly" HBox.hgrow="ALWAYS" />
                             <Label fx:id="lblEstadoBadge" styleClass="status-badge" text="ACTIVO" />
                         </HBox>
@@ -193,7 +193,7 @@
                 <!-- Tipo de Motivo -->
                 <VBox spacing="5">
                     <Label styleClass="field-label, field-required" text="Tipo de Motivo *" />
-                    <ComboBox fx:id="cmbMotivoTipo" maxWidth="Infinity" prefHeight="36" promptText="Seleccione el motivo según catálogo SUNAT..." styleClass="modern-combo" onAction="#seleccionarMotivo">
+                    <ComboBox fx:id="cmbMotivoTipo" maxWidth="Infinity" onAction="#seleccionarMotivo" prefHeight="36" promptText="Seleccione el motivo según catálogo SUNAT..." styleClass="modern-combo">
                         <cursor><Cursor fx:constant="HAND" /></cursor>
                     </ComboBox>
                 </VBox>
@@ -201,7 +201,7 @@
                 <!-- Descripción -->
                 <VBox spacing="5">
                     <Label styleClass="field-label" text="Descripción Detallada" />
-                    <TextArea fx:id="txtMotivoDescripcion" prefHeight="100" promptText="Ingrese una descripción detallada del motivo (opcional, pero obligatorio si selecciona 'Otros')..." wrapText="true" styleClass="modern-textarea" />
+                    <TextArea fx:id="txtMotivoDescripcion" prefHeight="100" promptText="Ingrese una descripción detallada del motivo (opcional, pero obligatorio si selecciona 'Otros')..." styleClass="modern-textarea" wrapText="true" />
                 </VBox>
 
                 <!-- Alert Box -->
@@ -239,7 +239,7 @@
         <Region HBox.hgrow="ALWAYS" />
 
         <!-- Botón Nuevo -->
-        <Button fx:id="btnNuevo" prefHeight="36" prefWidth="100" styleClass="btn-secondary" text="Nuevo" onAction="#nuevo">
+        <Button fx:id="btnNuevo" onAction="#nuevo" prefHeight="36" prefWidth="100" styleClass="btn-secondary" text="Nuevo">
             <cursor><Cursor fx:constant="HAND" /></cursor>
             <graphic>
                 <SVGPath content="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" scaleX="0.7" scaleY="0.7" styleClass="btn-icon-secondary" />
@@ -247,7 +247,7 @@
         </Button>
 
         <!-- Botón Enviar Baja -->
-        <Button fx:id="btnEnviarSunat" disable="true" prefHeight="36" prefWidth="180" styleClass="btn-danger" text="Enviar Baja a SUNAT" onAction="#enviarComunicacionBaja">
+        <Button fx:id="btnEnviarSunat" disable="true" onAction="#enviarComunicacionBaja" prefHeight="36" prefWidth="180" styleClass="btn-danger" text="Enviar Baja a SUNAT">
             <cursor><Cursor fx:constant="HAND" /></cursor>
             <graphic>
                 <SVGPath content="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" scaleX="0.75" scaleY="0.75" styleClass="btn-icon-danger" />
@@ -255,7 +255,7 @@
         </Button>
 
         <!-- Botón Cerrar -->
-        <Button fx:id="btnCerrar" prefHeight="36" prefWidth="100" styleClass="btn-secondary" text="Cerrar" onAction="#cerrar">
+        <Button fx:id="btnCerrar" onAction="#cerrar" prefHeight="36" prefWidth="100" styleClass="btn-secondary" text="Cerrar">
             <cursor><Cursor fx:constant="HAND" /></cursor>
             <graphic>
                 <SVGPath content="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" scaleX="0.65" scaleY="0.65" styleClass="btn-icon-secondary" />

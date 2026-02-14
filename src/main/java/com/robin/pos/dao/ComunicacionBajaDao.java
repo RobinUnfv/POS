@@ -31,53 +31,38 @@ public class ComunicacionBajaDao {
 
         int idGenerado = 0;
 
-        String sql = """
-            INSERT INTO FACTU.COMUNICACION_BAJA (
-                NO_CIA, TIPO_DOC, NO_FACTU, FECHA_EMISION, FECHA_BAJA,
-                CODIGO_MOTIVO, DESCRIPCION_MOTIVO, ESTADO_BAJA
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """;
+        String sql = "{ call FACTU.PR_FACTURA.REG_COMUNI_BAJA(?, ?, ?, ?, ?) }";
 
-        Connection cx = null;
+        Connection conexion = null;
+        CallableStatement cstmt = null;
         try {
-            cx = ConexionBD.oracle();
-            PreparedStatement ps = cx.prepareStatement(sql, new String[]{"ID_BAJA"});
+            conexion = ConexionBD.oracle();
+            cstmt = conexion.prepareCall(sql);
 
-            ps.setString(1, comprobante.getNoCia());
-            ps.setString(2, comprobante.getTipoDocumento());
-            ps.setString(3, comprobante.getNumeroComprobante());
-            ps.setDate(4, Date.valueOf(comprobante.getFechaEmision()));
-            ps.setDate(5, Date.valueOf(comprobante.getFechaBaja()));
-            ps.setString(6, comprobante.getCodigoMotivo());
-            ps.setString(7, comprobante.getDescripcionMotivo());
-            ps.setString(8, comprobante.getEstadoBaja());
+            cstmt.setString(1, comprobante.getNoCia());
+            cstmt.setString(2, comprobante.getNumeroComprobante());
+            cstmt.setDate(3, Date.valueOf(comprobante.getFechaBaja()));
+            cstmt.setString(4, comprobante.getCodigoMotivo());
+            cstmt.setString(5, comprobante.getDescripcionMotivo());
 
-            int filasAfectadas = ps.executeUpdate();
+            // Ejecutar el procedimiento
+            cstmt.execute();
 
-            if (filasAfectadas > 0) {
-                ResultSet rs = ps.getGeneratedKeys();
-                if (rs.next()) {
-                    idGenerado = rs.getInt(1);
-                }
-                rs.close();
-            }
-
-            ps.close();
-            cx.commit();
+            idGenerado = 1;
 
             LOGGER.info("Baja registrada con ID: " + idGenerado);
 
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Error al registrar baja", ex);
-            if (cx != null) {
+            if (conexion != null) {
                 try {
-                    cx.rollback();
+                    conexion.rollback();
                 } catch (SQLException e) {
                     LOGGER.log(Level.SEVERE, "Error en rollback", e);
                 }
             }
         } finally {
-            ConexionBD.cerrarCxOracle(cx);
+            ConexionBD.cerrarCxOracle(conexion);
         }
 
         return idGenerado;

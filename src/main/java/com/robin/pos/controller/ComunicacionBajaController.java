@@ -573,17 +573,16 @@ public class ComunicacionBajaController implements Initializable {
             @Override
             protected String call() throws Exception {
 
-                LOGGER.info("→ Creando objeto ComprobanteBaja");
-
                 // 1. Crear objeto ComprobanteBaja
                 ComprobanteBaja comprobante = new ComprobanteBaja();
                 comprobante.setNoCia(comprobanteActual.getNoCia());
                 comprobante.setTipoDocumento(comprobanteActual.getTipoDoc());
                 comprobante.setNumeroComprobante(comprobanteActual.getNoFactu());
-
+                /*
                 LocalDate fechaEmision = comprobanteActual.getFecha().toInstant()
                         .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
                 comprobante.setFechaEmision(fechaEmision);
+                */
 
                 comprobante.setNombreCliente(comprobanteActual.getNbrCliente());
                 comprobante.setDocumentoCliente(comprobanteActual.getNumDocCli());
@@ -595,39 +594,12 @@ public class ComunicacionBajaController implements Initializable {
                 comprobante.setCodigoMotivo(codigoMotivo);
                 comprobante.setDescripcionMotivo(txtMotivoDescripcion.getText().trim());
 
-                LOGGER.info("→ Registrando en base de datos");
-
                 // 2. Registrar en base de datos
                 int idBaja = bajaDao.registrarBaja(comprobante);
 
                 if (idBaja == 0) {
                     throw new Exception("No se pudo registrar la baja en la base de datos");
                 }
-
-                LOGGER.info("✓ Baja registrada con ID: " + idBaja);
-
-                // TODO: 3. Generar XML de comunicación de baja
-                LOGGER.info("→ Generando XML de comunicación de baja...");
-                // Aquí usar XMLGeneratorService para generar el XML
-                Thread.sleep(500);
-
-                // TODO: 4. Firmar digitalmente
-                LOGGER.info("→ Firmando XML con certificado digital...");
-                // Aquí usar DigitalSignature para firmar
-                Thread.sleep(500);
-
-                // TODO: 5. Enviar a SUNAT vía SOAP
-                LOGGER.info("→ Enviando a SUNAT vía SOAP...");
-                // Aquí usar SOAPClientService para enviar
-                Thread.sleep(1000);
-
-                // TODO: 6. Procesar respuesta (CDR)
-                LOGGER.info("→ Procesando respuesta de SUNAT...");
-                Thread.sleep(500);
-
-                // TODO: 7. Actualizar estado en BD
-                LOGGER.info("→ Actualizando estado en base de datos...");
-                // Actualizar ARFAFE.ESTADO = 'A'
 
                 // Simulación (remover cuando se implemente la integración real)
                 String ticketSunat = "TICKET-" + System.currentTimeMillis();
@@ -652,10 +624,7 @@ public class ComunicacionBajaController implements Initializable {
                     "Comunicación de baja enviada correctamente.\n\n" +
                             "📋 Ticket SUNAT: " + ticket + "\n" +
                             "📄 Comprobante: " + comprobanteActual.getNoFactu() + "\n\n" +
-                            "El comprobante será anulado una vez SUNAT procese la comunicación.\n\n" +
-                            "Puede verificar el estado en:\n" +
-                            "• Tabla: COMUNICACION_BAJA\n" +
-                            "• Log: LOG_ENVIO_SUNAT");
+                            "El comprobante será anulado una vez SUNAT procese la comunicación.");
 
             // Limpiar formulario
             nuevo(null);

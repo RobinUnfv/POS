@@ -431,7 +431,7 @@ public class ComprobantePagoDao {
             LOGGER.info("XML Entrada: " + xmlEntrada);
 
             // Preparar la llamada al procedimiento almacenado
-            String sql = "{ call FACTU.PR_COMPROBANTE_PAGO.EMISION_COMPRO_PAGO(?, ?) }";
+                String sql = "{ call FACTU.PR_COMPROBANTE_PAGO.EMISION_COMPRO_PAGO(?, ?) }";
             cstmt = conexion.prepareCall(sql);
 
             // Parámetro de entrada: XML con los datos del comprobante (CLOB)
