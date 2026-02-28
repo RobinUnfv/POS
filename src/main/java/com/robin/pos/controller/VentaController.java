@@ -146,6 +146,8 @@ public class VentaController implements Initializable {
     private ToggleButton btnBoleta;
     @FXML
     private ToggleButton btnFactura;
+    @FXML
+    private ToggleButton btnCotizacion;
 
     @FXML
     private TextField txtGuiaRemision;
@@ -862,6 +864,19 @@ public class VentaController implements Initializable {
         }
 
         String tipoComprobanteDesc = tipoComprobante.equals("B") ? "BOLETA" : "FACTURA";
+        switch (this.tipoComprobante) {
+            case "B":
+                tipoComprobanteDesc = "BOLETA";
+                break;
+            case "F":
+                tipoComprobanteDesc = "FACTURA";
+                break;
+            case "C":
+                tipoComprobanteDesc = "COTIZACIÓN";
+                break;
+            default:
+                tipoComprobanteDesc = "DESCONOCIDO";
+        }
         String msjComprobante = "Se generará la " + tipoComprobanteDesc + "\n" + "¿Desea continuar?";
 
         if (tipoComprobanteDesc.equalsIgnoreCase("FACTURA")) {
@@ -1085,7 +1100,7 @@ public class VentaController implements Initializable {
                 break;
         }
 
-        // Tipo de comprobante (B=Boleta, F=Factura)
+        // Tipo de comprobante (B=Boleta, F=Factura y C=Cotización)
         params.setTipoDocumento(tipoComprobante);
 
         // Fecha de la venta
@@ -1166,6 +1181,7 @@ public class VentaController implements Initializable {
     void onBoleta(ActionEvent event) {
         if ( this.btnBoleta.isSelected() ) {
             tipoComprobante = "B";
+            this.btnPagar.setText("PAGAR");
             cbxDocIdentidad.setValue("OTR");
             validarTipoDocumento();
             //this.mostrarGuiaRemision(false);
@@ -1195,6 +1211,18 @@ public class VentaController implements Initializable {
                             "-fx-border-radius: 2px;"
             );
 
+            // Estilo normal para COTIZACION
+            btnCotizacion.setStyle(
+                    "-fx-background-color: white; " +
+                            "-fx-border-color: #999999; " +
+                            "-fx-border-width: 1px; " +
+                            "-fx-text-fill: #333333; " +
+                            "-fx-font-size: 11px; " +
+                            "-fx-font-weight: bold; " +
+                            "-fx-background-radius: 2px; " +
+                            "-fx-border-radius: 2px;"
+            );
+
 
         }
     }
@@ -1204,6 +1232,7 @@ public class VentaController implements Initializable {
         if (btnFactura.isSelected()) {
                 tipoComprobante = "F";
                 cbxDocIdentidad.setValue("RUC");
+                this.btnPagar.setText("PAGAR");
                 validarTipoDocumento();
                 this.mostrarGuiaRemision(true);
 
@@ -1230,6 +1259,66 @@ public class VentaController implements Initializable {
                              "-fx-background-radius: 2px; " +
                              "-fx-border-radius: 2px;"
                 );
+            // Estilo normal para COTIZACION
+            btnCotizacion.setStyle(
+                    "-fx-background-color: white; " +
+                            "-fx-border-color: #999999; " +
+                            "-fx-border-width: 1px; " +
+                            "-fx-text-fill: #333333; " +
+                            "-fx-font-size: 11px; " +
+                            "-fx-font-weight: bold; " +
+                            "-fx-background-radius: 2px; " +
+                            "-fx-border-radius: 2px;"
+            );
+            Platform.runLater(() -> {
+                this.txtNumDoc.requestFocus();
+            });
+        }
+    }
+
+    @FXML
+    void onCotizacion(ActionEvent event) {
+        if (btnCotizacion.isSelected()) {
+            tipoComprobante = "C";
+            this.btnPagar.setText("GENERAR");
+            cbxDocIdentidad.setValue("OTR");
+            validarTipoDocumento();
+            //this.mostrarGuiaRemision(true);
+
+            // Estilo seleccionado para FACTURA
+            btnCotizacion.setStyle(
+                    "-fx-background-color: #16BB60; " +
+                            "-fx-border-color: #999999; " +
+                            "-fx-border-width: 1px; " +
+                            "-fx-text-fill: #333333; " +
+                            "-fx-font-size: 11px; " +
+                            "-fx-font-weight: bold; " +
+                            "-fx-background-radius: 2px; " +
+                            "-fx-border-radius: 2px;"
+            );
+
+            // Estilo normal para BOLETA
+            btnBoleta.setStyle(
+                    "-fx-background-color: white; " +
+                            "-fx-border-color: #999999; " +
+                            "-fx-border-width: 1px; " +
+                            "-fx-text-fill: #333333; " +
+                            "-fx-font-size: 11px; " +
+                            "-fx-font-weight: bold; " +
+                            "-fx-background-radius: 2px; " +
+                            "-fx-border-radius: 2px;"
+            );
+            // Estilo normal para BOLETA
+            btnFactura.setStyle(
+                    "-fx-background-color: white; " +
+                            "-fx-border-color: #999999; " +
+                            "-fx-border-width: 1px; " +
+                            "-fx-text-fill: #333333; " +
+                            "-fx-font-size: 11px; " +
+                            "-fx-font-weight: bold; " +
+                            "-fx-background-radius: 2px; " +
+                            "-fx-border-radius: 2px;"
+            );
             Platform.runLater(() -> {
                 this.txtNumDoc.requestFocus();
             });
