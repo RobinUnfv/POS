@@ -1044,6 +1044,18 @@ public class VentaController implements Initializable {
                         "-fx-border-radius: 2px;"
         );
 
+        // Estilo normal para COTIZACIÓN
+        btnCotizacion.setStyle(
+                "-fx-background-color: white; " +
+                        "-fx-border-color: #999999; " +
+                        "-fx-border-width: 1px; " +
+                        "-fx-text-fill: #333333; " +
+                        "-fx-font-size: 11px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 2px; " +
+                        "-fx-border-radius: 2px;"
+        );
+
         // Resetear campos de pago
         txtPago.setText("0.00");
         txtVuelto.setText("0.00");
@@ -1358,9 +1370,24 @@ public class VentaController implements Initializable {
         datosVenta.setVendedor("YPC"); // TODO: obtener del usuario logueado
         datosVenta.setPorcentajeIgv(18);
 
-        System.out.println("Imprimiendo comprobante con tipo: " + tipoComprobante);
-        ReporteCotizacion reporteCotizacion = new ReporteCotizacion();
-        reporteCotizacion.generarReporte(resultado.getNoOrden(), datosCliente.getNombre(), detalles );
+        switch (tipoComprobante) {
+            case "B":
+                ReporteComprobantePago reporteComprobantePago = new ReporteComprobantePago();
+                reporteComprobantePago.generarReporte(resultado, detalles, datosCliente, datosVenta);
+                break;
+            case "F":
+                ReporteComprobantePago reporteComprobantePago2 = new ReporteComprobantePago();
+                reporteComprobantePago2.generarReporte(resultado, detalles, datosCliente, datosVenta);
+                break;
+            case "C":
+                ReporteCotizacion reporteCotizacion = new ReporteCotizacion();
+                reporteCotizacion.generarReporte(resultado.getNoOrden(), datosCliente.getNombre(), detalles );
+                break;
+            default:
+                Mensaje.error(null, "Error de impresión",
+                        "Tipo de comprobante desconocido para impresión: " + tipoComprobante);
+                break;
+        }
         /*
         // Mostrar el reporte
         Platform.runLater(() -> {

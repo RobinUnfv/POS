@@ -30,7 +30,7 @@ public class ReporteCotizacion {
 
     // Datos de la empresa (configurables)
     private String empresaNombre = "CORPORACION TEXTIL CELIA E.I.R.L.";
-    private String empresaTagline = "EN DISEÑO Y MODELOS EXCLUSIVOS EN PRODUCTOS TEXTILES - \nPRENDAS DE VESTIR - CON PRECIOS ESPECIALES PARA PROVINCIA - \nVENTAS POR MAYOR Y MENOR";
+    private String empresaTagline = "EN DISEÑO Y MODELOS EXCLUSIVOS EN PRODUCTOS TEXTILES - \nPRENDAS DE VESTIR - CON PRECIOS ESPECIALES PARA PROVINCIA - VENTAS POR MAYOR Y MENOR";
     private String empresaTelefono = "";
     private String empresaDireccion = "JR. MARISCAL AGUSTIN GAMARRA NRO. 676 INT. 262 URB. EL PORVENIR - LA VICTORIA - LIMA - LIMA";
     private String empresaEmail = "";
@@ -198,18 +198,24 @@ public class ReporteCotizacion {
 
         // Calcular totales
         BigDecimal subtotal = calcularSubtotal(detalles);
-        BigDecimal igvMonto = calcularIGV(subtotal);
-        BigDecimal total = subtotal.add(igvMonto);
+        //BigDecimal igvMonto = calcularIGV(subtotal);
+        //BigDecimal total = subtotal.add(igvMonto);
 
-        params.put("SUBTOTAL", subtotal);
+        BigDecimal subTotal = subtotal.divide(BigDecimal.valueOf(1.18), 2, RoundingMode.HALF_UP);
+        BigDecimal igvTotal = subtotal.subtract(subTotal);
+
+        params.put("SUBTOTAL", subTotal);
         params.put("IGV_PORCENTAJE", new BigDecimal("18"));
-        params.put("IGV_MONTO", igvMonto);
-        params.put("TOTAL", total);
+        params.put("IGV_MONTO", igvTotal);
+        params.put("TOTAL", subtotal);
 
         // Método de pago
         params.put("METODO_PAGO", metodoPago);
         params.put("NUMERO_CUENTA", numeroCuenta);
         params.put("NUMERO_CUENTA_COMPLETO", numeroCuentaCompleto);
+        // Monto en letras
+        String montoEnLetras = NumeroALetras.convertir(subtotal.doubleValue(), "SOL");
+        params.put("SON", montoEnLetras);
 
         return params;
     }
