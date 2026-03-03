@@ -34,6 +34,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -715,16 +716,26 @@ public class VentaController implements Initializable {
     }
 
     private void calcularTotales() {
+        /*
         double total = listaDetalleVentas.stream()
                 .mapToDouble(p -> p.getCantidad() * p.getPrecio())
                 .sum();
         double igv = total * 0.18;
         double subTotal = total / 1.18;
+        */
+        double total = listaDetalleVentas.stream()
+                .mapToDouble(p -> p.getCantidad() * p.getPrecio())
+                .sum();
+
+        BigDecimal totalBD = BigDecimal.valueOf(total).setScale(2, RoundingMode.HALF_UP);
+
+        BigDecimal subTotal = totalBD.divide(BigDecimal.valueOf(1.18), 2, RoundingMode.HALF_UP);
+        BigDecimal igvTotal = totalBD.subtract(subTotal);
 
         lblSubTotal.setText(formatoMoneda.format(subTotal));
-        lblIgv.setText(formatoMoneda.format(igv));
+        lblIgv.setText(formatoMoneda.format(igvTotal));
         lblTotGravada.setText(formatoMoneda.format(subTotal));
-        lblTotal.setText(formatoMoneda.format(total));
+        lblTotal.setText(formatoMoneda.format(totalBD));
     }
 
     @FXML
