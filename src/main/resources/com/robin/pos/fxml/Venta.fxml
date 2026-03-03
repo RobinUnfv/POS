@@ -95,20 +95,35 @@
 
                     <Label styleClass="label-seccion" text="Dirección" />
                     <TextArea fx:id="txtDireccion" prefRowCount="2" promptText="Dirección del cliente" wrapText="true" />
-
-                    <Label styleClass="label-seccion" text="Fecha" />
-                    <DatePicker fx:id="txtFechaVenta" maxWidth="Infinity">
-                        <tooltip>
-                            <Tooltip text="Fecha de la venta" />
-                        </tooltip>
-                    </DatePicker>
-
-                    <Label styleClass="label-seccion" text="Moneda" />
-                    <ComboBox fx:id="cbxMoneda" maxWidth="Infinity" promptText="SOL">
-                        <tooltip>
-                            <Tooltip text="Moneda de la transacción" />
-                        </tooltip>
-                    </ComboBox>
+               <HBox prefHeight="55.0" prefWidth="290.0">
+                  <children>
+                     <VBox prefHeight="55.0" prefWidth="145.0">
+                        <children>
+            
+                                <Label styleClass="label-seccion" text="Fecha" />
+                                <DatePicker fx:id="txtFechaVenta" maxWidth="Infinity">
+                                    <tooltip>
+                                        <Tooltip text="Fecha de la venta" />
+                                    </tooltip>
+                                </DatePicker>
+                        </children>
+                        <padding>
+                           <Insets right="5.0" />
+                        </padding>
+                     </VBox>
+                     <VBox prefHeight="55.0" prefWidth="139.0">
+                        <children>
+            
+                                <Label styleClass="label-seccion" text="Moneda" />
+                                <ComboBox fx:id="cbxMoneda" maxWidth="Infinity" promptText="SOL">
+                                    <tooltip>
+                                        <Tooltip text="Moneda de la transacción" />
+                                    </tooltip>
+                                </ComboBox>
+                        </children>
+                     </VBox>
+                  </children>
+               </HBox>
 
                     <Label styleClass="label-seccion" text="Forma de Pago" />
                     <ComboBox fx:id="cbxFormaPago" maxWidth="Infinity" promptText="VENTA CONTADO">
