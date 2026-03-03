@@ -1342,6 +1342,7 @@ public class VentaController implements Initializable {
      * @param detalles Lista de detalles de la venta (copiar antes de limpiar)
      */
     private void imprimirComprobante(ResultadoEmision resultado, List<DetalleVenta> detalles) {
+
         // Preparar datos del cliente
         DatosCliente datosCliente = new DatosCliente();
         datosCliente.setNombre(txtRazSocNom.getText());
@@ -1357,11 +1358,32 @@ public class VentaController implements Initializable {
         datosVenta.setVendedor("YPC"); // TODO: obtener del usuario logueado
         datosVenta.setPorcentajeIgv(18);
 
+        System.out.println("Imprimiendo comprobante con tipo: " + tipoComprobante);
+        ReporteCotizacion reporteCotizacion = new ReporteCotizacion();
+        reporteCotizacion.generarReporte(resultado.getNoOrden(), datosCliente.getNombre(), detalles );
+        /*
         // Mostrar el reporte
         Platform.runLater(() -> {
-            ReporteComprobantePago reporteComprobantePago = new ReporteComprobantePago();
-            reporteComprobantePago.generarReporte(resultado, detalles, datosCliente, datosVenta);
+            switch (tipoComprobante) {
+                case "B":
+                    ReporteComprobantePago reporteComprobantePago = new ReporteComprobantePago();
+                    reporteComprobantePago.generarReporte(resultado, detalles, datosCliente, datosVenta);
+                case "F":
+                    ReporteComprobantePago reporteComprobantePago2 = new ReporteComprobantePago();
+                    reporteComprobantePago2.generarReporte(resultado, detalles, datosCliente, datosVenta);
+                    break;
+                case "C":
+                    ReporteCotizacion reporteCotizacion = new ReporteCotizacion();
+                    reporteCotizacion.generarReporte(resultado.getNoOrden(), datosCliente.getNombre(), detalles );
+                    break;
+                 default:
+                     Mensaje.error(null, "Error de impresión",
+                             "Tipo de comprobante desconocido para impresión: " + tipoComprobante);
+                     break;
+            }
+
         });
+        */
     }
 
 

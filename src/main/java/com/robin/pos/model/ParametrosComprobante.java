@@ -30,7 +30,7 @@ public class ParametrosComprobante {
     private String cajera = "900002";
 
     // Datos del documento
-    private String tipoDocumento; // B=Boleta, F=Factura
+    private String tipoDocumento; // B=Boleta, F=Factura y C=Cotización
     private LocalDate fecha = LocalDate.now();
     private String codTped = "1315";
     private String codTped1 = "1352";
