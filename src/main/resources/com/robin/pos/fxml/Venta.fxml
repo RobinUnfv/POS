@@ -9,8 +9,6 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -39,25 +37,15 @@
 
                 <!-- Sección: Documento de Identidad -->
                 <VBox spacing="5" styleClass="seccion-documento">
-               <HBox alignment="CENTER" spacing="0">
-                  <children>
-                     <ToggleButton fx:id="btnBoleta" onAction="#onBoleta" prefHeight="26.0" prefWidth="77.0" styleClass="btn-DocuPaga" text="BOLETA">
-                        <toggleGroup>
-                           <ToggleGroup fx:id="tipoDocumentoGroup" />
-                        </toggleGroup>
-                     </ToggleButton>
-                     <ToggleButton fx:id="btnFactura" onAction="#onFactura" prefHeight="26.0" prefWidth="73.0" styleClass="btn-DocuPaga" text="FACTURA" toggleGroup="$tipoDocumentoGroup" />
-                     <ToggleButton fx:id="btnCotizacion" onAction="#onCotizacion" prefHeight="26.0" prefWidth="88.0" styleClass="btn-DocuPaga" text="COTIZACIÓN" toggleGroup="$tipoDocumentoGroup" />
-                  </children>
-               </HBox>
-                    <Label prefHeight="18.0" prefWidth="126.0" styleClass="label-seccion" text="Tipo Documento" />
+                    <Label prefHeight="18.0" prefWidth="199.0" styleClass="label-seccion" text="Tipo  de Documento:" />
+               <ComboBox fx:id="cbxTipoDocu" maxWidth="Infinity" onAction="#capturarTipoDocumento" prefHeight="30.0" prefWidth="145.0" promptText="Seleccione...">
+                  <tooltip>
+                     <Tooltip text="Seleccione el tipo de documento" />
+                  </tooltip>
+               </ComboBox>
+               <Label prefHeight="18.0" prefWidth="199.0" styleClass="label-seccion" text="Destinatario : " />
                     <HBox spacing="5">
-                       <ComboBox fx:id="cbxDocIdentidad" maxWidth="Infinity" onAction="#escogerTipoDocumento" prefHeight="30.0" prefWidth="145.0" promptText="Seleccione...">
-                           <tooltip>
-                               <Tooltip text="Seleccione el tipo de documento" />
-                           </tooltip>
-                       </ComboBox>
-                        <TextField fx:id="txtNumDoc" onKeyPressed="#buscarClienteNumId" prefHeight="30.0" prefWidth="175.0" promptText="🔍 Buscar número" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="txtNumDoc" onKeyPressed="#buscarClienteNumId" prefHeight="30.0" prefWidth="175.0" promptText="🔍 Buscar cliente" HBox.hgrow="ALWAYS">
                             <tooltip>
                                 <Tooltip text="Presione Enter para buscar" />
                             </tooltip>
@@ -90,7 +78,7 @@
                 <!-- Sección: Datos del Cliente -->
                 <VBox spacing="5" VBox.vgrow="ALWAYS">
                     <Label fx:id="lblRazSocNom" styleClass="label-seccion" text="Razón Social / Nombre" />
-                    <TextArea fx:id="txtRazSocNom" prefRowCount="2" promptText="Razón Social / Nombre del cliente" text="CLIENTES VARIOS" wrapText="true" />
+                    <TextArea fx:id="txtRazSocNom" prefRowCount="2" promptText="Razón Social / Nombre del cliente" wrapText="true" />
 
                     <Label styleClass="label-seccion" text="Dirección" />
                     <TextArea fx:id="txtDireccion" prefRowCount="2" promptText="Dirección del cliente" wrapText="true" />

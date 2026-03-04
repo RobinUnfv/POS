@@ -31,6 +31,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -51,10 +52,10 @@ public class VentaController implements Initializable {
 
     @FXML
     private Button btnNuevoCliente;
-
+    /*
     @FXML
     private ComboBox<String> cbxDocIdentidad;
-
+    */
     @FXML
     private ComboBox<?> cbxFormaPago;
 
@@ -142,13 +143,16 @@ public class VentaController implements Initializable {
 
     @FXML
     private Button btnPagar;
-
+    /*
     @FXML
     private ToggleButton btnBoleta;
     @FXML
     private ToggleButton btnFactura;
     @FXML
     private ToggleButton btnCotizacion;
+    */
+    @FXML
+    private ComboBox<DocumentoPago> cbxTipoDocu;
 
     @FXML
     private TextField txtGuiaRemision;
@@ -172,10 +176,14 @@ public class VentaController implements Initializable {
        // this.lblNumDoc.setText("N° Doc:");
         this.lblRazSocNom.setText("Nombres:");
         this.txtNumDoc.setText("99999999998");
+        /*
         this.cbxDocIdentidad.getItems().addAll("CE", "DNI", "RUC", "OTR");
         this.cbxDocIdentidad.setValue("OTR");
-
+        */
         txtFechaVenta.setValue(LocalDate.now());
+
+        // Configurar documento de pago
+        cargarDocumentosPago();
 
         // Configurar la tabla de ventas
         configurarTablaVenta();
@@ -191,19 +199,7 @@ public class VentaController implements Initializable {
         this.mostrarGuiaRemision(true);
         // Configurar botón de boleta como seleccionado por defecto
         tipoComprobante = "B";
-        btnBoleta.setSelected(true);
-        btnBoleta.fire();
-        // Estilo seleccionado para BOLETA
-        btnBoleta.setStyle(
-                "-fx-background-color: #16BB60; " +
-                        "-fx-border-color: #999999; " +
-                        "-fx-border-width: 1px; " +
-                        "-fx-text-fill: #333333; " +
-                        "-fx-font-size: 11px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-radius: 2px; " +
-                        "-fx-border-radius: 2px;"
-        );
+
     }
 
     private void configurarTablaVenta() {
@@ -468,7 +464,7 @@ public class VentaController implements Initializable {
         txtRazSocNom.setText("");
         txtDireccion.setText("");
     }
-
+    /*
     private void validarTipoDocumento() {
         String tipoDoc = this.cbxDocIdentidad.getSelectionModel().getSelectedItem();
 
@@ -501,7 +497,8 @@ public class VentaController implements Initializable {
         }
 
     }
-
+    */
+    /*
     @FXML
     void escogerTipoDocumento(ActionEvent event) {
         validarTipoDocumento();
@@ -536,7 +533,7 @@ public class VentaController implements Initializable {
 
         this.txtNumDoc.requestFocus();
     }
-
+    */
     @FXML
     private void buscarArinda1(KeyEvent evt) {
         switch (evt.getCode()) {
@@ -1022,50 +1019,12 @@ public class VentaController implements Initializable {
 
         // Resetear tipo de comprobante a Boleta
         tipoComprobante = "B";
-        btnBoleta.setSelected(true);
-        btnBoleta.fire();
 
         // Resetear cliente a valores por defecto
-        cbxDocIdentidad.setValue("OTR");
+        //cbxDocIdentidad.setValue("OTR");
         txtNumDoc.setText("99999999998");
         txtRazSocNom.setText("CLIENTES VARIOS");
         txtDireccion.setText("");
-
-        // Estilo seleccionado para BOLETA
-        btnBoleta.setStyle(
-                "-fx-background-color: #16BB60; " +
-                        "-fx-border-color: #999999; " +
-                        "-fx-border-width: 1px; " +
-                        "-fx-text-fill: #333333; " +
-                        "-fx-font-size: 11px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-radius: 2px; " +
-                        "-fx-border-radius: 2px;"
-        );
-
-        // Estilo normal para FACTURA
-        btnFactura.setStyle(
-                "-fx-background-color: white; " +
-                        "-fx-border-color: #999999; " +
-                        "-fx-border-width: 1px; " +
-                        "-fx-text-fill: #333333; " +
-                        "-fx-font-size: 11px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-radius: 2px; " +
-                        "-fx-border-radius: 2px;"
-        );
-
-        // Estilo normal para COTIZACIÓN
-        btnCotizacion.setStyle(
-                "-fx-background-color: white; " +
-                        "-fx-border-color: #999999; " +
-                        "-fx-border-width: 1px; " +
-                        "-fx-text-fill: #333333; " +
-                        "-fx-font-size: 11px; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-background-radius: 2px; " +
-                        "-fx-border-radius: 2px;"
-        );
 
         // Resetear campos de pago
         txtPago.setText("0.00");
@@ -1104,7 +1063,7 @@ public class VentaController implements Initializable {
                 txtRazSocNom.getText().trim() : "CLIENTE VARIOS");
         params.setDireccionComercial(txtDireccion.getText() != null ?
                 txtDireccion.getText().trim() : "");
-
+        /*
         // Tipo de documento del cliente
         String tipoDocCliente = cbxDocIdentidad.getValue();
         switch (tipoDocCliente) {
@@ -1122,7 +1081,7 @@ public class VentaController implements Initializable {
                 params.setTipoDocCli("OTR");
                 break;
         }
-
+        */
         // Tipo de comprobante (B=Boleta, F=Factura y C=Cotización)
         params.setTipoDocumento(tipoComprobante);
 
@@ -1200,154 +1159,6 @@ public class VentaController implements Initializable {
         return true;
     }
 
-    @FXML
-    void onBoleta(ActionEvent event) {
-        if ( this.btnBoleta.isSelected() ) {
-            tipoComprobante = "B";
-            this.btnPagar.setText("PAGAR");
-            cbxDocIdentidad.setValue("OTR");
-            validarTipoDocumento();
-            //this.mostrarGuiaRemision(false);
-            mostrarGuiaRemision(true);
-
-            // Estilo seleccionado para BOLETA
-            btnBoleta.setStyle(
-                    "-fx-background-color: #16BB60; " +
-                            "-fx-border-color: #999999; " +
-                            "-fx-border-width: 1px; " +
-                            "-fx-text-fill: #333333; " +
-                            "-fx-font-size: 11px; " +
-                            "-fx-font-weight: bold; " +
-                            "-fx-background-radius: 2px; " +
-                            "-fx-border-radius: 2px;"
-            );
-
-            // Estilo normal para FACTURA
-            btnFactura.setStyle(
-                    "-fx-background-color: white; " +
-                            "-fx-border-color: #999999; " +
-                            "-fx-border-width: 1px; " +
-                            "-fx-text-fill: #333333; " +
-                            "-fx-font-size: 11px; " +
-                            "-fx-font-weight: bold; " +
-                            "-fx-background-radius: 2px; " +
-                            "-fx-border-radius: 2px;"
-            );
-
-            // Estilo normal para COTIZACION
-            btnCotizacion.setStyle(
-                    "-fx-background-color: white; " +
-                            "-fx-border-color: #999999; " +
-                            "-fx-border-width: 1px; " +
-                            "-fx-text-fill: #333333; " +
-                            "-fx-font-size: 11px; " +
-                            "-fx-font-weight: bold; " +
-                            "-fx-background-radius: 2px; " +
-                            "-fx-border-radius: 2px;"
-            );
-
-
-        }
-    }
-
-    @FXML
-    void onFactura(ActionEvent event) {
-        if (btnFactura.isSelected()) {
-                tipoComprobante = "F";
-                cbxDocIdentidad.setValue("RUC");
-                this.btnPagar.setText("PAGAR");
-                validarTipoDocumento();
-                this.mostrarGuiaRemision(true);
-
-                // Estilo seleccionado para FACTURA
-                btnFactura.setStyle(
-                      "-fx-background-color: #16BB60; " +
-                             "-fx-border-color: #999999; " +
-                             "-fx-border-width: 1px; " +
-                             "-fx-text-fill: #333333; " +
-                             "-fx-font-size: 11px; " +
-                             "-fx-font-weight: bold; " +
-                             "-fx-background-radius: 2px; " +
-                             "-fx-border-radius: 2px;"
-                );
-
-                // Estilo normal para BOLETA
-                btnBoleta.setStyle(
-                      "-fx-background-color: white; " +
-                             "-fx-border-color: #999999; " +
-                             "-fx-border-width: 1px; " +
-                             "-fx-text-fill: #333333; " +
-                             "-fx-font-size: 11px; " +
-                             "-fx-font-weight: bold; " +
-                             "-fx-background-radius: 2px; " +
-                             "-fx-border-radius: 2px;"
-                );
-            // Estilo normal para COTIZACION
-            btnCotizacion.setStyle(
-                    "-fx-background-color: white; " +
-                            "-fx-border-color: #999999; " +
-                            "-fx-border-width: 1px; " +
-                            "-fx-text-fill: #333333; " +
-                            "-fx-font-size: 11px; " +
-                            "-fx-font-weight: bold; " +
-                            "-fx-background-radius: 2px; " +
-                            "-fx-border-radius: 2px;"
-            );
-            Platform.runLater(() -> {
-                this.txtNumDoc.requestFocus();
-            });
-        }
-    }
-
-    @FXML
-    void onCotizacion(ActionEvent event) {
-        if (btnCotizacion.isSelected()) {
-            tipoComprobante = "C";
-            this.btnPagar.setText("GENERAR");
-            cbxDocIdentidad.setValue("OTR");
-            validarTipoDocumento();
-            //this.mostrarGuiaRemision(true);
-
-            // Estilo seleccionado para FACTURA
-            btnCotizacion.setStyle(
-                    "-fx-background-color: #16BB60; " +
-                            "-fx-border-color: #999999; " +
-                            "-fx-border-width: 1px; " +
-                            "-fx-text-fill: #333333; " +
-                            "-fx-font-size: 11px; " +
-                            "-fx-font-weight: bold; " +
-                            "-fx-background-radius: 2px; " +
-                            "-fx-border-radius: 2px;"
-            );
-
-            // Estilo normal para BOLETA
-            btnBoleta.setStyle(
-                    "-fx-background-color: white; " +
-                            "-fx-border-color: #999999; " +
-                            "-fx-border-width: 1px; " +
-                            "-fx-text-fill: #333333; " +
-                            "-fx-font-size: 11px; " +
-                            "-fx-font-weight: bold; " +
-                            "-fx-background-radius: 2px; " +
-                            "-fx-border-radius: 2px;"
-            );
-            // Estilo normal para BOLETA
-            btnFactura.setStyle(
-                    "-fx-background-color: white; " +
-                            "-fx-border-color: #999999; " +
-                            "-fx-border-width: 1px; " +
-                            "-fx-text-fill: #333333; " +
-                            "-fx-font-size: 11px; " +
-                            "-fx-font-weight: bold; " +
-                            "-fx-background-radius: 2px; " +
-                            "-fx-border-radius: 2px;"
-            );
-            Platform.runLater(() -> {
-                this.txtNumDoc.requestFocus();
-            });
-        }
-    }
-
     private void mostrarGuiaRemision(Boolean mostrar) {
         // Ocultar campo de guía de remisión
         txtGuiaRemision.setVisible(mostrar);
@@ -1370,7 +1181,7 @@ public class VentaController implements Initializable {
         DatosCliente datosCliente = new DatosCliente();
         datosCliente.setNombre(txtRazSocNom.getText());
         datosCliente.setNumeroDocumento(txtNumDoc.getText());
-        datosCliente.setTipoDocumento(cbxDocIdentidad.getValue());
+        //datosCliente.setTipoDocumento(cbxDocIdentidad.getValue());
         datosCliente.setDireccion(txtDireccion.getText());
 
         // Preparar datos de la venta
@@ -1422,6 +1233,44 @@ public class VentaController implements Initializable {
 
         });
         */
+    }
+
+    @FXML
+    void capturarTipoDocumento(ActionEvent event) {
+        String tipoDoc = this.cbxTipoDocu.getSelectionModel().getSelectedItem() != null ?
+                this.cbxTipoDocu.getSelectionModel().getSelectedItem().getCodigo() : "X";
+
+        System.out.println("Tipo de documento seleccionado: " + tipoDoc);
+
+        this.tipoComprobante = tipoDoc;
+    }
+
+    private void cargarDocumentosPago() {
+        List<DocumentoPago> documentosPago = Metodos.getDocumentosPago();
+        cbxTipoDocu.getItems().setAll(documentosPago);
+
+        cbxTipoDocu.setConverter(new StringConverter<DocumentoPago>() {
+            @Override
+            public String toString(DocumentoPago documentoPago) {
+                return documentoPago != null ? documentoPago.getDescripcion() : "";
+            }
+
+            @Override
+            public DocumentoPago fromString(String s) {
+                return cbxTipoDocu.getItems().stream()
+                        .filter(d -> d.getDescripcion().equals(s))
+                        .findFirst().orElse(null);
+            }
+        });
+
+        cbxTipoDocu.setCellFactory( listView -> new ListCell<DocumentoPago>() {
+            @Override
+            protected void updateItem(DocumentoPago item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getDescripcion());
+            }
+        });
+
     }
 
 

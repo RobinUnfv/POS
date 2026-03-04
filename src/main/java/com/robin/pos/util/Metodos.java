@@ -1,6 +1,7 @@
 package com.robin.pos.util;
 
 import com.google.gson.Gson;
+import com.robin.pos.model.DocumentoPago;
 import com.robin.pos.model.EntidadTributaria;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
@@ -10,6 +11,8 @@ import javafx.scene.text.Text;
 import javafx.scene.control.TableView;
 import java.awt.*;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.UnaryOperator;
@@ -167,6 +170,16 @@ public class Metodos {
             return "DOC.";
         }
 
+    }
+
+    public static List<DocumentoPago> getDocumentosPago() {
+        List<DocumentoPago> documentosPagos = new ArrayList<>();
+        documentosPagos.add(new DocumentoPago("B", "BOLETA"));
+        documentosPagos.add(new DocumentoPago("F", "FACTURA"));
+        documentosPagos.add(new DocumentoPago("C", "COTIZACIÓN"));
+        documentosPagos.add(new DocumentoPago("NV", "NOTA DE VENTA"));
+
+        return documentosPagos;
     }
 
 }
