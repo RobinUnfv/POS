@@ -63,7 +63,7 @@
                             </tooltip>
                         </TextField>
 
-                        <Button fx:id="btnBuscarCliente" onAction="#buscarCliente" styleClass="btn-icon">
+                        <Button fx:id="btnBuscarCliente" onAction="#buscarCliente" styleClass="btn-buscar-cliente">
                             <graphic>
                                 <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
                                     <Image url="@../imagenes/buscarCliente16.png" />
@@ -74,7 +74,7 @@
                             </tooltip>
                         </Button>
 
-                        <Button fx:id="btnNuevoCliente" onAction="#nuevoCliente" styleClass="btn-icon">
+                        <Button fx:id="btnNuevoCliente" onAction="#nuevoCliente" styleClass="btn-new-cliente">
                             <graphic>
                                 <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
                                     <Image url="@../imagenes/newCliente16.png" />

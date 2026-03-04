@@ -103,7 +103,32 @@
 /* BOTONES */
 /* ============================================ */
 /* Boton de buscar cliente */
+.btn-buscar-cliente {
+    -fx-background-color: #BBEDFC;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-padding: 5;
+    -fx-min-width: 32px;
+    -fx-min-height: 32px;
+}
 
+.btn-buscar-cliente: hover {
+    -fx-background-color: #06BCF9;
+}
+
+
+.btn-new-cliente {
+    -fx-background-color: #C9FDB9;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-padding: 5;
+    -fx-min-width: 32px;
+    -fx-min-height: 32px;
+}
+
+.btn-new-cliente: hover {
+    -fx-background-color: #05CC3E;
+}
 /* Botones de iconos */
 .btn-icon {
     -fx-background-color: #e9ecef;

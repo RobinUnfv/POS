@@ -254,18 +254,18 @@ Total]]></text>
 			<element kind="textField" uuid="c1d2e3f4-a5b6-7c8d-9e0f-1a2b3c4d5e6f" stretchType="ElementGroupHeight" x="283" y="4" width="37" height="14" fontSize="8.0" pattern="#,##0.00" hTextAlign="Center" vTextAlign="Top">
 				<expression><![CDATA[$F{cantidad}]]></expression>
 			</element>
-			<element kind="textField" uuid="d2e3f4a5-b6c7-8d9e-0f1a-2b3c4d5e6f7a" stretchType="ElementGroupHeight" x="321" y="4" width="77" height="14" fontSize="8.0" pattern="#,##0.00000" hTextAlign="Center" vTextAlign="Top">
+			<element kind="textField" uuid="d2e3f4a5-b6c7-8d9e-0f1a-2b3c4d5e6f7a" stretchType="ElementGroupHeight" x="321" y="4" width="77" height="14" fontSize="8.0" pattern="S/#,##0.00000" hTextAlign="Center" vTextAlign="Top">
 				<expression><![CDATA[$F{valorUnitario}]]></expression>
 				<box leftPadding="0" rightPadding="2"/>
 			</element>
 			<element kind="textField" uuid="e3f4a5b6-c7d8-9e0f-1a2b-3c4d5e6f7a8b" stretchType="ElementGroupHeight" x="399" y="4" width="25" height="14" fontSize="8.0" pattern="#,##0.00" hTextAlign="Center" vTextAlign="Top">
 				<expression><![CDATA[$F{descuento}]]></expression>
 			</element>
-			<element kind="textField" uuid="f4a5b6c7-d8e9-0f1a-2b3c-4d5e6f7a8b9c" stretchType="ElementGroupHeight" x="424" y="4" width="53" height="14" fontSize="8.0" pattern="#,##0.00" hTextAlign="Center" vTextAlign="Top">
+			<element kind="textField" uuid="f4a5b6c7-d8e9-0f1a-2b3c-4d5e6f7a8b9c" stretchType="ElementGroupHeight" x="424" y="4" width="53" height="14" fontSize="8.0" pattern="S/#,##0.00" hTextAlign="Center" vTextAlign="Top">
 				<expression><![CDATA[$F{igv}]]></expression>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="2"/>
 			</element>
-			<element kind="textField" uuid="a5b6c7d8-e9f0-1a2b-3c4d-5e6f7a8b9c0d" stretchType="ElementGroupHeight" x="477" y="4" width="73" height="14" fontSize="8.0" pattern="#,##0.00" hTextAlign="Right" vTextAlign="Top">
+			<element kind="textField" uuid="a5b6c7d8-e9f0-1a2b-3c4d-5e6f7a8b9c0d" stretchType="ElementGroupHeight" x="477" y="4" width="73" height="14" fontSize="8.0" pattern="S/#,##0.00" hTextAlign="Right" vTextAlign="Top">
 				<expression><![CDATA[$F{valorTotal}]]></expression>
 				<box rightPadding="0"/>
 			</element>
@@ -280,47 +280,29 @@ Total]]></text>
 			<text><![CDATA[Total Valor Venta -
 Operaciones Gravadas]]></text>
 		</element>
-		<element kind="staticText" uuid="b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e" x="457" y="29" width="20" height="15" fontSize="8.0" hTextAlign="Right" vTextAlign="Middle">
-			<text><![CDATA[S/.]]></text>
-		</element>
-		<element kind="textField" uuid="c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f" x="476" y="29" width="74" height="15" fontSize="8.0" pattern="#,##0.00" hTextAlign="Right" vTextAlign="Middle">
+		<element kind="textField" uuid="c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f" x="457" y="29" width="92" height="15" fontSize="8.0" pattern="S/#,##0.00" hTextAlign="Right" vTextAlign="Middle">
 			<expression><![CDATA[$P{TOTAL_GRAVADAS}]]></expression>
 		</element>
 		<element kind="staticText" uuid="d4e5f6a7-b8c9-0d1e-2f3a-4b5c6d7e8f9a" x="383" y="52" width="70" height="15" fontSize="8.0" hTextAlign="Right" vTextAlign="Middle">
 			<text><![CDATA[IGV]]></text>
 		</element>
-		<element kind="staticText" uuid="e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9a0b" x="457" y="52" width="20" height="15" fontSize="8.0" hTextAlign="Right" vTextAlign="Middle">
-			<text><![CDATA[S/.]]></text>
-		</element>
-		<element kind="textField" uuid="f6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9a0b1c" x="476" y="52" width="74" height="15" fontSize="8.0" pattern="#,##0.00" hTextAlign="Right" vTextAlign="Middle">
+		<element kind="textField" uuid="f6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9a0b1c" x="457" y="52" width="92" height="15" fontSize="8.0" pattern="S/#,##0.00" hTextAlign="Right" vTextAlign="Middle">
 			<expression><![CDATA[$P{IGV_TOTAL}]]></expression>
 		</element>
-		<element kind="staticText" uuid="a7b8c9d0-e1f2-3a4b-5c6d-7e8f9a0b1c2d" x="383" y="74" width="70" height="15" fontSize="10.0" bold="true" underline="false" hTextAlign="Right" vTextAlign="Middle">
+		<element kind="staticText" uuid="a7b8c9d0-e1f2-3a4b-5c6d-7e8f9a0b1c2d" x="383" y="74" width="70" height="15" fontSize="10.0" underline="false" bold="true" hTextAlign="Right" vTextAlign="Middle">
 			<text><![CDATA[Importe Total]]></text>
 		</element>
-		<element kind="staticText" uuid="b8c9d0e1-f2a3-4b5c-6d7e-8f9a0b1c2d3e" x="457" y="74" width="20" height="15" forecolor="#080707" fontSize="9.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
-			<text><![CDATA[S/.]]></text>
-		</element>
-		<element kind="textField" uuid="c9d0e1f2-a3b4-5c6d-7e8f-9a0b1c2d3e4f" x="476" y="74" width="74" height="15" forecolor="#050000" fontSize="10.0" pattern="#,##0.00" bold="true" hTextAlign="Right" vTextAlign="Middle">
+		<element kind="textField" uuid="c9d0e1f2-a3b4-5c6d-7e8f-9a0b1c2d3e4f" x="457" y="74" width="92" height="15" forecolor="#050000" fontSize="10.0" pattern="S/#,##0.00" bold="true" hTextAlign="Right" vTextAlign="Middle">
 			<expression><![CDATA[$P{IMPORTE_TOTAL}]]></expression>
 		</element>
 		<element kind="staticText" uuid="d0e1f2a3-b4c5-6d7e-8f9a-0b1c2d3e4f5a" x="383" y="96" width="70" height="15" fontSize="8.0" hTextAlign="Right" vTextAlign="Middle">
 			<text><![CDATA[Redondeo]]></text>
 		</element>
-		<element kind="staticText" uuid="e1f2a3b4-c5d6-7e8f-9a0b-1c2d3e4f5a6b" x="457" y="96" width="20" height="15" fontSize="8.0" hTextAlign="Right" vTextAlign="Middle">
-			<text><![CDATA[S/.]]></text>
-		</element>
-		<element kind="textField" uuid="f2a3b4c5-d6e7-8f9a-0b1c-2d3e4f5a6b7c" x="476" y="96" width="74" height="15" fontSize="8.0" pattern="#,##0.00" hTextAlign="Right" vTextAlign="Middle">
+		<element kind="textField" uuid="f2a3b4c5-d6e7-8f9a-0b1c-2d3e4f5a6b7c" x="457" y="96" width="92" height="15" fontSize="8.0" pattern="S/#,##0.00" hTextAlign="Right" vTextAlign="Middle">
 			<expression><![CDATA[$P{REDONDEO}]]></expression>
 		</element>
 		<element kind="image" uuid="d6e7f8a9-b0c1-2d3e-4f5a-6b7c8d9e0f1a" mode="Transparent" x="11" y="28" width="100" height="100" onErrorType="Blank" linkType="None" linkTarget="Self" hImageAlign="Center" vImageAlign="Middle">
 			<expression><![CDATA[$P{QR_CODE_IMAGE}]]></expression>
-		</element>
-		<element kind="staticText" uuid="a1b2c3d4-0002-0002-0002-000000000002" x="11" y="134" width="50" height="15" fontSize="7.0" bold="true" vTextAlign="Top">
-			<text><![CDATA[Sus Pagos:]]></text>
-		</element>
-		<element kind="textField" uuid="f8a9b0c1-d2e3-4f5a-6b7c-8d9e0f1a2b3c" x="61" y="134" width="495" height="16" fontSize="7.0" vTextAlign="Top">
-			<expression><![CDATA["Depositar en: Bco. BANCO DE CREDITO - Cuenta Soles: " + $P{BANCO_CUENTA_SOLES} + " - CCI : " + $P{BANCO_CUENTA_DOLARES}]]></expression>
 		</element>
 		<element kind="textField" uuid="b6c7d8e9-f0a1-2b3c-4d5e-6f7a8b9c0d1e" x="-1" y="1" width="550" height="15" fontSize="9.0" bold="true" vTextAlign="Middle">
 			<expression><![CDATA["SON : " + $P{SON}]]></expression>
@@ -336,6 +318,18 @@ Operaciones Gravadas]]></text>
 		</element>
 		<element kind="line" uuid="d86d6c8e-8b8b-4670-b48a-2e5e8ff8c412" x="455" y="24" width="1" height="90">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="staticText" uuid="114e81f8-01d5-46fc-9401-fa3e4c2fd3be" x="180" y="29" width="120" height="14" fontName="SansSerif" fontSize="10.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[Método de pago:]]></text>
+		</element>
+		<element kind="staticText" uuid="00c7febc-8f36-471f-ba3c-e31d78876234" x="180" y="44" width="138" height="15" fontSize="8.0" hTextAlign="Left" vTextAlign="Middle">
+			<text><![CDATA[Banco de Crédito del Perú (BCP)]]></text>
+		</element>
+		<element kind="textField" uuid="e956d716-e114-493d-88a4-ce06a156ca4f" x="180" y="59" width="190" height="12" fontName="SansSerif" fontSize="8.0" textAdjust="StretchHeight" vTextAlign="Middle">
+			<expression><![CDATA["Número de cuenta: " + $P{BANCO_CUENTA_SOLES}]]></expression>
+		</element>
+		<element kind="textField" uuid="9ae132d2-b04f-47c3-80f4-59c71a6cb21d" x="180" y="71" width="190" height="12" fontName="SansSerif" fontSize="8.0" textAdjust="StretchHeight" vTextAlign="Middle">
+			<expression><![CDATA["CCI: " + $P{BANCO_CUENTA_DOLARES}]]></expression>
 		</element>
 		<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 	</summary>
