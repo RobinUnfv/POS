@@ -882,6 +882,9 @@ public class VentaController implements Initializable {
             case "C":
                 tipoComprobanteDesc = "COTIZACIÓN";
                 break;
+            case "NV":
+                tipoComprobanteDesc = "NOTA DE VENTA";
+                break;
             default:
                 tipoComprobanteDesc = "DESCONOCIDO";
         }
@@ -1204,6 +1207,10 @@ public class VentaController implements Initializable {
             case "C":
                 ReporteCotizacion reporteCotizacion = new ReporteCotizacion();
                 reporteCotizacion.generarReporte(resultado.getNoOrden(), datosCliente.getNombre(), detalles );
+                break;
+            case "NV":
+                ReporteNotaVenta reporteNotaVenta = new ReporteNotaVenta();
+                reporteNotaVenta.generarReporte(resultado, detalles, datosCliente, datosVenta);
                 break;
             default:
                 Mensaje.error(null, "Error de impresión",

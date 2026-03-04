@@ -123,15 +123,18 @@ public class Metodos {
             return "COMPROBANTE";
         }
 
-        char primerCaracter = noFactu.charAt(0);
-        switch (primerCaracter) {
-            case 'F':
+        //char primerCaracter = noFactu.charAt(0);
+        String dosCaracter = noFactu.substring(0, 2);
+        switch (dosCaracter) {
+            case "F0":
                 return "FACTURA";
-            case 'B':
+            case "B0":
                 return "BOLETA";
-            case 'N':
+            case "NV":
+                return "NOTA DE VENTA";
+            case "NC":
                 return "NOTA DE CRÉDITO";
-            case 'D':
+            case "ND":
                 return "NOTA DE DÉBITO";
             default:
                 return "COMPROBANTE";

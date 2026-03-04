@@ -59,6 +59,34 @@ public class DetalleComprobante {
         return dc;
     }
 
+    /**
+     * Constructor desde DetalleVenta (para conversión fácil)
+     */
+    public static DetalleComprobante convertirNotaVenta(DetalleVenta dv, int porcentajeIgv) {
+        DetalleComprobante dc = new DetalleComprobante();
+        dc.setLinea(String.valueOf(dv.getItem()));
+        dc.setCodigo(dv.getArinda1().getCodigo());
+        dc.setDescripcion(dv.getArinda1().getDescripcion());
+        //dc.setUnidad("NIU"); // Unidad por defecto
+        dc.setUnidad(dv.getCodSunat());
+        dc.setCantidad(BigDecimal.valueOf(dv.getCantidad()));
+
+        // Calcular valores
+        double precioConIgv = dv.getPrecio();
+        double precioSinIgv = precioConIgv / (1 + porcentajeIgv / 100.0);
+        double totalSinIgv = precioSinIgv * dv.getCantidad();
+        double igvMonto = totalSinIgv * (porcentajeIgv / 100.0);
+        double totalConIgv = totalSinIgv + igvMonto;
+
+        //dc.setValorUnitario(BigDecimal.valueOf(precioSinIgv));
+        dc.setValorUnitario(BigDecimal.valueOf(precioConIgv));
+        dc.setDescuento(BigDecimal.ZERO);
+        dc.setIgv(BigDecimal.valueOf(igvMonto));
+        dc.setValorTotal(BigDecimal.valueOf(totalConIgv));
+
+        return dc;
+    }
+
     // ========== GETTERS Y SETTERS ==========
     public String getLinea() {
         return linea;
