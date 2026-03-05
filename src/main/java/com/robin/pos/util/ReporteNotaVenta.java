@@ -28,8 +28,8 @@ public class ReporteNotaVenta {
     private static final String LOGO_PATH = "/com/robin/pos/imagenes/logos-nexer.png";
 
     private String empresaNombre = "CORPORACION TEXTIL CELIA E.I.R.L.";
-    private String empresaActividad = "EN DISEÑO Y MODELOS EXCLUSIVOS EN PRODUCTOS TEXTILES - \nPRENDAS DE VESTIR - CON PRECIOS ESPECIALES PARA PROVINCIA - \nVENTAS POR MAYOR Y MENOR";
-    private String empresaDireccion = "JR. GAMARRA NRO. 676 INT. 262\nLA VICTORIA - LIMA - LIMA";
+    private String empresaActividad = "EN DISEÑO Y MODELOS EXCLUSIVOS EN PRODUCTOS TEXTILES - PRENDAS DE VESTIR - CON PRECIOS ESPECIALES PARA PROVINCIA - VENTAS POR MAYOR Y MENOR";
+    private String empresaDireccion = "JR. GAMARRA NRO. 676 INT. 262 LA VICTORIA - LIMA - LIMA";
     private String empresaRuc = "20609272016";
     private String empresaTelefonos = "";
     private String empresaEmail = "";

@@ -112,19 +112,19 @@
 		<element kind="textField" uuid="c2d3e4f5-a6b7-8c9d-0e1f-234567890123" x="0" y="68" width="206" height="14" fontSize="7.0" textAdjust="StretchHeight" bold="true" hTextAlign="Center" vTextAlign="Middle">
 			<expression><![CDATA[$P{EMPRESA_NOMBRE}]]></expression>
 		</element>
-		<element kind="textField" uuid="d3e4f5a6-b7c8-9d0e-1f2a-345678901234" x="0" y="82" width="206" height="20" fontSize="7.0" textAdjust="StretchHeight" hTextAlign="Center" vTextAlign="Top">
+		<element kind="textField" uuid="d3e4f5a6-b7c8-9d0e-1f2a-345678901234" stretchType="ElementGroupHeight" x="0" y="82" width="206" height="20" fontSize="6.0" textAdjust="StretchHeight" hTextAlign="Center" vTextAlign="Top">
 			<expression><![CDATA[$P{EMPRESA_ACTIVIDAD}]]></expression>
 		</element>
-		<element kind="textField" uuid="e4f5a6b7-c8d9-0e1f-2a3b-456789012345" x="0" y="102" width="206" height="12" fontSize="7.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+		<element kind="textField" uuid="e4f5a6b7-c8d9-0e1f-2a3b-456789012345" stretchType="ElementGroupHeight" x="0" y="102" width="206" height="12" fontSize="7.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
 			<expression><![CDATA["RUC: " + $P{EMPRESA_RUC}]]></expression>
 		</element>
-		<element kind="textField" uuid="f5a6b7c8-d9e0-1f2a-3b4c-567890123456" x="0" y="114" width="206" height="20" fontSize="7.0" textAdjust="StretchHeight" hTextAlign="Center" vTextAlign="Top">
+		<element kind="textField" uuid="f5a6b7c8-d9e0-1f2a-3b4c-567890123456" stretchType="ElementGroupHeight" x="0" y="114" width="206" height="20" fontSize="6.0" textAdjust="StretchHeight" hTextAlign="Center" vTextAlign="Top">
 			<expression><![CDATA[$P{EMPRESA_DIRECCION}]]></expression>
 		</element>
 		<element kind="line" uuid="a6b7c8d9-e0f1-2a3b-4c5d-678901234567" x="0" y="136" width="206" height="1">
 			<pen lineWidth="0.5" lineStyle="Dashed"/>
 		</element>
-		<element kind="textField" uuid="b7c8d9e0-f1a2-3b4c-5d6e-789012345678" x="0" y="139" width="206" height="14" fontSize="8.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+		<element kind="textField" uuid="b7c8d9e0-f1a2-3b4c-5d6e-789012345678" x="0" y="138" width="206" height="14" fontSize="10.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
 			<expression><![CDATA[$P{TIPO_COMPROBANTE}]]></expression>
 		</element>
 		<element kind="textField" uuid="c8d9e0f1-a2b3-4c5d-6e7f-890123456789" x="0" y="153" width="206" height="14" fontSize="9.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
@@ -229,30 +229,30 @@
 		<element kind="line" uuid="d9e0f1a2-b3c4-5d6e-7f8a-901234567890" x="0" y="53" width="206" height="1">
 			<pen lineWidth="0.5" lineStyle="Dashed"/>
 		</element>
-		<element kind="staticText" uuid="e0f1a2b3-c4d5-6e7f-8a9b-012345678901" x="0" y="55" width="20" height="10" fontSize="5.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
+		<element kind="staticText" uuid="e0f1a2b3-c4d5-6e7f-8a9b-012345678901" x="0" y="55" width="20" height="10" fontSize="6.0" bold="true" hTextAlign="Right" vTextAlign="Middle">
 			<text><![CDATA[SON:]]></text>
 			<box leftPadding="0" rightPadding="2"/>
 		</element>
-		<element kind="textField" uuid="f1a2b3c4-d5e6-7f8a-9b0c-123456789012" x="20" y="55" width="186" height="10" fontSize="5.0" textAdjust="StretchHeight" vTextAlign="Top">
+		<element kind="textField" uuid="f1a2b3c4-d5e6-7f8a-9b0c-123456789012" x="20" y="55" width="186" height="10" fontSize="6.0" textAdjust="StretchHeight" vTextAlign="Top">
 			<expression><![CDATA[$P{SON}]]></expression>
 			<box topPadding="2" leftPadding="1"/>
 		</element>
 		<element kind="staticText" uuid="a2b3c4d5-e6f7-8a9b-0c1d-234567890123" x="0" y="66" width="50" height="10" fontSize="5.0" bold="true" vTextAlign="Middle">
 			<text><![CDATA[FORMA DE PAGO:]]></text>
 		</element>
-		<element kind="textField" uuid="b3c4d5e6-f7a8-9b0c-1d2e-345678901234" x="50" y="66" width="156" height="10" fontSize="5.0" vTextAlign="Middle">
+		<element kind="textField" uuid="b3c4d5e6-f7a8-9b0c-1d2e-345678901234" x="50" y="66" width="156" height="10" fontSize="6.0" vTextAlign="Middle">
 			<expression><![CDATA[$P{CONDICION_PAGO}]]></expression>
 		</element>
 		<element kind="line" uuid="e6f7a8b9-c0d1-2e3f-4a5b-678901234567" x="0" y="77" width="206" height="1">
 			<pen lineWidth="0.5" lineStyle="Dashed"/>
 		</element>
-		<element kind="staticText" uuid="f7a8b9c0-d1e2-3f4a-5b6c-789012345678" x="0" y="78" width="206" height="10" fontSize="5.0" bold="true" vTextAlign="Middle">
+		<element kind="staticText" uuid="f7a8b9c0-d1e2-3f4a-5b6c-789012345678" x="0" y="78" width="206" height="10" fontSize="6.0" bold="true" vTextAlign="Middle">
 			<text><![CDATA[Observaciones:]]></text>
 		</element>
 		<element kind="line" uuid="a8b9c0d1-e2f3-4a5b-6c7d-890123456789" x="0" y="98" width="206" height="1">
 			<pen lineWidth="0.5" lineStyle="Dashed"/>
 		</element>
-		<element kind="staticText" uuid="c0d1e2f3-a4b5-6c7d-8e9f-012345678901" x="0" y="99" width="206" height="10" fontSize="4.0" hTextAlign="Center" vTextAlign="Middle">
+		<element kind="staticText" uuid="c0d1e2f3-a4b5-6c7d-8e9f-012345678901" x="0" y="99" width="206" height="10" fontSize="6.0" hTextAlign="Center" vTextAlign="Middle">
 			<text><![CDATA[Gracias por tu compra]]></text>
 		</element>
 	</summary>
