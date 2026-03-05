@@ -46,7 +46,7 @@ public class ReporteNotaVenta {
 
             SwingUtilities.invokeLater(() -> {
                 JasperViewer viewer = new JasperViewer(jasperPrint, false);
-                viewer.setTitle(tipoComprobante + resultado.getNoFactu());
+                viewer.setTitle(tipoComprobante +" "+resultado.getNoFactu());
 
                 // Configurar la ventana para que se muestre al frente
                 viewer.setAlwaysOnTop(true);   // Temporalmente siempre al frente

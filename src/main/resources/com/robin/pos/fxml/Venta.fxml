@@ -78,10 +78,10 @@
                 <!-- Sección: Datos del Cliente -->
                 <VBox spacing="5" VBox.vgrow="ALWAYS">
                     <Label fx:id="lblRazSocNom" styleClass="label-seccion" text="Razón Social / Nombre" />
-                    <TextArea fx:id="txtRazSocNom" prefRowCount="2" promptText="Razón Social / Nombre del cliente" wrapText="true" />
+                    <TextArea fx:id="txtRazSocNom" editable="false" prefRowCount="2" promptText="Razón Social / Nombre del cliente" wrapText="true" />
 
                     <Label styleClass="label-seccion" text="Dirección" />
-                    <TextArea fx:id="txtDireccion" prefRowCount="2" promptText="Dirección del cliente" wrapText="true" />
+                    <TextArea fx:id="txtDireccion" editable="false" prefRowCount="2" promptText="Dirección del cliente" wrapText="true" />
                <HBox prefHeight="55.0" prefWidth="290.0">
                   <children>
                      <VBox prefHeight="55.0" prefWidth="145.0">
