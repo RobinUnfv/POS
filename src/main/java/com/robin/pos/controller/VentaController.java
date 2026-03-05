@@ -176,6 +176,7 @@ public class VentaController implements Initializable {
        // this.lblNumDoc.setText("N° Doc:");
         this.lblRazSocNom.setText("Nombres:");
         this.txtNumDoc.setText("99999999998");
+        clienteInicio();
         /*
         this.cbxDocIdentidad.getItems().addAll("CE", "DNI", "RUC", "OTR");
         this.cbxDocIdentidad.setValue("OTR");
@@ -437,21 +438,25 @@ public class VentaController implements Initializable {
     @FXML
     void buscarClienteNumId(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
-            if (this.txtNumDoc.getText().isEmpty()) {
-                this.limpiarCliente();
-                return;
-            }
-
-            clienteDao = new ClienteDao();
-            Cliente cliente = clienteDao.buscarPorNumId("01",txtNumDoc.getText());
-
-            if (cliente ==  null) {
-                Mensaje.error(null,"Consulta cliente","El número de documento "+this.txtNumDoc.getText()+" no valido.");
-                this.limpiarCliente();
-                return;
-            }
-            this.mostrarCliente(cliente);
+            clienteInicio();
         }
+    }
+
+    void clienteInicio() {
+        if (this.txtNumDoc.getText().isEmpty()) {
+            this.limpiarCliente();
+            return;
+        }
+
+        clienteDao = new ClienteDao();
+        Cliente cliente = clienteDao.buscarPorNumId("01",txtNumDoc.getText());
+
+        if (cliente ==  null) {
+            Mensaje.error(null,"Consulta cliente","El número de documento "+this.txtNumDoc.getText()+" no valido.");
+            this.limpiarCliente();
+            return;
+        }
+        this.mostrarCliente(cliente);
     }
 
     void mostrarCliente(Cliente cliente) {
@@ -856,6 +861,16 @@ public class VentaController implements Initializable {
 
     @FXML
     void realizarPago(ActionEvent event) {
+        DocumentoPago dp = this.cbxTipoDocu.getValue();
+        if (dp == null || dp.getCodigo() == null) {
+            Mensaje.error(null, "Validación de comprobante",
+                    "Seleccione el tipo de comprobante a emitir.");
+            Platform.runLater(() -> {
+                this.cbxTipoDocu.requestFocus();
+            });
+            return;
+        }
+
         String numeroDoc = this.txtNumDoc.getText();
         if (numeroDoc == null || numeroDoc.isEmpty()) {
             Mensaje.error (null, "Validación de cliente",
@@ -982,7 +997,7 @@ public class VentaController implements Initializable {
 
                 // Limpiar formulario después de la venta exitosa
                 limpiarFormularioVenta();
-
+                clienteInicio();
             } else {
                 // Mostrar error
                 Mensaje.error(null, "Error en Comprobante",
