@@ -21,7 +21,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 
 public class DashboardController {
@@ -38,6 +37,7 @@ public class DashboardController {
     @FXML private Button btnCliente;
     @FXML private Button btnProductos;
     @FXML private Button btnReportes;
+    @FXML private Button btnConfiguracion;
     @FXML private Button btnSalir;
     
     // Botones del sub-menú
@@ -47,16 +47,19 @@ public class DashboardController {
     @FXML private Button btnListaClientes;
     @FXML private Button btnNuevoProducto;
     @FXML private Button btnCatalogo;
+    @FXML private Button btnSerieDocumento;
     
     // Sub-menús
     @FXML private VBox ventasSubmenu;
     @FXML private VBox clientesSubmenu;
     @FXML private VBox productosSubmenu;
+    @FXML private VBox ConfiguracionSubmenu;
     
     // Flechas de sub-menús
     @FXML private Label lblVentasArrow;
     @FXML private Label lblClientesArrow;
     @FXML private Label lblProductosArrow;
+    @FXML private Label lblConfiguracionArrow;
     
     // Iconos del menú
     @FXML private Label iconDashboard;
@@ -64,6 +67,7 @@ public class DashboardController {
     @FXML private Label iconClientes;
     @FXML private Label iconProductos;
     @FXML private Label iconReportes;
+    @FXML private Label iconConfiguracion;
     
     // Otros componentes
     @FXML private TabPane tabPane;
@@ -83,6 +87,7 @@ public class DashboardController {
     private Tab tabListaComPago;
     private Tab tabListaArinda1;
     private Tab tabComuBaja;
+    private Tab tabConfiguracion;
 
     @FXML
     public void initialize() {
@@ -172,6 +177,7 @@ public class DashboardController {
         animateButtonTexts(btnCliente);
         animateButtonTexts(btnProductos);
         animateButtonTexts(btnReportes);
+        animateButtonTexts(btnConfiguracion);
         animateButtonTexts(btnSalir);
         
         // Ocultar/mostrar flechas de sub-menú
@@ -204,6 +210,7 @@ public class DashboardController {
         if (button == btnCliente) return "Clientes";
         if (button == btnProductos) return "Productos";
         if (button == btnReportes) return "Reportes";
+        if (button == btnConfiguracion) return "Configuración";
         if (button == btnSalir) return "SALIR";
         return "";
     }
@@ -215,6 +222,7 @@ public class DashboardController {
         animateLabelOpacity(lblVentasArrow);
         animateLabelOpacity(lblClientesArrow);
         animateLabelOpacity(lblProductosArrow);
+        animateLabelOpacity(lblConfiguracionArrow);
     }
 
     /**
@@ -246,6 +254,7 @@ public class DashboardController {
         closeSubmenu(ventasSubmenu, lblVentasArrow);
         closeSubmenu(clientesSubmenu, lblClientesArrow);
         closeSubmenu(productosSubmenu, lblProductosArrow);
+        closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
     }
 
     /**
@@ -269,6 +278,7 @@ public class DashboardController {
         // Cerrar otros sub-menús
         closeSubmenu(clientesSubmenu, lblClientesArrow);
         closeSubmenu(productosSubmenu, lblProductosArrow);
+        closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
         
         // Toggle del sub-menú actual
         animateSubmenu(ventasSubmenu, lblVentasArrow, !isCurrentlyVisible);
@@ -286,6 +296,7 @@ public class DashboardController {
         // Cerrar otros sub-menús
         closeSubmenu(ventasSubmenu, lblVentasArrow);
         closeSubmenu(productosSubmenu, lblProductosArrow);
+        closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
         
         // Toggle del sub-menú actual
         animateSubmenu(clientesSubmenu, lblClientesArrow, !isCurrentlyVisible);
@@ -303,9 +314,25 @@ public class DashboardController {
         // Cerrar otros sub-menús
         closeSubmenu(ventasSubmenu, lblVentasArrow);
         closeSubmenu(clientesSubmenu, lblClientesArrow);
+        closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
         
         // Toggle del sub-menú actual
         animateSubmenu(productosSubmenu, lblProductosArrow, !isCurrentlyVisible);
+    }
+
+    @FXML
+    public void toggleConfiguracionSubmenu() {
+        if (!isSidebarExpanded) return;
+
+        boolean isCurrentlyVisible = ConfiguracionSubmenu.isVisible();
+
+        // Cerrar otros sub-menús
+        closeSubmenu(ventasSubmenu, lblVentasArrow);
+        closeSubmenu(productosSubmenu, lblProductosArrow);
+        closeSubmenu(clientesSubmenu, lblClientesArrow);
+
+        // Toggle del sub-menú actual
+        animateSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow, !isCurrentlyVisible);
     }
 
     /**
@@ -436,26 +463,7 @@ public class DashboardController {
             this.tabPane.getSelectionModel().select(tabListaComPago);
         }
     }
-    /*
-    @FXML
-    public void ingresarNuevoCliente() throws IOException {
-        System.out.println("Navegando a Nuevo Cliente");
-        if (this.tabCliente == null)  {
-            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/Cliente.fxml"));
-            VBox  ap = loader.load();
 
-            tabCliente = new Tab("Cliente", ap);
-            tabCliente.setClosable(true);
-            tabCliente.setOnClosed(e -> tabCliente = null);
-
-            this.tabPane.getTabs().add(tabCliente);
-            this.tabPane.getSelectionModel().select(tabCliente);
-        } else {
-            // Si el tab ya existe, solo selecciónalo
-            this.tabPane.getSelectionModel().select(tabCliente);
-        }
-    }
-    */
     @FXML
     public void ingresarListaClientes() throws IOException {
         System.out.println("Navegando a Lista de Clientes");
@@ -479,6 +487,11 @@ public class DashboardController {
             // Si el tab ya existe, solo selecciónalo
             this.tabPane.getSelectionModel().select(tabListaCliente);
         }
+    }
+
+    @FXML
+    public void ingresarListaSerieDocu() throws IOException {
+
     }
 
     @FXML

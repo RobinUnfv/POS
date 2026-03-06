@@ -144,6 +144,9 @@
                                             <padding>
                                                 <Insets left="50.0" />
                                             </padding>
+                                            <tooltip>
+                                                <Tooltip text="Lista de Clientes" />
+                                            </tooltip>
                                         </Button>
                                     </children>
                                     <VBox.margin>
@@ -242,6 +245,48 @@
                                  <padding>
                                     <Insets left="50.0" />
                                  </padding>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </VBox.margin>
+                        </VBox>
+                     </children>
+                  </VBox>
+                  <VBox spacing="3">
+                     <children>
+                        <Button fx:id="btnConfiguracion" alignment="CENTER_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#toggleConfiguracionSubmenu" prefHeight="50.0" prefWidth="200.0" styleClass="menu-button" text="Configuración">
+                           <graphic>
+                              <HBox alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label fx:id="iconConfiguracion" style="-fx-text-fill: #787575; -fx-font-size: 25px;" text="⚙" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="lblConfiguracionArrow" style="-fx-text-fill: #95a5a6; -fx-font-size: 14px; -fx-font-weight: bold;" text="▶" />
+                                 </children>
+                              </HBox>
+                           </graphic>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <padding>
+                              <Insets left="15.0" right="10.0" />
+                           </padding>
+                           <tooltip>
+                              <Tooltip text="Configuración" />
+                           </tooltip>
+                        </Button>
+                        <VBox fx:id="ConfiguracionSubmenu" managed="false" spacing="2" style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 5;" visible="false">
+                           <children>
+                              <Button fx:id="btnSerieDocumento" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarListaSerieDocu" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Serie Documentos">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <padding>
+                                    <Insets left="50.0" />
+                                 </padding>
+                                  <tooltip>
+                                      <Tooltip text="Lista serie de documentos" />
+                                  </tooltip>
                               </Button>
                            </children>
                            <VBox.margin>
