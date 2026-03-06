@@ -48,6 +48,7 @@ public class DashboardController {
     @FXML private Button btnNuevoProducto;
     @FXML private Button btnCatalogo;
     @FXML private Button btnSerieDocumento;
+    @FXML private Button btnDocumento;
     
     // Sub-menús
     @FXML private VBox ventasSubmenu;
@@ -87,7 +88,8 @@ public class DashboardController {
     private Tab tabListaComPago;
     private Tab tabListaArinda1;
     private Tab tabComuBaja;
-    private Tab tabConfiguracion;
+    private Tab tabSerieDocumento;
+    private Tab tabDocumento;
 
     @FXML
     public void initialize() {
@@ -419,6 +421,7 @@ public class DashboardController {
         }
     }
 
+
     @FXML
     public void ingresarProforma() throws IOException {
         System.out.println("Comunicación de pago");
@@ -491,7 +494,35 @@ public class DashboardController {
 
     @FXML
     public void ingresarListaSerieDocu() throws IOException {
+        if(tabSerieDocumento == null) {
 
+        } else {
+            this.tabPane.getSelectionModel().select(tabSerieDocumento);
+        }
+    }
+
+    @FXML
+    public void ingresarDocumento() throws IOException {
+        System.out.println("LISTA DE DOCUMENTOS");
+        if(tabDocumento == null) {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/listaDocumento.fxml"));
+            VBox  ap = loader.load();
+
+            ImageView icono = createIcon("/com/robin/pos/imagenes/documento.png");
+
+            tabDocumento = new Tab("Lista documentos", ap);
+
+            tabDocumento.setGraphic(icono);
+
+            tabDocumento.setClosable(true);
+            tabDocumento.setOnClosed(e -> tabDocumento = null);
+
+            this.tabPane.getTabs().add(tabDocumento);
+            this.tabPane.getSelectionModel().select(tabDocumento);
+
+        } else {
+            this.tabPane.getSelectionModel().select(tabDocumento);
+        }
     }
 
     @FXML

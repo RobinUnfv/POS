@@ -253,6 +253,7 @@
                         </VBox>
                      </children>
                   </VBox>
+                  <!-- Configuracion con sub-menú -->
                   <VBox spacing="3">
                      <children>
                         <Button fx:id="btnConfiguracion" alignment="CENTER_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#toggleConfiguracionSubmenu" prefHeight="50.0" prefWidth="200.0" styleClass="menu-button" text="Configuración">
@@ -286,6 +287,17 @@
                                  </padding>
                                   <tooltip>
                                       <Tooltip text="Lista serie de documentos" />
+                                  </tooltip>
+                              </Button>
+                              <Button fx:id="btnDocumento" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarDocumento" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Documentos">
+                                   <cursor>
+                                       <Cursor fx:constant="HAND" />
+                                   </cursor>
+                                   <padding>
+                                       <Insets left="50.0" />
+                                   </padding>
+                                  <tooltip>
+                                      <Tooltip text="Lista de documentos" />
                                   </tooltip>
                               </Button>
                            </children>
