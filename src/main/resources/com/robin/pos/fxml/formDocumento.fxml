@@ -6,6 +6,8 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -13,125 +15,128 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<VBox fx:id="vbxPrincipal" maxHeight="450" prefHeight="420" prefWidth="550" styleClass="root-container" stylesheets="@../css/FormDocumento.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.FormDocumentoController">
-    
+<VBox fx:id="vbxPrincipal" maxHeight="450.0" prefHeight="420.0" prefWidth="550.0" styleClass="root-container" stylesheets="@../css/FormDocumento.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.FormDocumentoController">
+
     <!-- ==================== CABECERA ==================== -->
-    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="header-container">
+    <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="header-container">
         <padding>
-            <Insets bottom="15" left="20" right="20" top="15" />
+            <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
         </padding>
-        
+
         <SVGPath content="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" scaleX="1.0" scaleY="1.0" styleClass="header-icon" />
-        
-        <VBox spacing="2" HBox.hgrow="ALWAYS">
+
+        <VBox spacing="2.0" HBox.hgrow="ALWAYS">
             <Label fx:id="lblTitulo" styleClass="header-title" text="Nuevo Documento" />
             <Label fx:id="lblSubtitulo" styleClass="header-subtitle" text="Complete los datos del documento" />
         </VBox>
     </HBox>
-    
+
     <!-- ==================== FORMULARIO ==================== -->
-    <VBox spacing="20" styleClass="form-container" VBox.vgrow="ALWAYS">
+    <VBox spacing="20.0" styleClass="form-container" VBox.vgrow="ALWAYS">
         <padding>
-            <Insets bottom="20" left="25" right="25" top="20" />
+            <Insets bottom="20.0" left="25.0" right="25.0" top="20.0" />
         </padding>
-        
-        <GridPane hgap="20" vgap="15" styleClass="form-grid">
+
+        <GridPane hgap="20.0" styleClass="form-grid" vgap="15.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+            </columnConstraints>
             <rowConstraints>
                 <RowConstraints />
                 <RowConstraints />
                 <RowConstraints />
-                <RowConstraints />
             </rowConstraints>
-            
+
             <!-- Código Documento -->
-            <VBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
                 <Label styleClass="field-label" text="Código Documento *" />
-                <TextField fx:id="txtCodDoc" maxLength="10" prefHeight="36" promptText="Ej: F001, B001" styleClass="input-field">
+                <TextField fx:id="txtCodDoc" prefHeight="36.0" promptText="Ej: F001, B001" styleClass="input-field">
                     <tooltip>
-                        <javafx.scene.control.Tooltip text="Código único del documento (máx. 10 caracteres)" />
+                        <Tooltip text="Código único del documento (máx. 10 caracteres)" />
                     </tooltip>
                 </TextField>
             </VBox>
-            
+
             <!-- Descripción -->
-            <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
                 <Label styleClass="field-label" text="Descripción *" />
-                <TextField fx:id="txtDescripcion" prefHeight="36" promptText="Ej: Factura Electrónica" styleClass="input-field">
+                <TextField fx:id="txtDescripcion" prefHeight="36.0" promptText="Ej: Factura Electrónica" styleClass="input-field">
                     <tooltip>
-                        <javafx.scene.control.Tooltip text="Descripción del tipo de documento" />
+                        <Tooltip text="Descripción del tipo de documento" />
                     </tooltip>
                 </TextField>
             </VBox>
-            
+
             <!-- Tipo -->
-            <VBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
                 <Label styleClass="field-label" text="Tipo *" />
-                <ComboBox fx:id="cbxTipo" maxWidth="Infinity" prefHeight="36" promptText="Seleccione..." styleClass="input-combo">
+                <ComboBox fx:id="cbxTipo" maxWidth="Infinity" prefHeight="36.0" promptText="Seleccione..." styleClass="input-combo">
                     <cursor><Cursor fx:constant="HAND" /></cursor>
                     <tooltip>
-                        <javafx.scene.control.Tooltip text="Tipo de documento" />
+                        <Tooltip text="Tipo de documento (V: Venta, C: Compra, O: Otros)" />
                     </tooltip>
                 </ComboBox>
             </VBox>
-            
+
             <!-- Código SUNAT -->
-            <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <Label styleClass="field-label" text="Código SUNAT" />
-                <TextField fx:id="txtCodSunat" maxLength="10" prefHeight="36" promptText="Ej: 01, 03, 07" styleClass="input-field">
+                <TextField fx:id="txtCodSunat" prefHeight="36.0" promptText="Ej: 01, 03, 07" styleClass="input-field">
                     <tooltip>
-                        <javafx.scene.control.Tooltip text="Código del catálogo SUNAT" />
+                        <Tooltip text="Código del catálogo SUNAT" />
                     </tooltip>
                 </TextField>
             </VBox>
-            
+
             <!-- Estado -->
-            <VBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="2">
+            <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
                 <Label styleClass="field-label" text="Estado *" />
-                <ComboBox fx:id="cbxEstado" maxWidth="Infinity" prefHeight="36" promptText="Seleccione..." styleClass="input-combo">
+                <ComboBox fx:id="cbxEstado" maxWidth="Infinity" prefHeight="36.0" promptText="Seleccione..." styleClass="input-combo">
                     <cursor><Cursor fx:constant="HAND" /></cursor>
                     <tooltip>
-                        <javafx.scene.control.Tooltip text="Estado del documento (A: Activo, I: Inactivo)" />
+                        <Tooltip text="Estado del documento (A: Activo, I: Inactivo)" />
                     </tooltip>
                 </ComboBox>
             </VBox>
         </GridPane>
-        
+
         <!-- Información adicional -->
-        <HBox spacing="10" styleClass="info-box">
+        <HBox spacing="10.0" styleClass="info-box">
             <padding>
-                <Insets bottom="12" left="15" right="15" top="12" />
+                <Insets bottom="12.0" left="15.0" right="15.0" top="12.0" />
             </padding>
             <SVGPath content="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" scaleX="0.8" scaleY="0.8" styleClass="info-icon" />
-            <VBox spacing="5">
+            <VBox spacing="5.0">
                 <Label styleClass="info-title" text="Información" />
                 <Label styleClass="info-text" text="Los campos marcados con (*) son obligatorios" wrapText="true" />
             </VBox>
         </HBox>
     </VBox>
-    
+
     <!-- ==================== BOTONES ==================== -->
-    <HBox alignment="CENTER_RIGHT" spacing="12" styleClass="footer-container">
+    <HBox alignment="CENTER_RIGHT" spacing="12.0" styleClass="footer-container">
         <padding>
-            <Insets bottom="15" left="25" right="25" top="15" />
+            <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
         </padding>
-        
-        <HBox alignment="CENTER_LEFT" spacing="5" HBox.hgrow="ALWAYS">
+
+        <HBox alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="ALWAYS">
             <Label styleClass="required-indicator" text="*" />
             <Label styleClass="required-text" text="Campos obligatorios" />
         </HBox>
-        
+
         <Region HBox.hgrow="ALWAYS" />
-        
+
         <!-- Botón Cancelar -->
-        <Button fx:id="btnCancelar" onAction="#cancelar" prefHeight="36" prefWidth="100" styleClass="btn-secondary" text="Cancelar">
+        <Button fx:id="btnCancelar" onAction="#cancelar" prefHeight="36.0" prefWidth="100.0" styleClass="btn-secondary" text="Cancelar">
             <cursor><Cursor fx:constant="HAND" /></cursor>
             <graphic>
                 <SVGPath content="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" scaleX="0.65" scaleY="0.65" styleClass="btn-icon-secondary" />
             </graphic>
         </Button>
-        
+
         <!-- Botón Guardar -->
-        <Button fx:id="btnGuardar" defaultButton="true" onAction="#guardar" prefHeight="36" prefWidth="110" styleClass="btn-primary" text="Guardar">
+        <Button fx:id="btnGuardar" defaultButton="true" onAction="#guardar" prefHeight="36.0" prefWidth="110.0" styleClass="btn-primary" text="Guardar">
             <cursor><Cursor fx:constant="HAND" /></cursor>
             <graphic>
                 <SVGPath content="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" scaleX="0.7" scaleY="0.7" styleClass="btn-icon-primary" />

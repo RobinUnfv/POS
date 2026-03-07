@@ -256,7 +256,7 @@
                   <!-- Configuracion con sub-menú -->
                   <VBox spacing="3">
                      <children>
-                        <Button fx:id="btnConfiguracion" alignment="CENTER_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#toggleConfiguracionSubmenu" prefHeight="50.0" prefWidth="200.0" styleClass="menu-button" text="Configuración">
+                        <Button fx:id="btnConfiguracion" alignment="CENTER_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#toggleConfiguracionSubmenu" prefHeight="50.0" prefWidth="200.0" styleClass="menu-button" text="Mantenimiento">
                            <graphic>
                               <HBox alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="ALWAYS">
                                  <children>

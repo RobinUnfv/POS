@@ -1,6 +1,7 @@
 package com.robin.pos.util;
 
 import com.google.gson.Gson;
+import com.robin.pos.model.Arfact;
 import com.robin.pos.model.DocumentoPago;
 import com.robin.pos.model.EntidadTributaria;
 import javafx.scene.control.TableColumn;
@@ -183,6 +184,35 @@ public class Metodos {
         documentosPagos.add(new DocumentoPago("NV", "NOTA DE VENTA"));
 
         return documentosPagos;
+    }
+
+    public static Arfact getTipoDocumento(String codDoc) {
+        return switch (codDoc) {
+            case "01" -> new Arfact("01", "01", "ORDENES DE COMPRA/SERVICIOS", "D");
+            case "02" -> new Arfact("01", "02", "COMPROBANTES DE VENTA", "D");
+            case "03" -> new Arfact("01", "03", "COMPROBANTES DE STOCK", "D");
+            case "04" -> new Arfact("01", "04", "PEDIDOS", "D");
+            case "05" -> new Arfact("01", "05", "GUIAS DE REMISION", "D");
+            case "06" -> new Arfact("01", "06", "ORDENES DE PRODUCCION", "D");
+            case "80" -> new Arfact("01", "80", "DOCS. INTERNOS", "D");
+            case "90" -> new Arfact("01", "90", "DOCS. EXTERNOS", "D");
+            case "99" -> new Arfact("01", "99", "OTROS", "D");
+            default -> new Arfact();
+        };
+    }
+
+    public static List<Arfact> getArfacts() {
+        List<Arfact> arfacts = new ArrayList<>();
+        arfacts.add(new Arfact("01", "01", "ORDENES DE COMPRA/SERVICIOS", "D"));
+        arfacts.add(new Arfact("01", "02", "COMPROBANTES DE VENTA", "D"));
+        arfacts.add(new Arfact("01", "03", "COMPROBANTES DE STOCK", "D"));
+        arfacts.add(new Arfact("01", "04", "PEDIDOS", "D"));
+        arfacts.add(new Arfact("01", "05", "GUIAS DE REMISION", "D"));
+        arfacts.add(new Arfact("01", "06", "ORDENES DE PRODUCCION", "D"));
+        arfacts.add(new Arfact("01", "80", "DOCS. INTERNOS", "D"));
+        arfacts.add(new Arfact("01", "90", "DOCS. EXTERNOS", "D"));
+        arfacts.add(new Arfact("01", "99", "OTROS", "D"));
+        return arfacts;
     }
 
 }
