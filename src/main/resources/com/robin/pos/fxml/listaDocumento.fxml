@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<VBox fx:id="vbxPrincipal" styleClass="root-container" stylesheets="@../css/ListaDocumento.css" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.ListaDocumentoController">
+<VBox fx:id="vbxPrincipal" styleClass="root-container" stylesheets="@../css/ListaDocumento.css" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.ListaDocumentoController">
     
     <!-- ==================== CABECERA ==================== -->
     <VBox spacing="15" styleClass="header-container">
@@ -119,9 +119,9 @@
             <TableView fx:id="tblDocumentos" onKeyPressed="#manejarTeclas" onMouseClicked="#manejarDobleClick" styleClass="modern-table" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colCodDoc" minWidth="80" prefWidth="100" text="Código" />
-                    <TableColumn fx:id="colDescripcion" minWidth="200" prefWidth="300" text="Descripción" />
-                    <TableColumn fx:id="colTipo" minWidth="100" prefWidth="120" text="Tipo" />
-                    <TableColumn fx:id="colCodSunat" minWidth="100" prefWidth="120" text="Cód. SUNAT" />
+                    <TableColumn fx:id="colDescripcion" minWidth="200" prefWidth="297.0" text="Descripción" />
+                    <TableColumn fx:id="colTipo" minWidth="100" prefWidth="254.0" text="Tipo" />
+                    <TableColumn fx:id="colCodSunat" minWidth="86.0" prefWidth="86.0" text="Cód. SUNAT" />
                     <TableColumn fx:id="colEstado" minWidth="80" prefWidth="100" text="Estado" />
                 </columns>
                 <columnResizePolicy>

@@ -90,6 +90,22 @@ public class Arfadoc {
         };
     }
 
+    public String getTipoDescripcion() {
+        if (tipo == null) return "";
+        return switch (tipo) {
+            case "01" -> "ORDENES DE COMPRA/SERVICIOS";
+            case "02" -> "COMPROBANTES DE VENTA";
+            case "03" -> "COMPROBANTES DE STOCK";
+            case "04" -> "PEDIDOS";
+            case "05" -> "GUIAS DE REMISION";
+            case "06" -> "ORDENES DE PRODUCCION";
+            case "80" -> "DOCS. INTERNOS";
+            case "90" -> "DOCS. EXTERNOS";
+            case "99" -> "OTROS";
+            default -> tipo;
+        };
+    }
+
     @Override
     public String toString() {
         return "Arfadoc{" +

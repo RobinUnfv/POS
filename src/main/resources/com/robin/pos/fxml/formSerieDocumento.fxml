@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<VBox fx:id="vbxPrincipal" maxHeight="550.0" prefHeight="520.0" prefWidth="650.0" styleClass="root-container" stylesheets="@../css/FormSerieDocumento.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.FormSerieDocumentoController">
+    
+    <!-- ==================== CABECERA ==================== -->
+    <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="header-container">
+        <padding>
+            <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+        </padding>
+        
+        <SVGPath content="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" scaleX="1.0" scaleY="1.0" styleClass="header-icon" />
+        
+        <VBox spacing="2.0" HBox.hgrow="ALWAYS">
+            <Label fx:id="lblTitulo" styleClass="header-title" text="Nueva Serie de Documento" />
+            <Label fx:id="lblSubtitulo" styleClass="header-subtitle" text="Complete los datos de la serie" />
+        </VBox>
+    </HBox>
+    
+    <!-- ==================== FORMULARIO ==================== -->
+    <VBox spacing="20.0" styleClass="form-container" VBox.vgrow="ALWAYS">
+        <padding>
+            <Insets bottom="20.0" left="25.0" right="25.0" top="20.0" />
+        </padding>
+        
+        <GridPane hgap="20.0" styleClass="form-grid" vgap="15.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="33.33" />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="33.33" />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="33.33" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+            
+            <!-- Fila 1: Centro, Tipo Doc, Serie -->
+            <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label styleClass="field-label" text="Centro *" />
+                <TextField fx:id="txtCentro" prefHeight="36.0" promptText="Ej: 41" styleClass="input-field">
+                    <tooltip>
+                        <Tooltip text="Código del centro de costo" />
+                    </tooltip>
+                </TextField>
+            </VBox>
+            
+            <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Label styleClass="field-label" text="Tipo Documento *" />
+                <ComboBox fx:id="cbxTipoDoc" maxWidth="Infinity" prefHeight="36.0" promptText="Seleccione..." styleClass="input-combo">
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                    <tooltip>
+                        <Tooltip text="Tipo de documento" />
+                    </tooltip>
+                </ComboBox>
+            </VBox>
+            
+            <VBox spacing="8.0" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                <Label styleClass="field-label" text="Serie *" />
+                <TextField fx:id="txtSerie" prefHeight="36.0" promptText="Ej: F001" styleClass="input-field">
+                    <tooltip>
+                        <Tooltip text="Número de serie" />
+                    </tooltip>
+                </TextField>
+            </VBox>
+            
+            <!-- Fila 2: Cons. Desde, Líneas, Control Auto -->
+            <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <Label styleClass="field-label" text="Consecutivo Desde *" />
+                <TextField fx:id="txtConsDesde" prefHeight="36.0" promptText="Ej: 1" styleClass="input-field">
+                    <tooltip>
+                        <Tooltip text="Número consecutivo inicial" />
+                    </tooltip>
+                </TextField>
+            </VBox>
+            
+            <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label styleClass="field-label" text="Líneas *" />
+                <TextField fx:id="txtLineas" prefHeight="36.0" promptText="Ej: 50" styleClass="input-field">
+                    <tooltip>
+                        <Tooltip text="Número de líneas del documento" />
+                    </tooltip>
+                </TextField>
+            </VBox>
+            
+            <VBox spacing="8.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                <Label styleClass="field-label" text="Control Automático *" />
+                <ComboBox fx:id="cbxControlAuto" maxWidth="Infinity" prefHeight="36.0" promptText="Seleccione..." styleClass="input-combo">
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                    <tooltip>
+                        <Tooltip text="Indica si tiene control automático" />
+                    </tooltip>
+                </ComboBox>
+            </VBox>
+            
+            <!-- Fila 3: Activo, N° Caba -->
+            <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                <Label styleClass="field-label" text="Estado *" />
+                <ComboBox fx:id="cbxActivo" maxWidth="Infinity" prefHeight="36.0" promptText="Seleccione..." styleClass="input-combo">
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                    <tooltip>
+                        <Tooltip text="Estado de la serie (S: Activo, N: Inactivo)" />
+                    </tooltip>
+                </ComboBox>
+            </VBox>
+            
+            <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Label styleClass="field-label" text="N° Caba" />
+                <TextField fx:id="txtNoCaba" prefHeight="36.0" promptText="Ej: 001" styleClass="input-field">
+                    <tooltip>
+                        <Tooltip text="Número de caba" />
+                    </tooltip>
+                </TextField>
+            </VBox>
+        </GridPane>
+        
+        <!-- Información adicional -->
+        <HBox spacing="10.0" styleClass="info-box">
+            <padding>
+                <Insets bottom="12.0" left="15.0" right="15.0" top="12.0" />
+            </padding>
+            <SVGPath content="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" scaleX="0.8" scaleY="0.8" styleClass="info-icon" />
+            <VBox spacing="5.0">
+                <Label styleClass="info-title" text="Información Importante" />
+                <Label styleClass="info-text" text="• Los campos marcados con (*) son obligatorios" wrapText="true" />
+                <Label styleClass="info-text" text="• El consecutivo desde indica el primer número a usar en la serie" wrapText="true" />
+                <Label styleClass="info-text" text="• Las líneas definen el tamaño del documento impreso" wrapText="true" />
+            </VBox>
+        </HBox>
+    </VBox>
+    
+    <!-- ==================== BOTONES ==================== -->
+    <HBox alignment="CENTER_RIGHT" spacing="12.0" styleClass="footer-container">
+        <padding>
+            <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
+        </padding>
+        
+        <HBox alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="ALWAYS">
+            <Label styleClass="required-indicator" text="*" />
+            <Label styleClass="required-text" text="Campos obligatorios" />
+        </HBox>
+        
+        <Region HBox.hgrow="ALWAYS" />
+        
+        <!-- Botón Cancelar -->
+        <Button fx:id="btnCancelar" onAction="#cancelar" prefHeight="36.0" prefWidth="100.0" styleClass="btn-secondary" text="Cancelar">
+            <cursor><Cursor fx:constant="HAND" /></cursor>
+            <graphic>
+                <SVGPath content="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" scaleX="0.65" scaleY="0.65" styleClass="btn-icon-secondary" />
+            </graphic>
+        </Button>
+        
+        <!-- Botón Guardar -->
+        <Button fx:id="btnGuardar" defaultButton="true" onAction="#guardar" prefHeight="36.0" prefWidth="110.0" styleClass="btn-primary" text="Guardar">
+            <cursor><Cursor fx:constant="HAND" /></cursor>
+            <graphic>
+                <SVGPath content="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" scaleX="0.7" scaleY="0.7" styleClass="btn-icon-primary" />
+            </graphic>
+        </Button>
+    </HBox>
+</VBox>

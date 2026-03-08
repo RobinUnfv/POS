@@ -495,7 +495,20 @@ public class DashboardController {
     @FXML
     public void ingresarListaSerieDocu() throws IOException {
         if(tabSerieDocumento == null) {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/listaSerieDocumento.fxml"));
+            VBox  ap = loader.load();
 
+            ImageView icono = createIcon("/com/robin/pos/imagenes/serieDocu.png");
+
+            tabSerieDocumento = new Tab("Lista serie", ap);
+
+            tabSerieDocumento.setGraphic(icono);
+
+            tabSerieDocumento.setClosable(true);
+            tabSerieDocumento.setOnClosed(e -> tabDocumento = null);
+
+            this.tabPane.getTabs().add(tabSerieDocumento);
+            this.tabPane.getSelectionModel().select(tabSerieDocumento);
         } else {
             this.tabPane.getSelectionModel().select(tabSerieDocumento);
         }
