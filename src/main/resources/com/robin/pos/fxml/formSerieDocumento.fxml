@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<VBox fx:id="vbxPrincipal" maxHeight="550.0" prefHeight="520.0" prefWidth="650.0" styleClass="root-container" stylesheets="@../css/FormSerieDocumento.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.FormSerieDocumentoController">
+<VBox fx:id="vbxPrincipal" maxHeight="550.0" prefHeight="520.0" prefWidth="650.0" styleClass="root-container" stylesheets="@../css/Formseriedocumento.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.FormSerieDocumentoController">
     
     <!-- ==================== CABECERA ==================== -->
     <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="header-container">

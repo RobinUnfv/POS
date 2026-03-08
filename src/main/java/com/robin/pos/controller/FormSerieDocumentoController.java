@@ -1,26 +1,24 @@
 package com.robin.pos.controller;
 
 import com.robin.pos.dao.ArfaccDao;
+import com.robin.pos.dao.ArfadocDao;
 import com.robin.pos.model.Arfacc;
+import com.robin.pos.model.Arfadoc;
 import com.robin.pos.util.Mensaje;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
+import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-/**
- * Controlador para el formulario modal de series de documentos
- * Permite crear y editar series
- *
- * @author Robin POS
- * @version 1.0
- */
+
 public class FormSerieDocumentoController implements Initializable {
 
     private static final Logger LOGGER = Logger.getLogger(FormSerieDocumentoController.class.getName());
@@ -31,7 +29,7 @@ public class FormSerieDocumentoController implements Initializable {
     @FXML private Label lblSubtitulo;
 
     @FXML private TextField txtCentro;
-    @FXML private ComboBox<String> cbxTipoDoc;
+    @FXML private ComboBox<Arfadoc> cbxTipoDoc;
     @FXML private TextField txtSerie;
     @FXML private TextField txtConsDesde;
     @FXML private TextField txtLineas;
@@ -50,6 +48,8 @@ public class FormSerieDocumentoController implements Initializable {
     private Runnable onGuardado;
     private Runnable onCancelado;
 
+    private static final String NO_CIA = "01";
+
     // ==================== INITIALIZE ====================
 
     @Override
@@ -63,7 +63,8 @@ public class FormSerieDocumentoController implements Initializable {
      */
     private void configurarComboBoxes() {
         // Tipos de documento
-        cbxTipoDoc.getItems().addAll("F", "B", "N", "NC", "ND");
+        //cbxTipoDoc.getItems().addAll("F", "B", "N", "NC", "ND");
+        cargarTipoDocumento();
 
         // Control automático
         cbxControlAuto.getItems().addAll("S", "N");
@@ -72,6 +73,34 @@ public class FormSerieDocumentoController implements Initializable {
         // Estado activo
         cbxActivo.getItems().addAll("S", "N");
         cbxActivo.setValue("S");
+    }
+
+    private void cargarTipoDocumento() {
+        ArfadocDao arfadocDao = new ArfadocDao();
+        //List<Arfadoc> arfadocs = arfadocDao.listarDocumentos(NO_CIA);
+        cbxTipoDoc.getItems().setAll(arfadocDao.listarDocumentos(NO_CIA));
+
+        cbxTipoDoc.setConverter(new StringConverter<Arfadoc>() {
+            @Override
+            public String toString(Arfadoc arfadoc) {
+                return arfadoc != null ? arfadoc.getDescripcion() : "";
+            }
+
+            @Override
+            public Arfadoc fromString(String s) {
+                return cbxTipoDoc.getItems().stream()
+                        .filter(d -> d.getDescripcion().equals(s))
+                        .findFirst().orElse(null);
+            }
+        });
+
+        cbxTipoDoc.setCellFactory(lv -> new ListCell<Arfadoc>() {
+            @Override
+            protected void updateItem(Arfadoc item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getDescripcion());
+            }
+        });
     }
 
     /**
@@ -149,8 +178,8 @@ public class FormSerieDocumentoController implements Initializable {
         txtCentro.setText(serie.getCentro());
         txtCentro.setEditable(false); // No se puede editar en modo edición
         txtCentro.setStyle("-fx-background-color: #f1f5f9;");
-
-        cbxTipoDoc.setValue(serie.getTipoDoc());
+        ArfadocDao arfadocDao = new ArfadocDao();
+        cbxTipoDoc.setValue( arfadocDao.buscarPorCodigo(noCia, serie.getTipoDoc() ) );
         cbxTipoDoc.setDisable(true); // No se puede editar en modo edición
 
         txtSerie.setText(serie.getSerie());
@@ -265,7 +294,7 @@ public class FormSerieDocumentoController implements Initializable {
     private boolean validarDuplicado() {
         if (!modoEdicion) {
             String centro = txtCentro.getText().trim();
-            String tipoDoc = cbxTipoDoc.getValue();
+            String tipoDoc = cbxTipoDoc.getValue().getCodDoc();
             String serie = txtSerie.getText().trim();
 
             boolean existe = arfaccDao.existe(noCia, centro, tipoDoc, serie);
@@ -306,7 +335,7 @@ public class FormSerieDocumentoController implements Initializable {
         Arfacc serie = new Arfacc();
         serie.setNoCia(noCia);
         serie.setCentro(txtCentro.getText().trim().toUpperCase());
-        serie.setTipoDoc(cbxTipoDoc.getValue());
+        serie.setTipoDoc(cbxTipoDoc.getValue().getCodDoc());
         serie.setSerie(txtSerie.getText().trim().toUpperCase());
         serie.setConsDesde(Integer.parseInt(txtConsDesde.getText().trim()));
         serie.setLineas(Integer.parseInt(txtLineas.getText().trim()));

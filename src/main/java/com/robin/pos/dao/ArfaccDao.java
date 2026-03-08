@@ -35,11 +35,12 @@ public class ArfaccDao {
         List<Arfacc> lstSeries = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT NO_CIA, CENTRO, TIPO_DOC, SERIE, CONS_DESDE, ");
-        sql.append("LINEAS, IND_CONTROL_AUTO, ACTIVO, NO_CABA ");
-        sql.append("FROM FACTU.ARFACC ");
-        sql.append("WHERE NO_CIA = ? AND CENTRO = ? ");
-        sql.append("ORDER BY TIPO_DOC, SERIE");
+        sql.append("SELECT F.NO_CIA, F.CENTRO, F.TIPO_DOC, D.DESCRIPCION, F.SERIE, F.CONS_DESDE, ");
+        sql.append("F.LINEAS, F.IND_CONTROL_AUTO, F.ACTIVO, F.NO_CABA ");
+        sql.append("FROM FACTU.ARFACC F, FACTU.ARFADOC D ");
+        sql.append("WHERE F.NO_CIA = ? AND F.CENTRO = ? ");
+        sql.append("AND D.NO_CIA = F.NO_CIA AND D.COD_DOC = F.TIPO_DOC ");
+        sql.append("ORDER BY F.TIPO_DOC");
 
         Connection cx = null;
 
@@ -55,6 +56,7 @@ public class ArfaccDao {
                 serie.setNoCia(rs.getString("NO_CIA"));
                 serie.setCentro(rs.getString("CENTRO"));
                 serie.setTipoDoc(rs.getString("TIPO_DOC"));
+                serie.setDescripcion(rs.getString("DESCRIPCION"));
                 serie.setSerie(rs.getString("SERIE"));
                 serie.setConsDesde(rs.getInt("CONS_DESDE"));
                 serie.setLineas(rs.getInt("LINEAS"));
@@ -90,11 +92,12 @@ public class ArfaccDao {
         List<Arfacc> lstSeries = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT NO_CIA, CENTRO, TIPO_DOC, SERIE, CONS_DESDE, ");
-        sql.append("LINEAS, IND_CONTROL_AUTO, ACTIVO, NO_CABA ");
-        sql.append("FROM FACTU.ARFACC ");
-        sql.append("WHERE NO_CIA = ? ");
-        sql.append("ORDER BY CENTRO, TIPO_DOC, SERIE");
+        sql.append("SELECT F.NO_CIA, F.CENTRO, F.TIPO_DOC, D.DESCRIPCION, F.SERIE, F.CONS_DESDE, ");
+        sql.append("F.LINEAS, F.IND_CONTROL_AUTO, F.ACTIVO, F.NO_CABA ");
+        sql.append("FROM FACTU.ARFACC F, FACTU.ARFADOC D ");
+        sql.append("WHERE F.NO_CIA = ? ");
+        sql.append("AND D.NO_CIA = F.NO_CIA AND D.COD_DOC = F.TIPO_DOC ");
+        sql.append("ORDER BY F.TIPO_DOC");
 
         Connection cx = null;
 
@@ -109,6 +112,7 @@ public class ArfaccDao {
                 serie.setNoCia(rs.getString("NO_CIA"));
                 serie.setCentro(rs.getString("CENTRO"));
                 serie.setTipoDoc(rs.getString("TIPO_DOC"));
+                serie.setDescripcion(rs.getString("DESCRIPCION"));
                 serie.setSerie(rs.getString("SERIE"));
                 serie.setConsDesde(rs.getInt("CONS_DESDE"));
                 serie.setLineas(rs.getInt("LINEAS"));
@@ -147,10 +151,11 @@ public class ArfaccDao {
         Arfacc arfacc = null;
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT NO_CIA, CENTRO, TIPO_DOC, SERIE, CONS_DESDE, ");
-        sql.append("LINEAS, IND_CONTROL_AUTO, ACTIVO, NO_CABA ");
-        sql.append("FROM FACTU.ARFACC ");
-        sql.append("WHERE NO_CIA = ? AND CENTRO = ? AND TIPO_DOC = ? AND SERIE = ?");
+        sql.append("SELECT F.NO_CIA, F.CENTRO, F.TIPO_DOC, D.DESCRIPCION, F.SERIE, F.CONS_DESDE, ");
+        sql.append("F.LINEAS, F.IND_CONTROL_AUTO, F.ACTIVO, F.NO_CABA ");
+        sql.append("FROM FACTU.ARFACC F, FACTU.ARFADOC D ");
+        sql.append("WHERE F.NO_CIA = ? AND F.CENTRO = ? AND F.TIPO_DOC = ? AND F.SERIE = ? ");
+        sql.append("AND D.NO_CIA = F.NO_CIA AND D.COD_DOC = F.TIPO_DOC");
 
         Connection cx = null;
 
@@ -168,6 +173,7 @@ public class ArfaccDao {
                 arfacc.setNoCia(rs.getString("NO_CIA"));
                 arfacc.setCentro(rs.getString("CENTRO"));
                 arfacc.setTipoDoc(rs.getString("TIPO_DOC"));
+                arfacc.setDescripcion(rs.getString("DESCRIPCION"));
                 arfacc.setSerie(rs.getString("SERIE"));
                 arfacc.setConsDesde(rs.getInt("CONS_DESDE"));
                 arfacc.setLineas(rs.getInt("LINEAS"));
@@ -212,11 +218,12 @@ public class ArfaccDao {
         List<Arfacc> lstSeries = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT NO_CIA, CENTRO, TIPO_DOC, SERIE, CONS_DESDE, ");
-        sql.append("LINEAS, IND_CONTROL_AUTO, ACTIVO, NO_CABA ");
-        sql.append("FROM FACTU.ARFACC ");
-        sql.append("WHERE NO_CIA = ? AND TIPO_DOC = ? ");
-        sql.append("ORDER BY CENTRO, SERIE");
+        sql.append("SELECT F.NO_CIA, F.CENTRO, F.TIPO_DOC, D.DESCRIPCION, F.SERIE, F.CONS_DESDE, ");
+        sql.append("F.LINEAS, F.IND_CONTROL_AUTO, F.ACTIVO, F.NO_CABA ");
+        sql.append("FROM FACTU.ARFACC F, FACTU.ARFADOC D ");
+        sql.append("WHERE F.NO_CIA = ? AND F.TIPO_DOC = ? ");
+        sql.append("AND D.NO_CIA = F.NO_CIA AND D.COD_DOC = F.TIPO_DOC ");
+        sql.append("ORDER BY F.CENTRO");
 
         Connection cx = null;
 
@@ -232,6 +239,7 @@ public class ArfaccDao {
                 serie.setNoCia(rs.getString("NO_CIA"));
                 serie.setCentro(rs.getString("CENTRO"));
                 serie.setTipoDoc(rs.getString("TIPO_DOC"));
+                serie.setDescripcion(rs.getString("DESCRIPCION"));
                 serie.setSerie(rs.getString("SERIE"));
                 serie.setConsDesde(rs.getInt("CONS_DESDE"));
                 serie.setLineas(rs.getInt("LINEAS"));
@@ -267,11 +275,12 @@ public class ArfaccDao {
         List<Arfacc> lstSeries = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT NO_CIA, CENTRO, TIPO_DOC, SERIE, CONS_DESDE, ");
-        sql.append("LINEAS, IND_CONTROL_AUTO, ACTIVO, NO_CABA ");
-        sql.append("FROM FACTU.ARFACC ");
-        sql.append("WHERE NO_CIA = ? AND ACTIVO = ? ");
-        sql.append("ORDER BY CENTRO, TIPO_DOC, SERIE");
+        sql.append("SELECT F.NO_CIA, F.CENTRO, F.TIPO_DOC, D.DESCRIPCION, F.SERIE, F.CONS_DESDE, ");
+        sql.append("F.LINEAS, F.IND_CONTROL_AUTO, F.ACTIVO, F.NO_CABA ");
+        sql.append("FROM FACTU.ARFACC F, FACTU.ARFADOC D ");
+        sql.append("WHERE F.NO_CIA = ? AND F.ACTIVO = ? ");
+        sql.append("AND D.NO_CIA = F.NO_CIA AND D.COD_DOC = F.TIPO_DOC ");
+        sql.append("ORDER BY F.TIPO_DOC");
 
         Connection cx = null;
 
@@ -287,6 +296,7 @@ public class ArfaccDao {
                 serie.setNoCia(rs.getString("NO_CIA"));
                 serie.setCentro(rs.getString("CENTRO"));
                 serie.setTipoDoc(rs.getString("TIPO_DOC"));
+                serie.setDescripcion(rs.getString("DESCRIPCION"));
                 serie.setSerie(rs.getString("SERIE"));
                 serie.setConsDesde(rs.getInt("CONS_DESDE"));
                 serie.setLineas(rs.getInt("LINEAS"));
@@ -322,14 +332,15 @@ public class ArfaccDao {
         List<Arfacc> lstSeries = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT NO_CIA, CENTRO, TIPO_DOC, SERIE, CONS_DESDE, ");
-        sql.append("LINEAS, IND_CONTROL_AUTO, ACTIVO, NO_CABA ");
-        sql.append("FROM FACTU.ARFACC ");
-        sql.append("WHERE NO_CIA = ? ");
-        sql.append("AND (UPPER(SERIE) LIKE ? ");
-        sql.append("OR UPPER(CENTRO) LIKE ? ");
-        sql.append("OR UPPER(TIPO_DOC) LIKE ?) ");
-        sql.append("ORDER BY CENTRO, TIPO_DOC, SERIE");
+        sql.append("SELECT F.NO_CIA, F.CENTRO, F.TIPO_DOC, D.DESCRIPCION, F.SERIE, F.CONS_DESDE, ");
+        sql.append("F.LINEAS, F.IND_CONTROL_AUTO, F.ACTIVO, F.NO_CABA ");
+        sql.append("FROM FACTU.ARFACC F, FACTU.ARFADOC D ");
+        sql.append("WHERE F.NO_CIA = ? ");
+        sql.append("AND (UPPER(F.SERIE) LIKE ? ");
+        sql.append("OR UPPER(F.CENTRO) LIKE ? ");
+        sql.append("OR UPPER(F.TIPO_DOC) LIKE ?) ");
+        sql.append("AND D.NO_CIA = F.NO_CIA AND D.COD_DOC = F.TIPO_DOC ");
+        sql.append("ORDER BY F.TIPO_DOC");
 
         Connection cx = null;
 
@@ -348,6 +359,7 @@ public class ArfaccDao {
                 serie.setNoCia(rs.getString("NO_CIA"));
                 serie.setCentro(rs.getString("CENTRO"));
                 serie.setTipoDoc(rs.getString("TIPO_DOC"));
+                serie.setDescripcion(rs.getString("DESCRIPCION"));
                 serie.setSerie(rs.getString("SERIE"));
                 serie.setConsDesde(rs.getInt("CONS_DESDE"));
                 serie.setLineas(rs.getInt("LINEAS"));

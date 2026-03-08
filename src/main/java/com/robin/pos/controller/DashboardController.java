@@ -505,7 +505,7 @@ public class DashboardController {
             tabSerieDocumento.setGraphic(icono);
 
             tabSerieDocumento.setClosable(true);
-            tabSerieDocumento.setOnClosed(e -> tabDocumento = null);
+            tabSerieDocumento.setOnClosed(e -> tabSerieDocumento = null);
 
             this.tabPane.getTabs().add(tabSerieDocumento);
             this.tabPane.getSelectionModel().select(tabSerieDocumento);

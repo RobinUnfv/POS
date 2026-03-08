@@ -2,8 +2,12 @@ package com.robin.pos.controller;
 
 import com.robin.pos.MainApp;
 import com.robin.pos.dao.ArfaccDao;
+import com.robin.pos.dao.ArfadocDao;
 import com.robin.pos.model.Arfacc;
+import com.robin.pos.model.Arfact;
+import com.robin.pos.model.Arfadoc;
 import com.robin.pos.util.Mensaje;
+import com.robin.pos.util.Metodos;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,8 +24,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.StringConverter;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -45,7 +51,7 @@ public class ListaSerieDocumentoController implements Initializable {
 
     @FXML private TextField txtBuscar;
     @FXML private ComboBox<String> cbxCentro;
-    @FXML private ComboBox<String> cbxTipoDoc;
+    @FXML private ComboBox<Arfadoc> cbxTipoDoc;
     @FXML private ComboBox<String> cbxEstado;
 
     @FXML private TableView<Arfacc> tblSeries;
@@ -97,7 +103,8 @@ public class ListaSerieDocumentoController implements Initializable {
      */
     private void configurarTabla() {
         colCentro.setCellValueFactory(new PropertyValueFactory<>("centro"));
-        colTipoDoc.setCellValueFactory(new PropertyValueFactory<>("tipoDoc"));
+        //colTipoDoc.setCellValueFactory(new PropertyValueFactory<>("tipoDoc"));
+        colTipoDoc.setCellValueFactory(new PropertyValueFactory<>("descripcion")); // Mostrar descripción del tipo de documento
         colSerie.setCellValueFactory(new PropertyValueFactory<>("serie"));
         colConsDesde.setCellValueFactory(new PropertyValueFactory<>("consDesde"));
         colLineas.setCellValueFactory(new PropertyValueFactory<>("lineas"));
@@ -133,12 +140,43 @@ public class ListaSerieDocumentoController implements Initializable {
         cbxCentro.setValue("TODOS");
 
         // Tipo de documento
+        /*
         cbxTipoDoc.getItems().addAll("TODOS", "F", "B", "N");
         cbxTipoDoc.setValue("TODOS");
+        */
+        cargarTipoDocumento();;
 
         // Estado
         cbxEstado.getItems().addAll("TODOS", "ACTIVO", "INACTIVO");
         cbxEstado.setValue("TODOS");
+    }
+
+    private void cargarTipoDocumento() {
+        ArfadocDao arfadocDao = new ArfadocDao();
+        //List<Arfadoc> arfadocs = arfadocDao.listarDocumentos(NO_CIA);
+        cbxTipoDoc.getItems().setAll(arfadocDao.listarDocumentos(NO_CIA));
+
+        cbxTipoDoc.setConverter(new StringConverter<Arfadoc>() {
+            @Override
+            public String toString(Arfadoc arfadoc) {
+                return arfadoc != null ? arfadoc.getDescripcion() : "";
+            }
+
+            @Override
+            public Arfadoc fromString(String s) {
+                return cbxTipoDoc.getItems().stream()
+                        .filter(d -> d.getDescripcion().equals(s))
+                        .findFirst().orElse(null);
+            }
+        });
+
+        cbxTipoDoc.setCellFactory(lv -> new ListCell<Arfadoc>() {
+            @Override
+            protected void updateItem(Arfadoc item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.getDescripcion());
+            }
+        });
     }
 
     /**
@@ -218,7 +256,7 @@ public class ListaSerieDocumentoController implements Initializable {
     private void aplicarFiltros() {
         String textoBusqueda = txtBuscar.getText().toLowerCase().trim();
         String centroSeleccionado = cbxCentro.getValue();
-        String tipoDocSeleccionado = cbxTipoDoc.getValue();
+        String tipoDocSeleccionado = cbxTipoDoc.getValue() != null ? cbxTipoDoc.getValue().getCodDoc() : "TODOS";
         String estadoSeleccionado = cbxEstado.getValue();
 
         listaFiltrada.clear();

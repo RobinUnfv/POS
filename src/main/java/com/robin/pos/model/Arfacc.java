@@ -12,6 +12,7 @@ public class Arfacc {
     private String noCia;
     private String centro;
     private String tipoDoc;
+    private String descripcion;
     private String serie;
     private int consDesde;
     private int lineas;
@@ -27,6 +28,20 @@ public class Arfacc {
         this.noCia = noCia;
         this.centro = centro;
         this.tipoDoc = tipoDoc;
+        this.serie = serie;
+        this.consDesde = consDesde;
+        this.lineas = lineas;
+        this.indControlAuto = indControlAuto;
+        this.activo = activo;
+        this.noCaba = noCaba;
+    }
+
+    public Arfacc(String noCia, String centro, String tipoDoc, String descripcion, String serie, int consDesde,
+                  int lineas, String indControlAuto, String activo, String noCaba) {
+        this.noCia = noCia;
+        this.centro = centro;
+        this.tipoDoc = tipoDoc;
+        this.descripcion = descripcion;
         this.serie = serie;
         this.consDesde = consDesde;
         this.lineas = lineas;
@@ -59,6 +74,14 @@ public class Arfacc {
 
     public void setTipoDoc(String tipoDoc) {
         this.tipoDoc = tipoDoc;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
     }
 
     public String getSerie() {
