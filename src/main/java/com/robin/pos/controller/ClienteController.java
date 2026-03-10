@@ -211,7 +211,7 @@ public class ClienteController implements Initializable {
     /**
      * Configura un campo para convertir texto a mayúsculas
      */
-    private void configurarMayusculas(TextField campo) {
+    public void configurarMayusculas(TextField campo) {
         if (campo != null) {
             campo.textProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal != null && !newVal.equals(newVal.toUpperCase())) {
@@ -521,7 +521,6 @@ public class ClienteController implements Initializable {
 
 
     // === CARGA DE UBIGEO ===
-
     private void cargarDepartamentos(String noCia) {
         ArccdpDao dao = new ArccdpDao();
         List<Arccdp> lista = dao.listarDepartamentos(noCia);

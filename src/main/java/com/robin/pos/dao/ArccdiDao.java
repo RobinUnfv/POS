@@ -50,4 +50,41 @@ public class ArccdiDao {
 
         return lstDistritos;
     }
+
+    public Arccdi getDistrito(String noCia, String codiDepa, String codiProv, String codiDist) {
+        Arccdi distrito = new Arccdi();
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT CODI_DIST AS codiDist, DESC_DIST AS descDist ");
+        sql.append("FROM CXC.ARCCDI ");
+        sql.append("WHERE NO_CIA = ? ");
+        sql.append("AND CODI_DEPA = ? ");
+        sql.append("AND CODI_PROV = ? ");
+        sql.append("AND CODI_DIST = ?");
+
+        Connection cx = null;
+
+        try {
+            cx = ConexionBD.oracle();
+            PreparedStatement ps = cx.prepareStatement(sql.toString());
+            ps.setString(1, noCia);
+            ps.setString(2, codiDepa);
+            ps.setString(3, codiProv);
+            ps.setString(4, codiDist);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                distrito.setCodiDist(rs.getString("codiDist"));
+                distrito.setDescDist(rs.getString("descDist"));
+            }
+            ConexionBD.cerrarCxOracle(cx);
+        }catch ( SQLException ex) {
+            Logger.getLogger(ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
+            Mensaje.error(null, "Distrito","Error cuando se consulta distritos.");
+            ConexionBD.cerrarCxOracle(cx);
+        } finally {
+            ConexionBD.cerrarCxOracle(cx);
+        }
+
+        return distrito;
+    }
+
 }

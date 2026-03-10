@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.SVGPath?>
+
+<VBox fx:id="vbxPrincipal" styleClass="root-container" stylesheets="@../css/DatosEmpresa.css" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.DatosEmpresaController">
+    
+    <!-- ==================== CABECERA ==================== -->
+    <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="header-container">
+        <padding>
+            <Insets bottom="20.0" left="25.0" right="25.0" top="20.0" />
+        </padding>
+        
+        <SVGPath content="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z" scaleX="1.2" scaleY="1.2" styleClass="header-icon" />
+        
+        <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+            <Label fx:id="lblTitulo" styleClass="header-title" text="Información de la Empresa" />
+            <Label fx:id="lblSubtitulo" styleClass="header-subtitle" text="Datos de la compañía y sucursales" />
+        </VBox>
+        
+        <HBox alignment="CENTER_RIGHT" spacing="10.0">
+            <Button fx:id="btnGuardar" onAction="#guardarCambios" prefHeight="35.0" prefWidth="41.0" styleClass="btn-action btn-save">
+                <graphic>
+                    <SVGPath content="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" scaleX="0.75" scaleY="0.75" styleClass="btn-icon" />
+                </graphic>
+                <tooltip><Tooltip text="Guardar cambios (Ctrl+S)" /></tooltip>
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+            
+            <Button fx:id="btnRefrescar" onAction="#refrescarDatos" prefHeight="36.0" prefWidth="39.0" styleClass="btn-action btn-refresh">
+                <graphic>
+                    <SVGPath content="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" scaleX="0.7" scaleY="0.7" styleClass="btn-icon-refresh" />
+                </graphic>
+                <tooltip><Tooltip text="Refrescar datos (F5)" /></tooltip>
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+        </HBox>
+    </HBox>
+    
+    <!-- ==================== CONTENIDO CON SCROLL ==================== -->
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="content-scroll" VBox.vgrow="ALWAYS">
+        <VBox spacing="20.0">
+            <padding>
+                <Insets bottom="25.0" left="25.0" right="25.0" top="15.0" />
+            </padding>
+            
+            <!-- ==================== SECCIÓN DATOS DE LA COMPAÑÍA ==================== -->
+            <VBox spacing="15.0" styleClass="section-container">
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <SVGPath content="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" scaleX="0.9" scaleY="0.9" styleClass="section-icon" />
+                    <Label styleClass="section-title" text="DATOS DE LA COMPAÑÍA" />
+                </HBox>
+                
+                <Separator styleClass="section-separator" />
+                
+                <GridPane hgap="20.0" styleClass="form-grid" vgap="15.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                    </rowConstraints>
+                    
+                    <!-- Fila 1 -->
+                    <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label styleClass="field-label" text="RUC" />
+                        <TextField fx:id="txtRuc" prefHeight="38.0" styleClass="field-readonly">
+                            <tooltip><Tooltip text="RUC de la empresa" /></tooltip>
+                        </TextField>
+                    </VBox>
+                    
+                    <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label styleClass="field-label" text="Razón Social" />
+                        <TextField fx:id="txtRazonSocial" prefHeight="38.0" styleClass="input-field">
+                            <tooltip><Tooltip text="Razón social de la empresa" /></tooltip>
+                        </TextField>
+                    </VBox>
+                    
+                    <!-- Fila 2 -->
+                    <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                        <Label styleClass="field-label" text="Nombre Comercial" />
+                        <TextField fx:id="txtNombre" prefHeight="38.0" styleClass="input-field">
+                            <tooltip><Tooltip text="Nombre comercial de la empresa" /></tooltip>
+                        </TextField>
+                    </VBox>
+                    
+                    <!-- Fila 3 -->
+                    <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <Label styleClass="field-label" text="Banco" />
+                        <TextField fx:id="txtBanco" prefHeight="38.0" styleClass="input-field">
+                            <tooltip><Tooltip text="Nombre del banco principal" /></tooltip>
+                        </TextField>
+                    </VBox>
+                    
+                    <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label styleClass="field-label" text="Cuenta Soles" />
+                        <TextField fx:id="txtCuentaSol" prefHeight="38.0" styleClass="input-field">
+                            <tooltip><Tooltip text="Número de cuenta en soles" /></tooltip>
+                        </TextField>
+                    </VBox>
+                    
+                    <!-- Fila 4 -->
+                    <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                        <Label styleClass="field-label" text="CCI / Cuenta Dólares" />
+                        <TextField fx:id="txtCci" prefHeight="38.0" styleClass="input-field">
+                            <tooltip><Tooltip text="CCI o cuenta en dólares" /></tooltip>
+                        </TextField>
+                    </VBox>
+                    
+                    <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <Label styleClass="field-label" text="Descripción" />
+                        <TextField fx:id="txtDescripcion" prefHeight="38.0" styleClass="input-field">
+                            <tooltip><Tooltip text="Descripción adicional" /></tooltip>
+                        </TextField>
+                    </VBox>
+                    
+                    <!-- Fila 5 - Tasas -->
+                    <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                        <Label styleClass="field-label" text="IGV (%)" />
+                        <TextField fx:id="txtIgv" editable="false" prefHeight="38.0" styleClass="field-readonly field-tax">
+                            <tooltip><Tooltip text="Porcentaje de IGV" /></tooltip>
+                        </TextField>
+                    </VBox>
+                    
+                    <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                        <Label styleClass="field-label" text="ISC (%)" />
+                        <TextField fx:id="txtIsc" editable="false" prefHeight="38.0" styleClass="field-readonly field-tax">
+                            <tooltip><Tooltip text="Porcentaje de ISC" /></tooltip>
+                        </TextField>
+                    </VBox>
+                </GridPane>
+            </VBox>
+            
+            <!-- ==================== SECCIÓN SUCURSALES ==================== -->
+            <VBox spacing="15.0" styleClass="section-container">
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <SVGPath content="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z" scaleX="0.9" scaleY="0.9" styleClass="section-icon" />
+                    <Label styleClass="section-title" text="SUCURSALES Y PUNTOS DE VENTA" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Label fx:id="lblSucursalInfo" styleClass="sucursal-counter" text="Seleccione una sucursal" />
+                </HBox>
+                
+                <Separator styleClass="section-separator" />
+                
+                <!-- Selector de Sucursal -->
+                <HBox alignment="CENTER_LEFT" spacing="15.0">
+                    <Label styleClass="field-label" text="Sucursal:" />
+                    <ComboBox fx:id="cbxSucursal" onAction="#seleccionarSucursal" prefHeight="38.0" prefWidth="300.0" promptText="Seleccione una sucursal..." styleClass="sucursal-combo">
+                        <cursor><Cursor fx:constant="HAND" /></cursor>
+                    </ComboBox>
+                </HBox>
+                
+                <!-- Formulario de Sucursal -->
+                <GridPane hgap="20.0" styleClass="form-grid" vgap="15.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="33.33" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="33.33" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="33.33" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                    </rowConstraints>
+                    
+                    <!-- Fila 1 -->
+                    <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label styleClass="field-label" text="Código Sucursal" />
+                        <TextField fx:id="txtCodSucursal" editable="false" prefHeight="38.0" styleClass="field-readonly" />
+                    </VBox>
+                    
+                    <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label styleClass="field-label" text="Código Pto. Venta" />
+                        <TextField fx:id="txtCodPtoVta" editable="false" prefHeight="38.0" styleClass="field-readonly" />
+                    </VBox>
+                    
+                    <VBox spacing="8.0" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <Label styleClass="field-label" text="Estado" />
+                        <ComboBox fx:id="cbxEstadoSuc" maxWidth="Infinity" prefHeight="38.0" styleClass="input-combo">
+                            <cursor><Cursor fx:constant="HAND" /></cursor>
+                        </ComboBox>
+                    </VBox>
+                    
+                    <!-- Fila 2 -->
+                    <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                        <Label styleClass="field-label" text="Nombre Sucursal" />
+                        <TextField fx:id="txtNombreSucursal" prefHeight="38.0" styleClass="input-field" />
+                    </VBox>
+                    
+                    <VBox spacing="8.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <Label styleClass="field-label" text="Nombre Comercial" />
+                        <TextField fx:id="txtNomComercial" prefHeight="38.0" styleClass="input-field" />
+                    </VBox>
+                    
+                    <!-- Fila 3 - Ubicación -->
+                    <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <Label styleClass="field-label" text="Departamento" />
+                  <ComboBox fx:id="cbxDepartamento" onAction="#buscarDepartamento" prefWidth="150.0" styleClass="cbxUbigeo" />
+                    </VBox>
+                    
+                    <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label styleClass="field-label" text="Provincia" />
+                  <ComboBox fx:id="cbxProvincia" onAction="#buscarProvincias" prefWidth="150.0" styleClass="cbxUbigeo" />
+                    </VBox>
+                    
+                    <VBox spacing="8.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                        <Label styleClass="field-label" text="Distrito" />
+                  <ComboBox fx:id="cbxDistrito" onAction="#buscarDistrito" prefWidth="150.0" styleClass="cbxUbigeo" />
+                    </VBox>
+                    
+                    <!-- Fila 4 - Dirección -->
+                    <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="3">
+                        <Label styleClass="field-label" text="Dirección" />
+                        <TextField fx:id="txtDireccion" prefHeight="38.0" styleClass="input-field" />
+                    </VBox>
+                    
+                    <!-- Fila 5 - Contacto -->
+                    <VBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="4">
+                        <Label styleClass="field-label" text="Teléfono 1" />
+                        <TextField fx:id="txtTelefono1" prefHeight="38.0" styleClass="input-field" />
+                    </VBox>
+                    
+                    <VBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                        <Label styleClass="field-label" text="Teléfono 2" />
+                        <TextField fx:id="txtTelefono2" prefHeight="38.0" styleClass="input-field" />
+                    </VBox>
+                    
+                    <VBox spacing="8.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                        <Label styleClass="field-label" text="Correo Electrónico" />
+                        <TextField fx:id="txtCorreo" prefHeight="38.0" styleClass="input-field" />
+                    </VBox>
+                </GridPane>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+    
+    <!-- ==================== FOOTER ==================== -->
+    <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="footer-container">
+        <padding>
+            <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
+        </padding>
+        
+        <SVGPath content="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" scaleX="0.8" scaleY="0.8" styleClass="footer-icon" />
+        <Label styleClass="footer-text" text="Los cambios se guardarán al presionar el botón Guardar" />
+        
+        <Region HBox.hgrow="ALWAYS" />
+        
+        <Label styleClass="shortcut-hint" text="Ctrl+S: Guardar" />
+        <Label styleClass="shortcut-hint" text="F5: Refrescar" />
+    </HBox>
+</VBox>

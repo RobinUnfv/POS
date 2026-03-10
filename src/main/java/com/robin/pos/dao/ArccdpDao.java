@@ -49,4 +49,38 @@ public class ArccdpDao {
         return lstDepartamentos;
     }
 
+    public Arccdp getDepartamento(String noCia, String codDepa) {
+        Arccdp departamento = new Arccdp();
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT CODI_DEPA AS CODDEPA , DESC_DEPA AS DESDEPA ");
+        sql.append("FROM CXC.ARCCDP ");
+        sql.append("WHERE NO_CIA = ? ");
+        sql.append("AND CODI_DEPA = ?");
+
+        Connection cx = null;
+
+        try {
+
+            cx = ConexionBD.oracle();
+            PreparedStatement ps = cx.prepareStatement(sql.toString());
+            ps.setString(1, noCia);
+            ps.setString(2, codDepa);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                departamento.setCodDepa(rs.getString("CODDEPA"));
+                departamento.setDesDepa(rs.getString("DESDEPA"));
+
+            }
+            ConexionBD.cerrarCxOracle(cx);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
+            Mensaje.error(null, "Departamento","Error cuando se consulta departemento.");
+            ConexionBD.cerrarCxOracle(cx);
+        } finally {
+            ConexionBD.cerrarCxOracle(cx);
+        }
+        return departamento;
+    }
+
 }

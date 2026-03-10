@@ -1,0 +1,312 @@
+/* ==================== DATOS EMPRESA CSS ==================== */
+/* Estilos modernos y responsivos para el formulario de datos de empresa */
+
+/* === CONTENEDOR PRINCIPAL === */
+.root-container {
+    -fx-background-color: #f8fafc;
+}
+
+/* === CABECERA === */
+.header-container {
+    -fx-background-color: linear-gradient(to right, #8b5cf6, #7c3aed, #6d28d9);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
+}
+
+.header-icon {
+    -fx-fill: white;
+}
+
+.header-title {
+    -fx-font-family: 'Segoe UI Semibold', sans-serif;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.header-subtitle {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(255,255,255,0.9);
+}
+
+/* === BOTONES DEL HEADER === */
+.btn-action {
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-padding: 10 18;
+    -fx-min-width: 48px;
+    -fx-min-height: 48px;
+}
+
+.btn-action:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.btn-action:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.btn-save {
+    -fx-background-color: #059669;
+    /* -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.3), 8, 0, 0, 2); */
+}
+
+.btn-save:hover {
+    -fx-background-color: linear-gradient(to bottom, #059669, #047857);
+}
+
+.btn-refresh {
+    -fx-background-color: white;
+    -fx-border-color: rgba(255,255,255,0.3);
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+}
+
+.btn-refresh:hover {
+    -fx-background-color: rgba(255,255,255,0.95);
+}
+
+.btn-icon {
+    -fx-fill: white;
+}
+
+.btn-icon-refresh {
+    -fx-fill: #8b5cf6;
+}
+
+/* === SCROLL PANE === */
+.content-scroll {
+    -fx-background-color: transparent;
+}
+
+.content-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.content-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12px;
+}
+
+.content-scroll .scroll-bar:vertical .track {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 6;
+}
+
+.content-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 6;
+}
+
+.content-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #94a3b8;
+}
+
+.content-scroll .scroll-bar:vertical .increment-button,
+.content-scroll .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* === SECCIONES === */
+.section-container {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 2);
+}
+
+.section-icon {
+    -fx-fill: #8b5cf6;
+}
+
+.section-title {
+    -fx-font-family: 'Segoe UI Semibold', sans-serif;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+    -fx-letter-spacing: 0.5;
+}
+
+.section-separator {
+    -fx-background-color: #e2e8f0;
+    -fx-pref-height: 1;
+}
+
+/* === FORMULARIOS === */
+.form-grid {
+    -fx-background-color: transparent;
+}
+
+.field-label {
+    -fx-font-family: 'Segoe UI Semibold', sans-serif;
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+    -fx-font-weight: 600;
+}
+
+/* === CAMPOS DE ENTRADA === */
+.input-field {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10 14;
+    -fx-text-fill: #1e293b;
+}
+
+.input-field:focused {
+    -fx-border-color: #8b5cf6;
+    -fx-effect: dropshadow(gaussian, rgba(139,92,246,0.2), 8, 0, 0, 0);
+}
+
+.input-field:hover {
+    -fx-border-color: #c4b5fd;
+}
+
+/* === CAMPOS READONLY === */
+.field-readonly {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10 14;
+    -fx-text-fill: #64748b;
+    -fx-opacity: 1.0;
+}
+
+/* === CAMPOS DE IMPUESTOS === */
+.field-tax {
+    -fx-background-color: #fef3c7;
+    -fx-border-color: #fbbf24;
+    -fx-text-fill: #92400e;
+    -fx-font-weight: 600;
+}
+
+/* === COMBOBOX === */
+.input-combo {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.input-combo:focused {
+    -fx-border-color: #8b5cf6;
+    -fx-effect: dropshadow(gaussian, rgba(139,92,246,0.2), 8, 0, 0, 0);
+}
+
+.input-combo .list-cell {
+    -fx-padding: 10 14;
+}
+
+.input-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.input-combo .arrow {
+    -fx-background-color: #64748b;
+}
+/* === SELECTOR DE SUCURSAL === */
+.cbxUbigeo {
+    -fx-font-family: 'Segoe UI Semibold', sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #faf5ff;
+    -fx-border-color: #207cf5;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-weight: 600;
+}
+
+/* === SELECTOR DE SUCURSAL === */
+.sucursal-combo {
+    -fx-font-family: 'Segoe UI Semibold', sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #faf5ff;
+    -fx-border-color: #8b5cf6;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-weight: 600;
+}
+
+.sucursal-combo:focused {
+    -fx-effect: dropshadow(gaussian, rgba(139,92,246,0.3), 10, 0, 0, 0);
+}
+
+.sucursal-counter {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 12px;
+    -fx-text-fill: #8b5cf6;
+    -fx-background-color: #faf5ff;
+    -fx-padding: 6 12;
+    -fx-background-radius: 12;
+    -fx-border-color: #8b5cf6;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+}
+
+/* === FOOTER === */
+.footer-container {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1 0 0 0;
+}
+
+.footer-icon {
+    -fx-fill: #8b5cf6;
+}
+
+.footer-text {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+}
+
+.shortcut-hint {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748b;
+    -fx-padding: 5 10;
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 6;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1200px) {
+    .header-title {
+        -fx-font-size: 18px;
+    }
+    
+    .section-container {
+        -fx-padding: 20;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-title {
+        -fx-font-size: 16px;
+    }
+    
+    .section-container {
+        -fx-padding: 15;
+    }
+    
+    .input-field,
+    .field-readonly,
+    .input-combo {
+        -fx-font-size: 13px;
+    }
+}

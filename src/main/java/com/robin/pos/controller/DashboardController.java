@@ -49,6 +49,7 @@ public class DashboardController {
     @FXML private Button btnCatalogo;
     @FXML private Button btnSerieDocumento;
     @FXML private Button btnDocumento;
+    @FXML private Button btnCompania;
     
     // Sub-menús
     @FXML private VBox ventasSubmenu;
@@ -90,6 +91,7 @@ public class DashboardController {
     private Tab tabComuBaja;
     private Tab tabSerieDocumento;
     private Tab tabDocumento;
+    private Tab tabCompania;
 
     @FXML
     public void initialize() {
@@ -535,6 +537,30 @@ public class DashboardController {
 
         } else {
             this.tabPane.getSelectionModel().select(tabDocumento);
+        }
+    }
+
+    @FXML
+    public void ingresarCompania() throws IOException {
+        System.out.println("LISTA DE DOCUMENTOS");
+        if(tabCompania == null) {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/datosEmpresa.fxml"));
+            VBox  ap = loader.load();
+
+            ImageView icono = createIcon("/com/robin/pos/imagenes/compania.png");
+
+            tabCompania = new Tab("Empresa", ap);
+
+            tabCompania.setGraphic(icono);
+
+            tabCompania.setClosable(true);
+            tabCompania.setOnClosed(e -> tabCompania = null);
+
+            this.tabPane.getTabs().add(tabCompania);
+            this.tabPane.getSelectionModel().select(tabCompania);
+
+        } else {
+            this.tabPane.getSelectionModel().select(tabCompania);
         }
     }
 

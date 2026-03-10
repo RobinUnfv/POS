@@ -49,4 +49,39 @@ public class ArccprDao {
         }
         return lstProvincias;
     }
+
+    public Arccpr getProvincia(String noCia, String codiDepa, String codiProv) {
+        Arccpr provincia = new Arccpr();
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT CODI_PROV as codiProv, DESC_PROV as descProv ");
+        sql.append("FROM CXC.ARCCPR ");
+        sql.append("WHERE NO_CIA = ? ");
+        sql.append("AND CODI_DEPA = ? ");
+        sql.append("AND CODI_PROV = ?");
+
+        Connection cx = null;
+
+        try {
+            cx = ConexionBD.oracle();
+            PreparedStatement ps = cx.prepareStatement(sql.toString());
+            ps.setString(1, noCia);
+            ps.setString(2, codiDepa);
+            ps.setString(3, codiProv);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                provincia.setCodiProv(rs.getString("codiProv"));
+                provincia.setDescProv(rs.getString("descProv"));
+            }
+            ConexionBD.cerrarCxOracle(cx);
+        } catch (SQLException ex) {
+            Logger.getLogger(ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
+            Mensaje.error(null, "Provincia","Error cuando se consulta provincias.");
+            ConexionBD.cerrarCxOracle(cx);
+        } finally {
+            ConexionBD.cerrarCxOracle(cx);
+        }
+        return provincia;
+    }
+
 }
