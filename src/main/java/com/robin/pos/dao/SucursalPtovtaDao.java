@@ -36,7 +36,7 @@ public class SucursalPtovtaDao {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT NO_CIA, COD_SUCURSAL, COD_PTO_VTA, NOMBRE_SUCU_PTOVTA, ");
         sql.append("CODI_DEPA, CODI_PROV, CODI_DIST, ");
-        sql.append("TELEF1, TELEF2, CORREOELECTRO, ESTADO_SUC, DIRECCION, NOM_COMERCIAL ");
+        sql.append("TELEF1, TELEF2, CORREOELECTRO, ESTADO_SUC, CXC.PR_CLIENTE.GET_DIRECC_CIA( ? ) AS DIRECCION, NOM_COMERCIAL ");
         sql.append("FROM FACTU.SUCURSAL_PTOVTA ");
         sql.append("WHERE NO_CIA = ? ");
         sql.append("ORDER BY COD_SUCURSAL, COD_PTO_VTA");
@@ -47,6 +47,7 @@ public class SucursalPtovtaDao {
             cx = ConexionBD.oracle();
             PreparedStatement ps = cx.prepareStatement(sql.toString());
             ps.setString(1, noCia);
+            ps.setString(2, noCia);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {

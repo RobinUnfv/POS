@@ -1,5 +1,7 @@
 package com.robin.pos.util;
 
+import com.robin.pos.dao.ArfamcDao;
+import com.robin.pos.dao.SucursalPtovtaDao;
 import com.robin.pos.model.*;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -25,16 +27,57 @@ public class ReporteComprobantePago {
     private static final String JRXML_PATH = "/com/robin/pos/reportes/comprobantePago.jrxml";
     private static final String JASPER_PATH = "/com/robin/pos/reportes/comprobantePago.jasper";
     private static final String LOGO_PATH = "/com/robin/pos/imagenes/logos-nexer.png";
+    private static final String NO_CIA = "01"; // Código de compañía
 
-    private String empresaNombre = "CORPORACION TEXTIL CELIA E.I.R.L.";
-    private String empresaActividad = "EN DISEÑO Y MODELOS EXCLUSIVOS EN PRODUCTOS TEXTILES - \nPRENDAS DE VESTIR - CON PRECIOS ESPECIALES PARA PROVINCIA - \nVENTAS POR MAYOR Y MENOR";
-    private String empresaDireccion = "JR. MARISCAL AGUSTIN GAMARRA NRO. 676 INT. 262 URB. EL PORVENIR - LA VICTORIA - LIMA - LIMA";
-    private String empresaRuc = "20609272016";
-    private String empresaTelefonos = "/";
-    private String empresaWeb = "";
-    private String empresaEmail = "";
-    private String bancoCuentaSoles = "191-9409603-0-93";
-    private String bancoCuentaDolares = "00219100940960309350";
+    // DAOs para obtener datos dinámicamente
+    private final ArfamcDao arfamcDao = new ArfamcDao();
+    private final SucursalPtovtaDao sucursalDao = new SucursalPtovtaDao();
+
+    // Cache de datos de empresa y sucursal
+    private Arfamc datosEmpresa;
+    private SucursalPtovta datosSucursal;
+
+    /**
+     * Constructor que carga los datos de la empresa y sucursal
+     */
+    public ReporteComprobantePago() {
+        cargarDatosEmpresa();
+    }
+
+    /**
+     * Carga los datos de la empresa y sucursal desde la base de datos
+     */
+    private void cargarDatosEmpresa() {
+        try {
+            // Obtener datos de la compañía
+            datosEmpresa = arfamcDao.obtenerDatosCompania(NO_CIA);
+            if (datosEmpresa == null) {
+                LOGGER.warning("No se pudieron obtener los datos de la empresa");
+                datosEmpresa = new Arfamc(); // Crear objeto vacío para evitar NPE
+            }
+
+            // Obtener la primera sucursal activa
+            List<SucursalPtovta> sucursales = sucursalDao.listarSucursales(NO_CIA);
+            if (!sucursales.isEmpty()) {
+                // Buscar sucursal activa o tomar la primera
+                datosSucursal = sucursales.stream()
+                        .filter(s -> "A".equals(s.getEstadoSuc()))
+                        .findFirst()
+                        .orElse(sucursales.get(0));
+            } else {
+                LOGGER.warning("No se encontraron sucursales");
+                datosSucursal = new SucursalPtovta(); // Crear objeto vacío
+            }
+
+            LOGGER.info("Datos de empresa y sucursal cargados correctamente");
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al cargar datos de empresa", e);
+            // Inicializar objetos vacíos para evitar NPE
+            datosEmpresa = new Arfamc();
+            datosSucursal = new SucursalPtovta();
+        }
+    }
 
     /**
      * Genera y muestra el reporte de comprobante de pago
@@ -61,13 +104,7 @@ public class ReporteComprobantePago {
 
             // Llenar el reporte
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
-            /*
-            // Mostrar el reporte en un visor
-            JasperViewer viewer = new JasperViewer(jasperPrint, false);
-            String tipoComprobante = Metodos.getTipoComprobante(resultado.getNoFactu());
-            viewer.setTitle(tipoComprobante+" ELECTRONICA - " + resultado.getNoFactu());
-            viewer.setVisible(true);
-            */
+
             String tipoComprobante = Metodos.getTipoComprobante(resultado.getNoFactu());
             SwingUtilities.invokeLater(() -> {
                 JasperViewer viewer = new JasperViewer(jasperPrint, false);
@@ -95,9 +132,9 @@ public class ReporteComprobantePago {
     }
 
     public void generarReportePDf(ResultadoEmision resultado,
-                               List<DetalleVenta> detalles,
-                               DatosCliente datosCliente,
-                               DatosVenta datosVenta) {
+                                  List<DetalleVenta> detalles,
+                                  DatosCliente datosCliente,
+                                  DatosVenta datosVenta) {
         try {
             // Cargar el reporte compilado o compilarlo desde JRXML
             JasperReport jasperReport = cargarReporte();
@@ -111,7 +148,7 @@ public class ReporteComprobantePago {
 
             // Llenar el reporte
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
-            //String tipoComprobante = Metodos.getTipoComprobante(resultado.getNoFactu());
+
             String carpetaDescargas = GestorDescargas.getCarpetaDescargas();
             String nombreArchivo = carpetaDescargas + "/" + resultado.getNoFactu()+ ".pdf";
             JasperExportManager.exportReportToPdfFile(jasperPrint, nombreArchivo);
@@ -151,7 +188,7 @@ public class ReporteComprobantePago {
     }
 
     /**
-     * Prepara todos los parámetros para el reporte
+     * Prepara todos los parámetros para el reporte usando datos de BD
      */
     private Map<String, Object> prepararParametros(ResultadoEmision resultado,
                                                    DatosCliente cliente,
@@ -163,18 +200,62 @@ public class ReporteComprobantePago {
         params.put("TIPO_COMPROBANTE", tipoComprobante);
         String tipoDocumentoCliente = Metodos.getTipoDocumentoCliente( resultado.getNoFactu(), resultado.getNoCliente() );
         params.put("TIP_DOC_CLI", tipoDocumentoCliente);
-        // Datos de la empresa
-        params.put("EMPRESA_NOMBRE", empresaNombre);
-        params.put("EMPRESA_ACTIVIDAD", empresaActividad);
-        params.put("EMPRESA_DIRECCION", empresaDireccion);
-        params.put("EMPRESA_RUC", empresaRuc);
-        /*
-        params.put("EMPRESA_TELEFONOS", empresaTelefonos);
-        params.put("EMPRESA_WEB", empresaWeb);
-        params.put("EMPRESA_EMAIL", empresaEmail);
-        */
-        params.put("BANCO_CUENTA_SOLES", bancoCuentaSoles);
-        params.put("BANCO_CUENTA_DOLARES", bancoCuentaDolares);
+
+        // ==================== DATOS DE LA EMPRESA DESDE BD ====================
+        if (datosEmpresa != null) {
+            // Nombre comercial
+            params.put("EMPRESA_NOMBRE",
+                    datosEmpresa.getNombre() != null ? datosEmpresa.getNombre() : "");
+
+            // Actividad comercial (usar descripción)
+            params.put("EMPRESA_ACTIVIDAD",
+                    datosEmpresa.getDescripcion() != null ? datosEmpresa.getDescripcion() : "");
+
+            // RUC
+            params.put("EMPRESA_RUC",
+                    datosEmpresa.getRuc() != null ? datosEmpresa.getRuc() : "");
+
+            // Cuentas bancarias
+            params.put("BANCO_CUENTA_SOLES",
+                    datosEmpresa.getCuentaSol() != null ? datosEmpresa.getCuentaSol() : "");
+
+            params.put("BANCO_CUENTA_DOLARES",
+                    datosEmpresa.getCci() != null ? datosEmpresa.getCci() : "");
+        } else {
+            // Valores por defecto si no hay datos
+            params.put("EMPRESA_NOMBRE", "");
+            params.put("EMPRESA_ACTIVIDAD", "");
+            params.put("EMPRESA_RUC", "");
+            params.put("BANCO_CUENTA_SOLES", "");
+            params.put("BANCO_CUENTA_DOLARES", "");
+        }
+
+        // ==================== DATOS DE LA SUCURSAL DESDE BD ====================
+        if (datosSucursal != null) {
+            // Dirección completa de la sucursal
+            params.put("EMPRESA_DIRECCION",
+                    datosSucursal.getDireccion() != null ? datosSucursal.getDireccion() : "");
+
+            // Teléfonos de la sucursal (concatenar si hay dos)
+            StringBuilder telefonos = new StringBuilder();
+            if (datosSucursal.getTelef1() != null && !datosSucursal.getTelef1().isEmpty()) {
+                telefonos.append(datosSucursal.getTelef1());
+            }
+            if (datosSucursal.getTelef2() != null && !datosSucursal.getTelef2().isEmpty()) {
+                if (telefonos.length() > 0) telefonos.append(" / ");
+                telefonos.append(datosSucursal.getTelef2());
+            }
+            params.put("EMPRESA_TELEFONOS", telefonos.toString());
+
+            // Email de la sucursal
+            params.put("EMPRESA_EMAIL",
+                    datosSucursal.getCorreoElectro() != null ? datosSucursal.getCorreoElectro() : "");
+        } else {
+            // Valores por defecto
+            params.put("EMPRESA_DIRECCION", "");
+            params.put("EMPRESA_TELEFONOS", "");
+            params.put("EMPRESA_EMAIL", "");
+        }
 
         // Logo
         params.put("LOGO_PATH", getClass().getResource(LOGO_PATH).toString());
@@ -192,10 +273,8 @@ public class ReporteComprobantePago {
         params.put("CONDICION_PAGO", venta.getCondicionPago());
         params.put("MONEDA", venta.getMoneda());
         params.put("VENDEDOR", venta.getVendedor());
-        // params.put("ORDEN_COMPRA", venta.getOrdenCompra() != null ? venta.getOrdenCompra() : "");
         params.put("ORDEN_COMPRA", resultado.getNoOrden() != null ? resultado.getNoOrden() : "-----");
         params.put("GUIA_REMISION", resultado.getNoGuia() != null ? resultado.getNoGuia() : "-----");
-        // params.put("ENTREGA_DIRECCION", cliente.getDireccion());
 
         // Calcular totales
         BigDecimal totalConIgv = calcularTotalConIgv(detalles);
@@ -213,11 +292,10 @@ public class ReporteComprobantePago {
         String montoEnLetras = NumeroALetras.convertir(totalConIgv.doubleValue(), venta.getMoneda());
         params.put("SON", montoEnLetras);
 
-        // Código QR (generar imagen)
+        // Código QR
         try {
-            // InputStream qrImage = generarCodigoQR(resultado, totalConIgv);
             InputStream qrImage = GeneradorQR.generarQRSunat(
-                    empresaRuc,
+                    datosEmpresa != null ? datosEmpresa.getRuc() : "",
                     resultado.getNumeroComprobanteFormateado(),
                     igvTotal,
                     totalConIgv,
@@ -225,8 +303,7 @@ public class ReporteComprobantePago {
                     cliente.getTipoDocumento(),
                     cliente.getNumeroDocumento()
             );
-            //params.put("QR_CODE_IMAGE", qrImage); // Se muestra el QR
-            params.put("QR_CODE_IMAGE", null); //Nexer no quiere el QR
+            params.put("QR_CODE_IMAGE", null); // Nexer no quiere el QR
         } catch (Exception e) {
             LOGGER.warning("No se pudo generar código QR: " + e.getMessage());
         }
@@ -244,4 +321,20 @@ public class ReporteComprobantePago {
         return BigDecimal.valueOf(total).setScale(2, RoundingMode.HALF_UP);
     }
 
+    /**
+     * Permite establecer una sucursal específica para el reporte
+     * @param codSucursal Código de sucursal
+     * @param codPtoVta Código de punto de venta
+     */
+    public void setSucursal(String codSucursal, String codPtoVta) {
+        try {
+            SucursalPtovta sucursal = sucursalDao.buscarSucursal(NO_CIA, codSucursal, codPtoVta);
+            if (sucursal != null) {
+                this.datosSucursal = sucursal;
+                LOGGER.info("Sucursal establecida: " + codSucursal + "-" + codPtoVta);
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "No se pudo establecer la sucursal", e);
+        }
+    }
 }
