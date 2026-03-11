@@ -1,10 +1,13 @@
 package com.robin.pos.controller;
 
+import com.robin.pos.dao.ArfamcDao;
 import com.robin.pos.dao.RegistroVentaDao;
-import com.robin.pos.model.RegVta;
+import com.robin.pos.dao.SucursalPtovtaDao;
+import com.robin.pos.model.*;
 import com.robin.pos.util.GestorDescargas;
 import com.robin.pos.util.Mensaje;
 import com.robin.pos.util.Metodos;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,6 +29,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
@@ -36,14 +40,16 @@ import java.util.logging.Logger;
 
 /**
  * Controlador para el formulario de Registro de Ventas
+ * Con integración de datos de empresa desde BD
  *
  * @author Robin POS
- * @version 1.0
+ * @version 2.0
  */
 public class RegistroVentaController implements Initializable {
 
     private static final Logger LOGGER = Logger.getLogger(RegistroVentaController.class.getName());
     private static final String NO_CIA = "01";
+    private static final String LOGO_PATH = "/com/robin/pos/imagenes/logos-nexer.png";
 
     // Rutas de reportes
     private static final String REPORTE_PDF_PATH = "/com/robin/pos/reportes/registroVentaPdf.jasper";
@@ -74,7 +80,12 @@ public class RegistroVentaController implements Initializable {
     // ==================== VARIABLES DE INSTANCIA ====================
 
     private final RegistroVentaDao registroVentaDao = new RegistroVentaDao();
+    private final ArfamcDao arfamcDao = new ArfamcDao();
+    private final SucursalPtovtaDao sucursalDao = new SucursalPtovtaDao();
+
     private String userId;
+    private Arfamc datosEmpresa;
+    private SucursalPtovta datosSucursal;
 
     // ==================== INITIALIZE ====================
 
@@ -82,6 +93,7 @@ public class RegistroVentaController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         LOGGER.info("Inicializando RegistroVentaController");
 
+        cargarDatosEmpresa();
         configurarComboBoxes();
         configurarDatePickers();
         configurarListeners();
@@ -92,10 +104,39 @@ public class RegistroVentaController implements Initializable {
     }
 
     /**
+     * Carga los datos de la empresa desde la BD
+     */
+    private void cargarDatosEmpresa() {
+        try {
+            datosEmpresa = arfamcDao.obtenerDatosCompania(NO_CIA);
+            if (datosEmpresa == null) {
+                LOGGER.warning("No se encontraron datos de la empresa");
+                datosEmpresa = new Arfamc(); // Objeto vacío para evitar NPE
+            }
+
+            List<SucursalPtovta> sucursales = sucursalDao.listarSucursales(NO_CIA);
+            if (!sucursales.isEmpty()) {
+                datosSucursal = sucursales.stream()
+                        .filter(s -> "A".equals(s.getEstadoSuc()))
+                        .findFirst()
+                        .orElse(sucursales.get(0));
+            } else {
+                datosSucursal = new SucursalPtovta();
+            }
+
+            LOGGER.info("Datos de empresa cargados para registro de ventas");
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al cargar datos de empresa", e);
+            datosEmpresa = new Arfamc();
+            datosSucursal = new SucursalPtovta();
+        }
+    }
+
+    /**
      * Configura los ComboBoxes
      */
     private void configurarComboBoxes() {
-        // Tipos de documento
         cbxTipoDocumento.getItems().addAll(
                 "TODOS",
                 "01 - Factura",
@@ -110,14 +151,12 @@ public class RegistroVentaController implements Initializable {
      * Configura los DatePickers
      */
     private void configurarDatePickers() {
-        // Establecer primer día del mes actual
         LocalDate hoy = LocalDate.now();
         LocalDate primerDia = hoy.withDayOfMonth(1);
 
         dpFechaDesde.setValue(primerDia);
         dpFechaHasta.setValue(hoy);
 
-        // Formato de fecha
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         dpFechaDesde.setPromptText("dd/MM/yyyy");
         dpFechaHasta.setPromptText("dd/MM/yyyy");
@@ -127,7 +166,6 @@ public class RegistroVentaController implements Initializable {
      * Configura los listeners
      */
     private void configurarListeners() {
-        // Listener para cambio de destino
         grupoDestino.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
             actualizarRutaArchivo();
         });
@@ -146,6 +184,7 @@ public class RegistroVentaController implements Initializable {
         });
     }
     */
+
     /**
      * Establece la ruta por defecto
      */
@@ -155,7 +194,7 @@ public class RegistroVentaController implements Initializable {
     }
 
     /**
-     * Actualiza la ruta del archivo según el destino seleccionado
+     * Actualiza la ruta del archivo
      */
     private void actualizarRutaArchivo() {
         if (rbImpresora.isSelected()) {
@@ -167,15 +206,11 @@ public class RegistroVentaController implements Initializable {
 
     // ==================== EXAMINAR RUTA ====================
 
-    /**
-     * Abre diálogo para seleccionar carpeta de destino
-     */
     @FXML
     private void examinarRuta(ActionEvent event) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Seleccionar Carpeta de Destino");
 
-        // Establecer directorio inicial
         String rutaActual = txtRutaArchivo.getText();
         if (rutaActual != null && !rutaActual.isEmpty()) {
             File dirActual = new File(rutaActual);
@@ -184,7 +219,6 @@ public class RegistroVentaController implements Initializable {
             }
         }
 
-        // Mostrar diálogo
         File dirSeleccionado = directoryChooser.showDialog(btnExaminar.getScene().getWindow());
 
         if (dirSeleccionado != null) {
@@ -195,26 +229,18 @@ public class RegistroVentaController implements Initializable {
 
     // ==================== PROCESAR REGISTRO ====================
 
-    /**
-     * Procesa el registro de ventas
-     */
     @FXML
     private void procesarRegistro(ActionEvent event) {
-
         try {
-            // 1. Validar datos
             if (!validarDatos()) {
                 return;
             }
 
-            // 2. Obtener parámetros
             LocalDate fechaDesde = dpFechaDesde.getValue();
             LocalDate fechaHasta = dpFechaHasta.getValue();
             String tipoDoc = obtenerCodigoTipoDocumento();
             String moneda = rbSoles.isSelected() ? "S" : "D";
 
-            // 3. Ejecutar procedimiento almacenado
-            LOGGER.info("Ejecutando procedimiento FACTU.REGISTRO_VENTA");
             userId = registroVentaDao.ejecutarRegistroVenta(
                     NO_CIA, fechaDesde, fechaHasta, tipoDoc, moneda
             );
@@ -227,7 +253,6 @@ public class RegistroVentaController implements Initializable {
 
             LOGGER.info("Procedimiento ejecutado. UserId: " + userId);
 
-            // 4. Obtener datos para el reporte
             List<RegVta> registros = registroVentaDao.obtenerRegistrosVenta(
                     NO_CIA, userId, fechaDesde, fechaHasta
             );
@@ -240,7 +265,6 @@ public class RegistroVentaController implements Initializable {
 
             LOGGER.info("Se obtuvieron " + registros.size() + " registros");
 
-            // 5. Generar reporte según destino
             generarReporte(registros, fechaDesde, fechaHasta);
 
         } catch (Exception e) {
@@ -250,25 +274,69 @@ public class RegistroVentaController implements Initializable {
         }
     }
 
+    private void mostrarMensajeEspera() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Procesando");
+        alert.setHeaderText(null);
+        alert.setContentText("Generando el reporte, por favor espere...");
+        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
+        alert.show();
+
+        // Crear tarea en segundo plano
+        Task<List<RegVta>> task = new Task<List<RegVta>>() {
+            @Override
+            protected List<RegVta> call() throws Exception {
+                LocalDate fechaDesde = dpFechaDesde.getValue();
+                LocalDate fechaHasta = dpFechaHasta.getValue();
+                String tipoDoc = obtenerCodigoTipoDocumento();
+                String moneda = rbSoles.isSelected() ? "S" : "D";
+
+                userId = registroVentaDao.ejecutarRegistroVenta(
+                        NO_CIA, fechaDesde, fechaHasta, tipoDoc, moneda
+                );
+
+                return registroVentaDao.obtenerRegistrosVenta(NO_CIA, userId, fechaDesde, fechaHasta);
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            List<RegVta> registros = task.getValue();
+            alert.close();
+            generarReporte(registros, dpFechaDesde.getValue(), dpFechaHasta.getValue());
+        });
+
+        // Manejar error en la tarea
+        task.setOnFailed(event -> {
+            alert.close();
+            Throwable exception = task.getException();
+            Mensaje.error(null, "Error",
+                    "Ocurrió un error al procesar el reporte de ventas: " +
+                            (exception != null ? exception.getMessage() : "Error desconocido"));
+            if (exception != null) {
+                exception.printStackTrace();
+            }
+        });
+
+        new Thread(task).start();
+
+    }
+
     /**
      * Valida los datos del formulario
      */
     private boolean validarDatos() {
-        // Validar fecha desde
         if (dpFechaDesde.getValue() == null) {
             Mensaje.alerta(null, "Validación", "Debe seleccionar la fecha inicial.");
             dpFechaDesde.requestFocus();
             return false;
         }
 
-        // Validar fecha hasta
         if (dpFechaHasta.getValue() == null) {
             Mensaje.alerta(null, "Validación", "Debe seleccionar la fecha final.");
             dpFechaHasta.requestFocus();
             return false;
         }
 
-        // Validar que fecha desde sea menor o igual a fecha hasta
         if (dpFechaDesde.getValue().isAfter(dpFechaHasta.getValue())) {
             Mensaje.alerta(null, "Validación",
                     "La fecha inicial debe ser menor o igual a la fecha final.");
@@ -276,7 +344,6 @@ public class RegistroVentaController implements Initializable {
             return false;
         }
 
-        // Validar tipo de documento
         if (cbxTipoDocumento.getValue() == null) {
             Mensaje.alerta(null, "Validación", "Debe seleccionar el tipo de documento.");
             cbxTipoDocumento.requestFocus();
@@ -287,7 +354,7 @@ public class RegistroVentaController implements Initializable {
     }
 
     /**
-     * Obtiene el código del tipo de documento seleccionado
+     * Obtiene el código del tipo de documento
      */
     private String obtenerCodigoTipoDocumento() {
         String seleccion = cbxTipoDocumento.getValue();
@@ -299,9 +366,6 @@ public class RegistroVentaController implements Initializable {
 
     // ==================== GENERACIÓN DE REPORTES ====================
 
-    /**
-     * Genera el reporte según el destino seleccionado
-     */
     private void generarReporte(List<RegVta> registros, LocalDate fechaDesde, LocalDate fechaHasta) {
         try {
             if (rbPdf.isSelected()) {
@@ -309,9 +373,12 @@ public class RegistroVentaController implements Initializable {
             } else if (rbExcel.isSelected()) {
                 generarReporteExcel(registros, fechaDesde, fechaHasta);
             } else {
-                // Impresora (vista previa)
                 mostrarVistaPrevia(registros, fechaDesde, fechaHasta);
             }
+
+            RegistroVentaDao registroVentaDao = new RegistroVentaDao();
+            registroVentaDao.ejecutarLimpiarRegVta(NO_CIA);
+
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error al generar reporte", e);
             Mensaje.error(null, "Error de Reporte",
@@ -319,27 +386,17 @@ public class RegistroVentaController implements Initializable {
         }
     }
 
-    /**
-     * Genera reporte PDF
-     */
     private void generarReportePDF(List<RegVta> registros, LocalDate fechaDesde, LocalDate fechaHasta)
             throws JRException {
         LOGGER.info("Generando reporte PDF");
 
-        // Cargar reporte
         InputStream reportStream = getClass().getResourceAsStream(REPORTE_PDF_PATH);
         JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
 
-        // Preparar parámetros
         Map<String, Object> parametros = prepararParametros(fechaDesde, fechaHasta);
-
-        // Crear datasource
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(registros);
-
-        // Llenar reporte
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
 
-        // Exportar a PDF
         String nombreArchivo = generarNombreArchivo(fechaDesde, fechaHasta, "pdf");
         String rutaCompleta = txtRutaArchivo.getText() + File.separator + nombreArchivo;
 
@@ -350,27 +407,17 @@ public class RegistroVentaController implements Initializable {
                 "El reporte PDF se guardó correctamente en:\n" + rutaCompleta);
     }
 
-    /**
-     * Genera reporte Excel
-     */
     private void generarReporteExcel(List<RegVta> registros, LocalDate fechaDesde, LocalDate fechaHasta)
             throws JRException {
         LOGGER.info("Generando reporte Excel");
 
-        // Cargar reporte
         InputStream reportStream = getClass().getResourceAsStream(REPORTE_XLS_PATH);
         JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
 
-        // Preparar parámetros
         Map<String, Object> parametros = prepararParametros(fechaDesde, fechaHasta);
-
-        // Crear datasource
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(registros);
-
-        // Llenar reporte
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
 
-        // Exportar a Excel
         String nombreArchivo = generarNombreArchivo(fechaDesde, fechaHasta, "xlsx");
         String rutaCompleta = txtRutaArchivo.getText() + File.separator + nombreArchivo;
 
@@ -391,27 +438,17 @@ public class RegistroVentaController implements Initializable {
                 "El reporte Excel se guardó correctamente en:\n" + rutaCompleta);
     }
 
-    /**
-     * Muestra vista previa del reporte
-     */
     private void mostrarVistaPrevia(List<RegVta> registros, LocalDate fechaDesde, LocalDate fechaHasta)
             throws JRException {
         LOGGER.info("Mostrando vista previa");
 
-        // Cargar reporte
         InputStream reportStream = getClass().getResourceAsStream(REPORTE_PDF_PATH);
         JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
 
-        // Preparar parámetros
         Map<String, Object> parametros = prepararParametros(fechaDesde, fechaHasta);
-
-        // Crear datasource
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(registros);
-
-        // Llenar reporte
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
 
-        // Mostrar visor
         SwingUtilities.invokeLater(() -> {
             JasperViewer viewer = new JasperViewer(jasperPrint, false);
             viewer.setTitle("REGISTRO DE VENTAS - " +
@@ -428,28 +465,69 @@ public class RegistroVentaController implements Initializable {
     }
 
     /**
-     * Prepara los parámetros para el reporte
+     * Prepara los parámetros del reporte incluyendo datos de empresa
      */
     private Map<String, Object> prepararParametros(LocalDate fechaDesde, LocalDate fechaHasta) {
         Map<String, Object> parametros = new HashMap<>();
 
+        // Parámetros básicos
         parametros.put("NO_CIA", NO_CIA);
         parametros.put("userid", userId);
         parametros.put("d_fecha", java.sql.Date.valueOf(fechaDesde));
         parametros.put("h_fecha", java.sql.Date.valueOf(fechaHasta));
-
-        // Parámetros adicionales para el reporte
         parametros.put("TITULO", "REGISTRO DE VENTAS");
         parametros.put("PERIODO", "Del " +
                 fechaDesde.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " al " +
                 fechaHasta.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
+        // Logo
+        parametros.put("LOGO_PATH", getClass().getResource(LOGO_PATH).toString());
+
+        // Datos de la empresa
+        if (datosEmpresa != null) {
+            parametros.put("EMPRESA_NOMBRE",
+                    datosEmpresa.getNombre() != null ? datosEmpresa.getNombre() : "");
+            parametros.put("EMPRESA_RUC",
+                    datosEmpresa.getRuc() != null ? datosEmpresa.getRuc() : "");
+            parametros.put("EMPRESA_DESCRIPCION",
+                    datosEmpresa.getDescripcion() != null ? datosEmpresa.getDescripcion() : "");
+        } else {
+            parametros.put("EMPRESA_NOMBRE", "");
+            parametros.put("EMPRESA_RUC", "");
+            parametros.put("EMPRESA_DESCRIPCION", "");
+        }
+
+        // Datos de la sucursal
+        if (datosSucursal != null) {
+            parametros.put("EMPRESA_DIRECCION",
+                    datosSucursal.getDireccion() != null ? datosSucursal.getDireccion() : "");
+            parametros.put("EMPRESA_EMAIL",
+                    datosSucursal.getCorreoElectro() != null ? datosSucursal.getCorreoElectro() : "");
+
+            StringBuilder telefonos = new StringBuilder();
+            if (datosSucursal.getTelef1() != null && !datosSucursal.getTelef1().isEmpty()) {
+                telefonos.append(datosSucursal.getTelef1());
+            }
+            if (datosSucursal.getTelef2() != null && !datosSucursal.getTelef2().isEmpty()) {
+                if (telefonos.length() > 0) telefonos.append(" / ");
+                telefonos.append(datosSucursal.getTelef2());
+            }
+            parametros.put("EMPRESA_TELEFONOS", telefonos.toString());
+        } else {
+            parametros.put("EMPRESA_DIRECCION", "");
+            parametros.put("EMPRESA_EMAIL", "");
+            parametros.put("EMPRESA_TELEFONOS", "");
+        }
+
+        // Información de generación
+        LocalDateTime ahora = LocalDateTime.now();
+        parametros.put("FECHA_GENERACION", ahora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        parametros.put("HORA_GENERACION", ahora.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        parametros.put("USUARIO_GENERACION", userId != null ? userId : "SYSTEM");
+
         return parametros;
     }
 
-    /**
-     * Genera el nombre del archivo
-     */
     private String generarNombreArchivo(LocalDate fechaDesde, LocalDate fechaHasta, String extension) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         return "REG_VENT_" +

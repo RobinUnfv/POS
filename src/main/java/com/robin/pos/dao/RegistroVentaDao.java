@@ -42,32 +42,26 @@ public class RegistroVentaDao {
 
         try {
             cx = ConexionBD.oracle();
-
             // Preparar llamada al procedimiento
             String sql = "{call FACTU.PR_FACTURA.REGISTRO_VENTA(?, ?, ?, ?, ?, ?)}";
             cs = cx.prepareCall(sql);
-
             // Parámetros IN
             cs.setString(1, noCia);
             cs.setDate(2, Date.valueOf(fechaInicio));
             cs.setDate(3, Date.valueOf(fechaFin));
             cs.setString(4, tipoDoc);
             cs.setString(5, moneda);
-
             // Parámetro OUT
             cs.registerOutParameter(6, Types.VARCHAR);
-
             // Ejecutar procedimiento
             cs.execute();
-
             // Obtener parámetro OUT
             usuario = cs.getString(6);
-
-            LOGGER.info("Procedimiento REGISTRO_VENTA ejecutado. Usuario: " + usuario);
-
+            /*
             Mensaje.alerta(null, "Proceso Exitoso",
                     "El registro de ventas se generó correctamente.\n" +
                             "Período: " + fechaInicio + " al " + fechaFin);
+            */
 
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Error al ejecutar REGISTRO_VENTA", ex);
@@ -182,5 +176,39 @@ public class RegistroVentaDao {
         }
 
         return registros;
+    }
+
+    public void ejecutarLimpiarRegVta(String noCia) {
+        Connection cx = null;
+        CallableStatement cs = null;
+
+        try {
+            cx = ConexionBD.oracle();
+
+            // Preparar llamada al procedimiento
+            String sql = "{call FACTU.PR_FACTURA.LIMPIAR_REGVTA(?)}";
+            cs = cx.prepareCall(sql);
+
+            // Parámetros IN
+            cs.setString(1, noCia);
+
+            // Ejecutar procedimiento
+            cs.execute();
+
+            LOGGER.info("Procedimiento LIMPIAR_REGVTA ejecutado.");
+
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Error al ejecutar LIMPIAR_REGVTA", ex);
+            Mensaje.error(null, "Error al Procesar",
+                    "No se pudo generar el limpiar la tabla de registro de venta.\n" + ex.getMessage());
+        } finally {
+            try {
+                if (cs != null) cs.close();
+                ConexionBD.cerrarCxOracle(cx);
+            } catch (SQLException e) {
+                LOGGER.log(Level.WARNING, "Error al cerrar recursos", e);
+            }
+        }
+
     }
 }
