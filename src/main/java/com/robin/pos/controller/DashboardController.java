@@ -50,18 +50,21 @@ public class DashboardController {
     @FXML private Button btnSerieDocumento;
     @FXML private Button btnDocumento;
     @FXML private Button btnCompania;
+    @FXML private Button btnRegistroVenta;
     
     // Sub-menús
     @FXML private VBox ventasSubmenu;
     @FXML private VBox clientesSubmenu;
     @FXML private VBox productosSubmenu;
     @FXML private VBox ConfiguracionSubmenu;
+    @FXML private VBox reporteSubmenu;
     
     // Flechas de sub-menús
     @FXML private Label lblVentasArrow;
     @FXML private Label lblClientesArrow;
     @FXML private Label lblProductosArrow;
     @FXML private Label lblConfiguracionArrow;
+    @FXML private Label lblReporteArrow1;
     
     // Iconos del menú
     @FXML private Label iconDashboard;
@@ -92,6 +95,7 @@ public class DashboardController {
     private Tab tabSerieDocumento;
     private Tab tabDocumento;
     private Tab tabCompania;
+    private Tab tabRegistroVenta;
 
     @FXML
     public void initialize() {
@@ -227,6 +231,7 @@ public class DashboardController {
         animateLabelOpacity(lblClientesArrow);
         animateLabelOpacity(lblProductosArrow);
         animateLabelOpacity(lblConfiguracionArrow);
+        animateLabelOpacity(lblReporteArrow1);
     }
 
     /**
@@ -259,6 +264,7 @@ public class DashboardController {
         closeSubmenu(clientesSubmenu, lblClientesArrow);
         closeSubmenu(productosSubmenu, lblProductosArrow);
         closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
+        closeSubmenu(reporteSubmenu, lblReporteArrow1);
     }
 
     /**
@@ -283,6 +289,7 @@ public class DashboardController {
         closeSubmenu(clientesSubmenu, lblClientesArrow);
         closeSubmenu(productosSubmenu, lblProductosArrow);
         closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
+        closeSubmenu(reporteSubmenu, lblReporteArrow1);
         
         // Toggle del sub-menú actual
         animateSubmenu(ventasSubmenu, lblVentasArrow, !isCurrentlyVisible);
@@ -301,6 +308,7 @@ public class DashboardController {
         closeSubmenu(ventasSubmenu, lblVentasArrow);
         closeSubmenu(productosSubmenu, lblProductosArrow);
         closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
+        closeSubmenu(reporteSubmenu, lblReporteArrow1);
         
         // Toggle del sub-menú actual
         animateSubmenu(clientesSubmenu, lblClientesArrow, !isCurrentlyVisible);
@@ -319,6 +327,7 @@ public class DashboardController {
         closeSubmenu(ventasSubmenu, lblVentasArrow);
         closeSubmenu(clientesSubmenu, lblClientesArrow);
         closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
+        closeSubmenu(reporteSubmenu, lblReporteArrow1);
         
         // Toggle del sub-menú actual
         animateSubmenu(productosSubmenu, lblProductosArrow, !isCurrentlyVisible);
@@ -334,9 +343,29 @@ public class DashboardController {
         closeSubmenu(ventasSubmenu, lblVentasArrow);
         closeSubmenu(productosSubmenu, lblProductosArrow);
         closeSubmenu(clientesSubmenu, lblClientesArrow);
+        closeSubmenu(reporteSubmenu, lblReporteArrow1);
 
         // Toggle del sub-menú actual
         animateSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow, !isCurrentlyVisible);
+    }
+
+    /**
+     * Alternar sub-menú de Clientes
+     */
+    @FXML
+    public void toggleReporteSubmenu() {
+        if (!isSidebarExpanded) return;
+
+        boolean isCurrentlyVisible = clientesSubmenu.isVisible();
+
+        // Cerrar otros sub-menús
+        closeSubmenu(ventasSubmenu, lblVentasArrow);
+        closeSubmenu(productosSubmenu, lblProductosArrow);
+        closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
+        closeSubmenu(clientesSubmenu, lblClientesArrow);
+
+        // Toggle del sub-menú actual
+        animateSubmenu(reporteSubmenu, lblReporteArrow1, !isCurrentlyVisible);
     }
 
     /**
@@ -602,6 +631,27 @@ public class DashboardController {
         } else {
             // Si el tab ya existe, solo selecciónalo
             this.tabPane.getSelectionModel().select(tabListaArinda1);
+        }
+    }
+
+    @FXML
+    public void ingresarRegistroVenta() throws IOException {
+
+        if (this.tabRegistroVenta == null)  {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/registroVenta.fxml"));
+            VBox ap = loader.load();
+            ImageView icono = createIcon("/com/robin/pos/imagenes/invoice.png");
+            tabRegistroVenta = new Tab("Registro Venta", ap);
+            tabRegistroVenta.setGraphic(icono);
+
+            tabRegistroVenta.setClosable(true);
+            tabRegistroVenta.setOnClosed(e -> tabRegistroVenta = null);
+
+            this.tabPane.getTabs().add(tabRegistroVenta);
+            this.tabPane.getSelectionModel().select(tabRegistroVenta);
+        } else {
+            // Si el tab ya existe, solo selecciónalo
+            this.tabPane.getSelectionModel().select(tabRegistroVenta);
         }
     }
 

@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="registroVentaPdf" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="NO_CIA" class="java.lang.String"/>
+	<parameter name="userid" class="java.lang.String"/>
+	<parameter name="d_fecha" class="java.util.Date"/>
+	<parameter name="h_fecha" class="java.util.Date"/>
+	<parameter name="TITULO" class="java.lang.String"/>
+	<parameter name="PERIODO" class="java.lang.String"/>
+	<field name="fecha" class="java.time.LocalDate"/>
+	<field name="codSunat" class="java.lang.String"/>
+	<field name="nbrSunat" class="java.lang.String"/>
+	<field name="serie" class="java.lang.String"/>
+	<field name="factura" class="java.lang.String"/>
+	<field name="ruc" class="java.lang.String"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="impGravable" class="java.math.BigDecimal"/>
+	<field name="impExonerado" class="java.math.BigDecimal"/>
+	<field name="impIgv" class="java.math.BigDecimal"/>
+	<field name="impTotal" class="java.math.BigDecimal"/>
+	<variable name="totalGravable" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{impGravable}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.math.BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="totalExonerado" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{impExonerado}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.math.BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="totalIgv" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{impIgv}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.math.BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="totalTotal" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{impTotal}]]></variableExpression>
+		<initialValueExpression><![CDATA[new java.math.BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="60" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="802" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TITULO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="30" width="802" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{PERIODO}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="55" width="802" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineColor="#0891B2"/>
+				</graphicElement>
+			</line>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="50" height="30" backcolor="#0891B2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="50" y="0" width="40" height="30" backcolor="#0891B2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIPO DOC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="90" y="0" width="40" height="30" backcolor="#0891B2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SERIE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="130" y="0" width="50" height="30" backcolor="#0891B2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NÚMERO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="180" y="0" width="70" height="30" backcolor="#0891B2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RUC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="250" y="0" width="212" height="30" backcolor="#0891B2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="462" y="0" width="85" height="30" backcolor="#0891B2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BASE IMPONIBLE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="547" y="0" width="85" height="30" backcolor="#0891B2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EXONERADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="632" y="0" width="85" height="30" backcolor="#0891B2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IGV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="717" y="0" width="85" height="30" backcolor="#0891B2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="0" width="50" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<topPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<leftPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<bottomPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<rightPen lineWidth="0.5" lineColor="#E2E8F0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="0" width="40" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<topPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<leftPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<bottomPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<rightPen lineWidth="0.5" lineColor="#E2E8F0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codSunat}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="90" y="0" width="40" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<topPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<leftPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<bottomPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<rightPen lineWidth="0.5" lineColor="#E2E8F0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{serie}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="0" width="50" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<topPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<leftPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<bottomPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<rightPen lineWidth="0.5" lineColor="#E2E8F0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{factura}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="180" y="0" width="70" height="20"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<topPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<leftPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<bottomPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<rightPen lineWidth="0.5" lineColor="#E2E8F0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ruc}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="250" y="0" width="212" height="20"/>
+				<box leftPadding="3" rightPadding="3">
+					<pen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<topPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<leftPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<bottomPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<rightPen lineWidth="0.5" lineColor="#E2E8F0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="462" y="0" width="85" height="20"/>
+				<box rightPadding="3">
+					<pen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<topPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<leftPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<bottomPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<rightPen lineWidth="0.5" lineColor="#E2E8F0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{impGravable}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="547" y="0" width="85" height="20"/>
+				<box rightPadding="3">
+					<pen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<topPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<leftPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<bottomPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<rightPen lineWidth="0.5" lineColor="#E2E8F0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{impExonerado}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="632" y="0" width="85" height="20"/>
+				<box rightPadding="3">
+					<pen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<topPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<leftPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<bottomPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<rightPen lineWidth="0.5" lineColor="#E2E8F0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{impIgv}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="717" y="0" width="85" height="20"/>
+				<box rightPadding="3">
+					<pen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<topPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<leftPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<bottomPen lineWidth="0.5" lineColor="#E2E8F0"/>
+					<rightPen lineWidth="0.5" lineColor="#E2E8F0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{impTotal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="30">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="462" height="30" backcolor="#E0F2FE"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTALES]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="462" y="0" width="85" height="30" backcolor="#E0F2FE"/>
+				<box rightPadding="3">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalGravable}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="547" y="0" width="85" height="30" backcolor="#E0F2FE"/>
+				<box rightPadding="3">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalExonerado}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="632" y="0" width="85" height="30" backcolor="#E0F2FE"/>
+				<box rightPadding="3">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalIgv}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="717" y="0" width="85" height="30" backcolor="#E0F2FE"/>
+				<box rightPadding="3">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalTotal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

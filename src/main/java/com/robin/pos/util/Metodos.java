@@ -215,6 +215,16 @@ public class Metodos {
         return arfacts;
     }
 
+    public static String getTipoDocumentoSunat(String codDoc) {
+
+            return switch (codDoc) {
+                case "01" -> "F";
+                case "03" -> "B";
+                case "07" -> "NC";
+                default -> "01";
+            };
+    }
+
 
 
 }

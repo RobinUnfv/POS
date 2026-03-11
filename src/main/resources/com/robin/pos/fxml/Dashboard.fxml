@@ -206,15 +206,17 @@
                                 </VBox>
                             </children>
                         </VBox>
+                   <!-- REPORTE -->
                   <VBox spacing="3">
                      <children>
-                        <Button fx:id="btnReportes" alignment="CENTER_LEFT" graphicTextGap="15.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" styleClass="menu-button" text="Reportes">
+                        <Button fx:id="btnReportes" alignment="CENTER_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#toggleReporteSubmenu" prefHeight="50.0" prefWidth="200.0" styleClass="menu-button" text="Reportes">
                            <graphic>
                               <HBox alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Label fx:id="iconProductos1" style="-fx-text-fill: #5f27cd; -fx-font-size: 20px;" text="📈" />
                                     <Region HBox.hgrow="ALWAYS" />
-                                    <Label fx:id="lblProductosArrow1" style="-fx-text-fill: #95a5a6; -fx-font-size: 14px; -fx-font-weight: bold;" text="▶" />
+                                    <Label fx:id="lblReporteArrow1" style="-fx-text-fill: #95a5a6; -fx-font-size: 14px; -fx-font-weight: bold;" text="▶" />
+
                                  </children>
                               </HBox>
                            </graphic>
@@ -225,32 +227,29 @@
                               <Insets left="15.0" right="10.0" />
                            </padding>
                            <tooltip>
-                              <Tooltip text="Inventario de Productos" />
+                              <Tooltip text="Reporte de registro de venta" />
                            </tooltip>
                         </Button>
-                        <VBox fx:id="productosSubmenu1" managed="false" spacing="2" style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 5;" visible="false">
-                           <children>
-                              <Button fx:id="btnNuevoProducto1" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarNuevoProducto" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Nuevo">
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                                 <padding>
-                                    <Insets left="50.0" />
-                                 </padding>
-                              </Button>
-                              <Button fx:id="btnCatalogo1" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarCatalogo" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Catálogo">
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                                 <padding>
-                                    <Insets left="50.0" />
-                                 </padding>
-                              </Button>
-                           </children>
-                           <VBox.margin>
-                              <Insets left="5.0" right="5.0" />
-                           </VBox.margin>
-                        </VBox>
+                         <!-- Sub-menú reporte -->
+                         <VBox fx:id="reporteSubmenu" managed="false" spacing="2" style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 5;" visible="false">
+                             <children>
+                                 <Button fx:id="btnRegistroVenta" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarRegistroVenta" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Registro Ventas">
+                                     <cursor>
+                                         <Cursor fx:constant="HAND" />
+                                     </cursor>
+                                     <padding>
+                                         <Insets left="50.0" />
+                                     </padding>
+                                     <tooltip>
+                                         <Tooltip text="Generar reporte registro de venta" />
+                                     </tooltip>
+                                 </Button>
+
+                             </children>
+                             <VBox.margin>
+                                 <Insets left="5.0" right="5.0" />
+                             </VBox.margin>
+                         </VBox>
                      </children>
                   </VBox>
                   <!-- Configuracion con sub-menú -->
