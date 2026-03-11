@@ -1,5 +1,7 @@
 package com.robin.pos.util;
 
+import com.robin.pos.dao.ArfamcDao;
+import com.robin.pos.dao.SucursalPtovtaDao;
 import com.robin.pos.model.*;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -25,9 +27,10 @@ import java.util.logging.Logger;
 /**
  * Clase para generar reportes de comprobante de pago en formato ticket (80mm)
  * Para impresoras térmicas POS
+ * Datos dinámicos desde BD
  *
  * @author Robin POS
- * @version 1.0
+ * @version 2.0
  */
 public class ReporteComprobantePagoTicket {
 
@@ -37,16 +40,55 @@ public class ReporteComprobantePagoTicket {
     private static final String JRXML_PATH = "/com/robin/pos/reportes/comprobantePagoTicket.jrxml";
     private static final String JASPER_PATH = "/com/robin/pos/reportes/comprobantePagoTicket.jasper";
     private static final String LOGO_PATH = "/com/robin/pos/imagenes/logos-nexer.png";
+    private static final String NO_CIA = "01"; // Código de compañía
 
-    // Datos de la empresa (pueden ser configurables)
-    private String empresaNombre = "CORPORACION TEXTIL CELIA E.I.R.L.";
-    private String empresaActividad = "EN DISEÑO Y MODELOS EXCLUSIVOS EN PRODUCTOS TEXTILES - \nPRENDAS DE VESTIR - CON PRECIOS ESPECIALES PARA PROVINCIA - \nVENTAS POR MAYOR Y MENOR";
-    private String empresaDireccion = "JR. GAMARRA NRO. 676 INT. 262\nLA VICTORIA - LIMA - LIMA";
-    private String empresaRuc = "20609272016";
-    private String empresaTelefonos = "";
-    private String empresaEmail = "";
-    private String bancoCuentaSoles = "191-9409603-0-93";
-    private String bancoCuentaDolares = "00219100940960309350";
+    // DAOs para obtener datos dinámicamente
+    private final ArfamcDao arfamcDao = new ArfamcDao();
+    private final SucursalPtovtaDao sucursalDao = new SucursalPtovtaDao();
+
+    // Cache de datos de empresa y sucursal
+    private Arfamc datosEmpresa;
+    private SucursalPtovta datosSucursal;
+
+    /**
+     * Constructor que carga los datos de la empresa y sucursal
+     */
+    public ReporteComprobantePagoTicket() {
+        cargarDatosEmpresa();
+    }
+
+    /**
+     * Carga los datos de la empresa y sucursal desde la base de datos
+     */
+    private void cargarDatosEmpresa() {
+        try {
+            // Obtener datos de la compañía
+            datosEmpresa = arfamcDao.obtenerDatosCompania(NO_CIA);
+            if (datosEmpresa == null) {
+                LOGGER.warning("No se pudieron obtener los datos de la empresa");
+                datosEmpresa = new Arfamc();
+            }
+
+            // Obtener la primera sucursal activa
+            List<SucursalPtovta> sucursales = sucursalDao.listarSucursales(NO_CIA);
+            if (!sucursales.isEmpty()) {
+                datosSucursal = sucursales.stream()
+                        .filter(s -> "A".equals(s.getEstadoSuc()))
+                        .findFirst()
+                        .orElse(sucursales.get(0));
+            } else {
+                LOGGER.warning("No se encontraron sucursales");
+                datosSucursal = new SucursalPtovta();
+            }
+
+            LOGGER.info("Datos de empresa y sucursal cargados para ticket");
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al cargar datos de empresa", e);
+            datosEmpresa = new Arfamc();
+            datosSucursal = new SucursalPtovta();
+        }
+    }
 
     /**
      * Genera y muestra el reporte de ticket en un visor
@@ -63,29 +105,20 @@ public class ReporteComprobantePagoTicket {
         try {
             JasperPrint jasperPrint = generarJasperPrint(resultado, detalles, datosCliente, datosVenta);
             String tipoComprobante = Metodos.getTipoComprobante(resultado.getNoFactu());
-             /*
-            // Mostrar en visor
-            JasperViewer viewer = new JasperViewer(jasperPrint, false);
-            String tipoComprobante = Metodos.getTipoComprobante(resultado.getNoFactu());
-            //viewer.setTitle("TICKET " + tipoComprobante + " - " + resultado.getNoFactu());
-            viewer.setTitle(tipoComprobante+" ELECTRONICA - " + resultado.getNoFactu());
-            viewer.setVisible(true);
-            */
+
             SwingUtilities.invokeLater(() -> {
                 JasperViewer viewer = new JasperViewer(jasperPrint, false);
                 viewer.setTitle(tipoComprobante + " ELECTRONICA - " + resultado.getNoFactu());
 
                 // Configurar la ventana para que se muestre al frente
-                viewer.setAlwaysOnTop(true);   // Temporalmente siempre al frente
+                viewer.setAlwaysOnTop(true);
                 viewer.setVisible(true);
-                viewer.toFront();              // Traer al frente
-                viewer.requestFocus();         // Solicitar foco
-                viewer.setAlwaysOnTop(false);  // Quitar siempre al frente después
+                viewer.toFront();
+                viewer.requestFocus();
+                viewer.setAlwaysOnTop(false);
 
                 // Centrar en pantalla
                 viewer.setLocationRelativeTo(null);
-
-                // Estado normal
                 viewer.setExtendedState(JFrame.NORMAL);
             });
 
@@ -176,7 +209,7 @@ public class ReporteComprobantePagoTicket {
     }
 
     /**
-     * Prepara todos los parámetros del reporte
+     * Prepara todos los parámetros del reporte usando datos de BD
      */
     private Map<String, Object> prepararParametros(ResultadoEmision resultado,
                                                    DatosCliente cliente,
@@ -192,15 +225,56 @@ public class ReporteComprobantePagoTicket {
         String tipoDocumentoCliente = Metodos.getTipoDocumentoCliente(resultado.getNoFactu(), resultado.getNoCliente());
         params.put("TIP_DOC_CLI", tipoDocumentoCliente);
 
-        // Datos de la empresa
-        params.put("EMPRESA_NOMBRE", empresaNombre);
-        params.put("EMPRESA_ACTIVIDAD", empresaActividad);
-        params.put("EMPRESA_DIRECCION", empresaDireccion);
-        params.put("EMPRESA_RUC", empresaRuc);
-        params.put("EMPRESA_TELEFONOS", empresaTelefonos);
-        params.put("EMPRESA_EMAIL", empresaEmail);
-        params.put("BANCO_CUENTA_SOLES", bancoCuentaSoles);
-        params.put("BANCO_CUENTA_DOLARES", bancoCuentaDolares);
+        // ==================== DATOS DE LA EMPRESA DESDE BD ====================
+        if (datosEmpresa != null) {
+            params.put("EMPRESA_NOMBRE",
+                    datosEmpresa.getNombre() != null ? datosEmpresa.getNombre() : "");
+
+            params.put("EMPRESA_ACTIVIDAD",
+                    datosEmpresa.getDescripcion() != null ? datosEmpresa.getDescripcion() : "");
+
+            params.put("EMPRESA_RUC",
+                    datosEmpresa.getRuc() != null ? datosEmpresa.getRuc() : "");
+
+            params.put("BANCO_CUENTA_SOLES",
+                    datosEmpresa.getCuentaSol() != null ? datosEmpresa.getCuentaSol() : "");
+
+            params.put("BANCO_CUENTA_DOLARES",
+                    datosEmpresa.getCci() != null ? datosEmpresa.getCci() : "");
+        } else {
+            params.put("EMPRESA_NOMBRE", "");
+            params.put("EMPRESA_ACTIVIDAD", "");
+            params.put("EMPRESA_RUC", "");
+            params.put("BANCO_CUENTA_SOLES", "");
+            params.put("BANCO_CUENTA_DOLARES", "");
+        }
+
+        // ==================== DATOS DE LA SUCURSAL DESDE BD ====================
+        if (datosSucursal != null) {
+            // Dirección compacta para ticket (quitar saltos de línea extras)
+            String direccionTicket = datosSucursal.getDireccion() != null
+                    ? datosSucursal.getDireccion().replace("\n", " ")
+                    : "";
+            params.put("EMPRESA_DIRECCION", direccionTicket);
+
+            // Teléfonos concatenados
+            StringBuilder telefonos = new StringBuilder();
+            if (datosSucursal.getTelef1() != null && !datosSucursal.getTelef1().isEmpty()) {
+                telefonos.append(datosSucursal.getTelef1());
+            }
+            if (datosSucursal.getTelef2() != null && !datosSucursal.getTelef2().isEmpty()) {
+                if (telefonos.length() > 0) telefonos.append(" / ");
+                telefonos.append(datosSucursal.getTelef2());
+            }
+            params.put("EMPRESA_TELEFONOS", telefonos.toString());
+
+            params.put("EMPRESA_EMAIL",
+                    datosSucursal.getCorreoElectro() != null ? datosSucursal.getCorreoElectro() : "");
+        } else {
+            params.put("EMPRESA_DIRECCION", "");
+            params.put("EMPRESA_TELEFONOS", "");
+            params.put("EMPRESA_EMAIL", "");
+        }
 
         // Logo
         try {
@@ -247,7 +321,7 @@ public class ReporteComprobantePagoTicket {
         // Código QR
         try {
             InputStream qrImage = GeneradorQR.generarQRSunat(
-                    empresaRuc,
+                    datosEmpresa != null ? datosEmpresa.getRuc() : "",
                     resultado.getNumeroComprobanteFormateado(),
                     igvTotal,
                     totalConIgv,
@@ -291,7 +365,6 @@ public class ReporteComprobantePagoTicket {
         PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
 
         if (nombreImpresora == null || nombreImpresora.isEmpty()) {
-            // Retornar impresora por defecto
             return PrintServiceLookup.lookupDefaultPrintService();
         }
 
@@ -318,37 +391,20 @@ public class ReporteComprobantePagoTicket {
         return impresoras;
     }
 
-    // ==================== SETTERS PARA CONFIGURACIÓN ====================
-
-    public void setEmpresaNombre(String empresaNombre) {
-        this.empresaNombre = empresaNombre;
-    }
-
-    public void setEmpresaActividad(String empresaActividad) {
-        this.empresaActividad = empresaActividad;
-    }
-
-    public void setEmpresaDireccion(String empresaDireccion) {
-        this.empresaDireccion = empresaDireccion;
-    }
-
-    public void setEmpresaRuc(String empresaRuc) {
-        this.empresaRuc = empresaRuc;
-    }
-
-    public void setEmpresaTelefonos(String empresaTelefonos) {
-        this.empresaTelefonos = empresaTelefonos;
-    }
-
-    public void setEmpresaEmail(String empresaEmail) {
-        this.empresaEmail = empresaEmail;
-    }
-
-    public void setBancoCuentaSoles(String bancoCuentaSoles) {
-        this.bancoCuentaSoles = bancoCuentaSoles;
-    }
-
-    public void setBancoCuentaDolares(String bancoCuentaDolares) {
-        this.bancoCuentaDolares = bancoCuentaDolares;
+    /**
+     * Permite establecer una sucursal específica para el reporte
+     * @param codSucursal Código de sucursal
+     * @param codPtoVta Código de punto de venta
+     */
+    public void setSucursal(String codSucursal, String codPtoVta) {
+        try {
+            SucursalPtovta sucursal = sucursalDao.buscarSucursal(NO_CIA, codSucursal, codPtoVta);
+            if (sucursal != null) {
+                this.datosSucursal = sucursal;
+                LOGGER.info("Sucursal establecida para ticket: " + codSucursal + "-" + codPtoVta);
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "No se pudo establecer la sucursal", e);
+        }
     }
 }

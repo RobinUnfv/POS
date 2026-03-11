@@ -1,7 +1,8 @@
 package com.robin.pos.util;
 
-import com.robin.pos.model.DetalleVenta;
-import com.robin.pos.model.ItemCotizacion;
+import com.robin.pos.dao.ArfamcDao;
+import com.robin.pos.dao.SucursalPtovtaDao;
+import com.robin.pos.model.*;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
@@ -20,6 +21,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Clase para generar reportes de cotización
+ * Datos dinámicos desde BD
+ *
+ * @author Robin POS
+ * @version 2.0
+ */
 public class ReporteCotizacion {
     private static final Logger LOGGER = Logger.getLogger(ReporteCotizacion.class.getName());
 
@@ -27,26 +35,47 @@ public class ReporteCotizacion {
     private static final String JRXML_PATH = "/com/robin/pos/reportes/cotizacion.jrxml";
     private static final String JASPER_PATH = "/com/robin/pos/reportes/cotizacion.jasper";
     private static final String LOGO_PATH = "/com/robin/pos/imagenes/logos-nexer.png";
+    private static final String NO_CIA = "01";
 
-    // Datos de la empresa (configurables)
-    private String empresaNombre = "CORPORACION TEXTIL CELIA E.I.R.L.";
-    private String empresaTagline = "EN DISEÑO Y MODELOS EXCLUSIVOS EN PRODUCTOS TEXTILES - \nPRENDAS DE VESTIR - CON PRECIOS ESPECIALES PARA PROVINCIA - VENTAS POR MAYOR Y MENOR";
-    private String empresaTelefono = "";
-    private String empresaDireccion = "JR. MARISCAL AGUSTIN GAMARRA NRO. 676 INT. 262 URB. EL PORVENIR - LA VICTORIA - LIMA - LIMA";
-    private String empresaEmail = "";
+    // DAOs para obtener datos dinámicamente
+    private final ArfamcDao arfamcDao = new ArfamcDao();
+    private final SucursalPtovtaDao sucursalDao = new SucursalPtovtaDao();
 
-    // Método de pago predeterminado
-    private String metodoPago = "Banco de Crédito del Perú (BCP)";
-    private String numeroCuenta = "191-9409603-0-93";
-    private String numeroCuentaCompleto = "CCI: 00219100940960309350";
+    // Cache de datos
+    private Arfamc datosEmpresa;
+    private SucursalPtovta datosSucursal;
 
-    /**
-     * Genera y muestra el reporte de cotización
-     *
-     * @param numeroCotizacion Número de la cotización
-     * @param clienteNombre Nombre del cliente
-     * @param detalles Lista de productos/servicios cotizados
-     */
+    public ReporteCotizacion() {
+        cargarDatosEmpresa();
+    }
+
+    private void cargarDatosEmpresa() {
+        try {
+            datosEmpresa = arfamcDao.obtenerDatosCompania(NO_CIA);
+            if (datosEmpresa == null) {
+                LOGGER.warning("No se pudieron obtener los datos de la empresa");
+                datosEmpresa = new Arfamc();
+            }
+
+            List<SucursalPtovta> sucursales = sucursalDao.listarSucursales(NO_CIA);
+            if (!sucursales.isEmpty()) {
+                datosSucursal = sucursales.stream()
+                        .filter(s -> "A".equals(s.getEstadoSuc()))
+                        .findFirst()
+                        .orElse(sucursales.get(0));
+            } else {
+                datosSucursal = new SucursalPtovta();
+            }
+
+            LOGGER.info("Datos de empresa cargados para cotización");
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error al cargar datos de empresa", e);
+            datosEmpresa = new Arfamc();
+            datosSucursal = new SucursalPtovta();
+        }
+    }
+
     public void generarReporte(String numeroCotizacion,
                                String clienteNombre,
                                List<DetalleVenta> detalles) {
@@ -54,28 +83,11 @@ public class ReporteCotizacion {
         try {
             LOGGER.info("Iniciando generación de cotización: " + numeroCotizacion);
 
-            // Cargar el reporte
             JasperReport jasperReport = cargarReporte();
-
-            // Preparar parámetros
-            Map<String, Object> parametros = prepararParametros(
-                    numeroCotizacion,
-                    clienteNombre,
-                    detalles
-            );
-
-            // Convertir detalles a items de cotización
+            Map<String, Object> parametros = prepararParametros(numeroCotizacion, clienteNombre, detalles);
             List<ItemCotizacion> items = convertirDetalles(detalles);
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(items);
-
-            // Generar el reporte
-            JasperPrint jasperPrint = JasperFillManager.fillReport(
-                    jasperReport,
-                    parametros,
-                    dataSource
-            );
-
-            // Mostrar en visor
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
             mostrarVisor(jasperPrint, numeroCotizacion);
 
             LOGGER.info("Cotización generada exitosamente");
@@ -87,13 +99,6 @@ public class ReporteCotizacion {
         }
     }
 
-    /**
-     * Genera el reporte y lo exporta a PDF
-     *
-     * @param numeroCotizacion Número de la cotización
-     * @param clienteNombre Nombre del cliente
-     * @param detalles Lista de productos/servicios
-     */
     public void generarPDF(String numeroCotizacion,
                            String clienteNombre,
                            List<DetalleVenta> detalles) {
@@ -101,35 +106,18 @@ public class ReporteCotizacion {
         try {
             LOGGER.info("Generando PDF de cotización: " + numeroCotizacion);
 
-            // Cargar reporte
             JasperReport jasperReport = cargarReporte();
-
-            // Preparar parámetros
-            Map<String, Object> parametros = prepararParametros(
-                    numeroCotizacion,
-                    clienteNombre,
-                    detalles
-            );
-
-            // Convertir detalles
+            Map<String, Object> parametros = prepararParametros(numeroCotizacion, clienteNombre, detalles);
             List<ItemCotizacion> items = convertirDetalles(detalles);
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(items);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
 
-            // Generar reporte
-            JasperPrint jasperPrint = JasperFillManager.fillReport(
-                    jasperReport,
-                    parametros,
-                    dataSource
-            );
-
-            // Exportar a PDF
             String carpetaDescargas = GestorDescargas.getCarpetaDescargas();
             String nombreArchivo = carpetaDescargas + "/COTIZACION_" + numeroCotizacion + ".pdf";
             JasperExportManager.exportReportToPdfFile(jasperPrint, nombreArchivo);
 
             LOGGER.info("PDF generado: " + nombreArchivo);
-
-            Mensaje.alerta (null, "PDF Generado",
+            Mensaje.alerta(null, "PDF Generado",
                     "La cotización se guardó en:\n" + nombreArchivo);
 
         } catch (Exception e) {
@@ -139,19 +127,13 @@ public class ReporteCotizacion {
         }
     }
 
-    /**
-     * Carga el reporte compilado o lo compila desde JRXML
-     */
     private JasperReport cargarReporte() throws JRException {
-
-        // Intentar cargar el reporte compilado (.jasper)
         InputStream jasperStream = getClass().getResourceAsStream(JASPER_PATH);
         if (jasperStream != null) {
             LOGGER.fine("Cargando reporte compilado");
             return (JasperReport) JRLoader.loadObject(jasperStream);
         }
 
-        // Si no existe, compilar desde JRXML
         InputStream jrxmlStream = getClass().getResourceAsStream(JRXML_PATH);
         if (jrxmlStream != null) {
             LOGGER.fine("Compilando reporte desde JRXML");
@@ -161,9 +143,6 @@ public class ReporteCotizacion {
         throw new JRException("No se encontró el archivo de reporte: " + JRXML_PATH);
     }
 
-    /**
-     * Prepara todos los parámetros para el reporte
-     */
     private Map<String, Object> prepararParametros(String numeroCotizacion,
                                                    String clienteNombre,
                                                    List<DetalleVenta> detalles) {
@@ -178,29 +157,50 @@ public class ReporteCotizacion {
             params.put("LOGO_PATH", null);
         }
 
-        // Datos de la empresa
-        params.put("EMPRESA_NOMBRE", empresaNombre);
-        params.put("EMPRESA_TAGLINE", empresaTagline);
-        params.put("EMPRESA_TELEFONO", empresaTelefono);
-        params.put("EMPRESA_DIRECCION", empresaDireccion);
-        params.put("EMPRESA_EMAIL", empresaEmail);
+        // ==================== DATOS DE LA EMPRESA DESDE BD ====================
+        if (datosEmpresa != null) {
+            params.put("EMPRESA_NOMBRE",
+                    datosEmpresa.getNombre() != null ? datosEmpresa.getNombre() : "");
+
+            params.put("EMPRESA_TAGLINE",
+                    datosEmpresa.getDescripcion() != null ? datosEmpresa.getDescripcion() : "");
+        } else {
+            params.put("EMPRESA_NOMBRE", "");
+            params.put("EMPRESA_TAGLINE", "");
+        }
+
+        // ==================== DATOS DE LA SUCURSAL DESDE BD ====================
+        if (datosSucursal != null) {
+            params.put("EMPRESA_DIRECCION",
+                    datosSucursal.getDireccion() != null ? datosSucursal.getDireccion() : "");
+
+            StringBuilder telefonos = new StringBuilder();
+            if (datosSucursal.getTelef1() != null && !datosSucursal.getTelef1().isEmpty()) {
+                telefonos.append(datosSucursal.getTelef1());
+            }
+            if (datosSucursal.getTelef2() != null && !datosSucursal.getTelef2().isEmpty()) {
+                if (telefonos.length() > 0) telefonos.append(" / ");
+                telefonos.append(datosSucursal.getTelef2());
+            }
+            params.put("EMPRESA_TELEFONO", telefonos.toString());
+
+            params.put("EMPRESA_EMAIL",
+                    datosSucursal.getCorreoElectro() != null ? datosSucursal.getCorreoElectro() : "");
+        } else {
+            params.put("EMPRESA_DIRECCION", "");
+            params.put("EMPRESA_TELEFONO", "");
+            params.put("EMPRESA_EMAIL", "");
+        }
 
         // Datos de la cotización
         params.put("NUMERO_COTIZACION", numeroCotizacion);
-
-        // Fecha actual
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String fechaActual = LocalDate.now().format(formatter);
         params.put("FECHA_COTIZACION", fechaActual);
-
-        // Cliente
         params.put("CLIENTE_NOMBRE", clienteNombre);
 
         // Calcular totales
         BigDecimal subtotal = calcularSubtotal(detalles);
-        //BigDecimal igvMonto = calcularIGV(subtotal);
-        //BigDecimal total = subtotal.add(igvMonto);
-
         BigDecimal subTotal = subtotal.divide(BigDecimal.valueOf(1.18), 2, RoundingMode.HALF_UP);
         BigDecimal igvTotal = subtotal.subtract(subTotal);
 
@@ -209,22 +209,27 @@ public class ReporteCotizacion {
         params.put("IGV_MONTO", igvTotal);
         params.put("TOTAL", subtotal);
 
-        // Método de pago
-        params.put("METODO_PAGO", metodoPago);
-        params.put("NUMERO_CUENTA", numeroCuenta);
-        params.put("NUMERO_CUENTA_COMPLETO", numeroCuentaCompleto);
-        // Monto en letras
+        // Método de pago desde BD
+        if (datosEmpresa != null) {
+            params.put("METODO_PAGO",
+                    datosEmpresa.getBanco() != null ? datosEmpresa.getBanco() : "");
+            params.put("NUMERO_CUENTA",
+                    datosEmpresa.getCuentaSol() != null ? datosEmpresa.getCuentaSol() : "");
+            params.put("NUMERO_CUENTA_COMPLETO",
+                    "CCI: " + (datosEmpresa.getCci() != null ? datosEmpresa.getCci() : ""));
+        } else {
+            params.put("METODO_PAGO", "");
+            params.put("NUMERO_CUENTA", "");
+            params.put("NUMERO_CUENTA_COMPLETO", "");
+        }
+
         String montoEnLetras = NumeroALetras.convertir(subtotal.doubleValue(), "SOL");
         params.put("SON", montoEnLetras);
 
         return params;
     }
 
-    /**
-     * Convierte DetalleVenta a ItemCotizacion
-     */
     private List<ItemCotizacion> convertirDetalles(List<DetalleVenta> detalles) {
-
         List<ItemCotizacion> items = new ArrayList<>();
         int itemNumber = 1;
 
@@ -245,9 +250,6 @@ public class ReporteCotizacion {
         return items;
     }
 
-    /**
-     * Calcula el subtotal (sin IGV)
-     */
     private BigDecimal calcularSubtotal(List<DetalleVenta> detalles) {
         double total = detalles.stream()
                 .mapToDouble(d -> d.getCantidad() * d.getPrecio())
@@ -255,68 +257,29 @@ public class ReporteCotizacion {
         return BigDecimal.valueOf(total).setScale(2, RoundingMode.HALF_UP);
     }
 
-    /**
-     * Calcula el IGV (18%)
-     */
-    private BigDecimal calcularIGV(BigDecimal subtotal) {
-        return subtotal.multiply(new BigDecimal("0.18"))
-                .setScale(2, RoundingMode.HALF_UP);
-    }
-
-    /**
-     * Muestra el visor de JasperReports
-     */
     private void mostrarVisor(JasperPrint jasperPrint, String numeroCotizacion) {
-
         SwingUtilities.invokeLater(() -> {
             JasperViewer viewer = new JasperViewer(jasperPrint, false);
             viewer.setTitle("COTIZACIÓN - " + numeroCotizacion);
-
-            // Configurar ventana
             viewer.setAlwaysOnTop(true);
             viewer.setVisible(true);
             viewer.toFront();
             viewer.requestFocus();
             viewer.setAlwaysOnTop(false);
-
-            // Centrar en pantalla
             viewer.setLocationRelativeTo(null);
             viewer.setExtendedState(JFrame.NORMAL);
         });
     }
 
-    // ==================== GETTERS Y SETTERS ====================
-
-    public void setEmpresaNombre(String empresaNombre) {
-        this.empresaNombre = empresaNombre;
+    public void setSucursal(String codSucursal, String codPtoVta) {
+        try {
+            SucursalPtovta sucursal = sucursalDao.buscarSucursal(NO_CIA, codSucursal, codPtoVta);
+            if (sucursal != null) {
+                this.datosSucursal = sucursal;
+                LOGGER.info("Sucursal establecida para cotización: " + codSucursal + "-" + codPtoVta);
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "No se pudo establecer la sucursal", e);
+        }
     }
-
-    public void setEmpresaTagline(String empresaTagline) {
-        this.empresaTagline = empresaTagline;
-    }
-
-    public void setEmpresaTelefono(String empresaTelefono) {
-        this.empresaTelefono = empresaTelefono;
-    }
-
-    public void setEmpresaDireccion(String empresaDireccion) {
-        this.empresaDireccion = empresaDireccion;
-    }
-
-    public void setEmpresaEmail(String empresaEmail) {
-        this.empresaEmail = empresaEmail;
-    }
-
-    public void setMetodoPago(String metodoPago) {
-        this.metodoPago = metodoPago;
-    }
-
-    public void setNumeroCuenta(String numeroCuenta) {
-        this.numeroCuenta = numeroCuenta;
-    }
-
-    public void setNumeroCuentaCompleto(String numeroCuentaCompleto) {
-        this.numeroCuentaCompleto = numeroCuentaCompleto;
-    }
-
 }
