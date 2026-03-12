@@ -4,6 +4,7 @@ import com.robin.pos.dao.ArfamcDao;
 import com.robin.pos.dao.RegistroVentaDao;
 import com.robin.pos.dao.SucursalPtovtaDao;
 import com.robin.pos.model.*;
+import com.robin.pos.util.FormCargar;
 import com.robin.pos.util.GestorDescargas;
 import com.robin.pos.util.Mensaje;
 import com.robin.pos.util.Metodos;
@@ -14,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -56,6 +58,8 @@ public class RegistroVentaController implements Initializable {
     private static final String REPORTE_XLS_PATH = "/com/robin/pos/reportes/registroVentaXls.jasper";
 
     // ==================== CAMPOS FXML - PERÍODO ====================
+    @FXML private VBox vbxPrincipal;
+    @FXML private Label lblEstado;
 
     @FXML private DatePicker dpFechaDesde;
     @FXML private DatePicker dpFechaHasta;
@@ -275,12 +279,7 @@ public class RegistroVentaController implements Initializable {
     }
 
     private void mostrarMensajeEspera() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Procesando");
-        alert.setHeaderText(null);
-        alert.setContentText("Generando el reporte, por favor espere...");
-        alert.getDialogPane().lookupButton(ButtonType.OK).setDisable(true);
-        alert.show();
+        FormCargar.mostrarCargando("Procesando reporte de ventas...", vbxPrincipal);
 
         // Crear tarea en segundo plano
         Task<List<RegVta>> task = new Task<List<RegVta>>() {
@@ -301,13 +300,13 @@ public class RegistroVentaController implements Initializable {
 
         task.setOnSucceeded(event -> {
             List<RegVta> registros = task.getValue();
-            alert.close();
+            FormCargar.ocultarCargando();
             generarReporte(registros, dpFechaDesde.getValue(), dpFechaHasta.getValue());
         });
 
         // Manejar error en la tarea
         task.setOnFailed(event -> {
-            alert.close();
+            FormCargar.ocultarCargando();
             Throwable exception = task.getException();
             Mensaje.error(null, "Error",
                     "Ocurrió un error al procesar el reporte de ventas: " +

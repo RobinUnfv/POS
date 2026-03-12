@@ -339,3 +339,62 @@
         -fx-spacing: 8;
     }
 }
+
+/* === BOTONES === */
+.btn-refresh {
+    -fx-background-color: #edeff2;
+    -fx-background-radius: 8;
+    -fx-padding: 10;
+    -fx-cursor: hand;
+}
+
+.btn-refresh:hover {
+    -fx-background-color: #475569;
+}
+
+.btn-new {
+    -fx-background-color: linear-gradient(to bottom, #1a7802, #1a7802);
+    -fx-background-radius: 8;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(124,58,237,0.4), 8, 0, 0, 2);
+}
+
+.btn-new:hover {
+    -fx-background-color: linear-gradient(to bottom, #6d28d9, #5b21b6);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.btn-edit {
+    -fx-background-color: linear-gradient(to bottom, #0891b2, #0e7490);
+    -fx-background-radius: 8;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.btn-edit:hover {
+    -fx-background-color: linear-gradient(to bottom, #0e7490, #155e75);
+}
+
+.btn-delete {
+    -fx-background-color: linear-gradient(to bottom, #dc2626, #b91c1c);
+    -fx-background-radius: 8;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.btn-delete:hover {
+    -fx-background-color: linear-gradient(to bottom, #b91c1c, #991b1b);
+}
+
+.icon-white {
+    -fx-fill: white;
+}
+
+.btn-label {
+    -fx-font-family: 'Segoe UI Semibold', sans-serif;
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}

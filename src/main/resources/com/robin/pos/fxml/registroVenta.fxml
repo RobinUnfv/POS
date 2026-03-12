@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<VBox styleClass="root-container" stylesheets="@../css/RegistroVenta.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.RegistroVentaController">
+<VBox fx:id="vbxPrincipal" styleClass="root-container" stylesheets="@../css/RegistroVenta.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.robin.pos.controller.RegistroVentaController">
     
     <!-- ==================== CABECERA ==================== -->
     <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="header-container">
