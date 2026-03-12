@@ -1,0 +1,229 @@
+/* ==================== FORM CONFIGURACIÓN SUNAT CSS ==================== */
+
+/* === ROOT === */
+.root-container {
+    -fx-background-color: #f8fafc;
+}
+
+/* === CABECERA === */
+.header-container {
+    -fx-background-color: linear-gradient(to right, #7c3aed, #6d28d9, #5b21b6);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
+}
+
+.header-icon {
+    -fx-fill: white;
+}
+
+.header-title {
+    -fx-font-family: 'Segoe UI Semibold', sans-serif;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.header-subtitle {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(255,255,255,0.9);
+}
+
+.btn-close {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6;
+    -fx-padding: 6;
+    -fx-cursor: hand;
+}
+
+.btn-close:hover {
+    -fx-background-color: rgba(255,255,255,0.2);
+}
+
+.icon-white {
+    -fx-fill: white;
+}
+
+/* === SCROLL === */
+.content-scroll {
+    -fx-background-color: transparent;
+}
+
+.content-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* === FORMULARIO === */
+.form-container {
+    -fx-background-color: transparent;
+}
+
+.section-container {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 2);
+}
+
+.section-icon {
+    -fx-fill: #7c3aed;
+}
+
+.section-title {
+    -fx-font-family: 'Segoe UI Semibold', sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+}
+
+.section-separator {
+    -fx-background-color: #e2e8f0;
+    -fx-pref-height: 1;
+}
+
+.field-label {
+    -fx-font-family: 'Segoe UI Semibold', sans-serif;
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+    -fx-font-weight: 600;
+}
+
+/* === CAMPOS === */
+.input-field {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10 14;
+    -fx-text-fill: #1e293b;
+}
+
+.input-field:focused {
+    -fx-border-color: #7c3aed;
+    -fx-effect: dropshadow(gaussian, rgba(124,58,237,0.2), 8, 0, 0, 0);
+}
+
+.input-field-readonly {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #64748b;
+}
+
+.input-area {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10 14;
+    -fx-text-fill: #1e293b;
+}
+
+.input-area:focused {
+    -fx-border-color: #7c3aed;
+    -fx-effect: dropshadow(gaussian, rgba(124,58,237,0.2), 8, 0, 0, 0);
+}
+
+.input-combo {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.input-combo:focused {
+    -fx-border-color: #7c3aed;
+}
+
+.custom-checkbox {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #334155;
+    -fx-cursor: hand;
+}
+
+.custom-checkbox .box {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-width: 2;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.custom-checkbox:selected .box {
+    -fx-background-color: #7c3aed;
+    -fx-border-color: #7c3aed;
+}
+
+.custom-checkbox:selected .mark {
+    -fx-background-color: white;
+}
+
+/* === FOOTER === */
+.footer-container {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1 0 0 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 8, 0, 0, -2);
+}
+
+.required-note {
+    -fx-font-family: 'Segoe UI', sans-serif;
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748b;
+    -fx-font-style: italic;
+}
+
+/* === BOTONES === */
+.btn-save {
+    -fx-background-color: linear-gradient(to bottom, #10b981, #059669);
+    -fx-background-radius: 8;
+    -fx-padding: 10 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(16,185,129,0.4), 8, 0, 0, 2);
+}
+
+.btn-save:hover {
+    -fx-background-color: linear-gradient(to bottom, #059669, #047857);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.btn-cancel {
+    -fx-background-color: linear-gradient(to bottom, #6b7280, #4b5563);
+    -fx-background-radius: 8;
+    -fx-padding: 10 25;
+    -fx-cursor: hand;
+}
+
+.btn-cancel:hover {
+    -fx-background-color: linear-gradient(to bottom, #4b5563, #374151);
+}
+
+.btn-icon-white {
+    -fx-fill: white;
+}
+
+.btn-icon-gray {
+    -fx-fill: white;
+}
+
+.btn-label-white {
+    -fx-font-family: 'Segoe UI Semibold', sans-serif;
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.btn-label-gray {
+    -fx-font-family: 'Segoe UI Semibold', sans-serif;
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}

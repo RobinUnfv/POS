@@ -310,6 +310,17 @@
                                        <Tooltip text="Empresa" />
                                    </tooltip>
                                </Button>
+                               <Button fx:id="btnConfSunat" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarConfSunat" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Conf. SUNAT">
+                                   <cursor>
+                                       <Cursor fx:constant="HAND" />
+                                   </cursor>
+                                   <padding>
+                                       <Insets left="50.0" />
+                                   </padding>
+                                   <tooltip>
+                                       <Tooltip text="Lista de configuraciones para SUNAT" />
+                                   </tooltip>
+                               </Button>
                            </children>
                            <VBox.margin>
                               <Insets left="5.0" right="5.0" />

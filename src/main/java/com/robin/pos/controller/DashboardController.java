@@ -51,6 +51,7 @@ public class DashboardController {
     @FXML private Button btnDocumento;
     @FXML private Button btnCompania;
     @FXML private Button btnRegistroVenta;
+    @FXML private Button btnConfSunat;
     
     // Sub-menús
     @FXML private VBox ventasSubmenu;
@@ -96,6 +97,7 @@ public class DashboardController {
     private Tab tabDocumento;
     private Tab tabCompania;
     private Tab tabRegistroVenta;
+    private Tab tabConfSunat;
 
     @FXML
     public void initialize() {
@@ -590,6 +592,24 @@ public class DashboardController {
 
         } else {
             this.tabPane.getSelectionModel().select(tabCompania);
+        }
+    }
+
+    @FXML
+    public void ingresarConfSunat() throws IOException {
+
+        if(tabConfSunat == null) {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/listaConfSunat.fxml"));
+            VBox  ap = loader.load();
+            ImageView icono = createIcon("/com/robin/pos/imagenes/sunat.png");
+            tabConfSunat = new Tab("Conf. Sunat", ap);
+            tabConfSunat.setGraphic(icono);
+            tabConfSunat.setClosable(true);
+            tabConfSunat.setOnClosed(e -> tabConfSunat = null);
+            this.tabPane.getTabs().add(tabConfSunat);
+            this.tabPane.getSelectionModel().select(tabConfSunat);
+        } else {
+            this.tabPane.getSelectionModel().select(tabConfSunat);
         }
     }
 
