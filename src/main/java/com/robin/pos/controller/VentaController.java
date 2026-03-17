@@ -1,5 +1,6 @@
 package com.robin.pos.controller;
 
+import com.google.zxing.oned.UPCAReader;
 import com.robin.pos.dao.Arinda1Dao;
 import com.robin.pos.dao.ClienteDao;
 import com.robin.pos.dao.ComprobantePagoDao;
@@ -1078,7 +1079,7 @@ public class VentaController implements Initializable {
         // Datos del cliente
         params.setNoCliente(txtNumDoc.getText().trim());
         params.setNombreCliente(txtRazSocNom.getText() != null ?
-                txtRazSocNom.getText().trim() : "CLIENTE VARIOS");
+                txtRazSocNom.getText().toUpperCase().trim() : "CLIENTE VARIOS");
         params.setDireccionComercial(txtDireccion.getText() != null ?
                 txtDireccion.getText().trim() : "");
         /*
@@ -1197,7 +1198,8 @@ public class VentaController implements Initializable {
 
         // Preparar datos del cliente
         DatosCliente datosCliente = new DatosCliente();
-        datosCliente.setNombre(txtRazSocNom.getText());
+        String razSoc = (txtRazSocNom.getText() != null) ? txtRazSocNom.getText().toUpperCase() : "CLIENTE VARIOS";
+        datosCliente.setNombre(razSoc);
         datosCliente.setNumeroDocumento(txtNumDoc.getText());
         //datosCliente.setTipoDocumento(cbxDocIdentidad.getValue());
         datosCliente.setDireccion(txtDireccion.getText());
