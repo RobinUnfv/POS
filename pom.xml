@@ -90,7 +90,6 @@
             <artifactId>jasperreports-fonts</artifactId>
             <version>7.0.3</version>
         </dependency>
-
         <!-- ZXing para códigos QR -->
         <dependency>
             <groupId>com.google.zxing</groupId>
