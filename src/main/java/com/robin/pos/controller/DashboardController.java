@@ -55,6 +55,7 @@ public class DashboardController {
     
     // Sub-menús
     @FXML private VBox ventasSubmenu;
+    @FXML private VBox guiaSubmenu;
     @FXML private VBox clientesSubmenu;
     @FXML private VBox productosSubmenu;
     @FXML private VBox ConfiguracionSubmenu;
@@ -295,6 +296,26 @@ public class DashboardController {
         
         // Toggle del sub-menú actual
         animateSubmenu(ventasSubmenu, lblVentasArrow, !isCurrentlyVisible);
+    }
+
+    /**
+     * Alternar sub-menú de Guía de Remisión
+     */
+    @FXML
+    public void toggleGuiaSubmenu() {
+        if (!isSidebarExpanded) return; // No permitir abrir sub-menús si está colapsado
+
+        boolean isCurrentlyVisible = guiaSubmenu.isVisible();
+
+        // Cerrar otros sub-menús
+        closeSubmenu(clientesSubmenu, lblClientesArrow);
+        closeSubmenu(productosSubmenu, lblProductosArrow);
+        closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
+        closeSubmenu(reporteSubmenu, lblReporteArrow1);
+        closeSubmenu(ventasSubmenu, lblVentasArrow);
+
+        // Toggle del sub-menú actual
+        animateSubmenu(guiaSubmenu, lblVentasArrow, !isCurrentlyVisible);
     }
 
     /**
