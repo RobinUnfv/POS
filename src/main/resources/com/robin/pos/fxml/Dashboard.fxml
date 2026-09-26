@@ -106,7 +106,7 @@
                                     <graphic>
                                         <HBox alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <Label fx:id="iconGuia" style="-fx-text-fill: #4ecca3; -fx-font-size: 20px;" text="💰" />
+                                                <Label fx:id="iconGuia" style="-fx-text-fill: #2052f5; -fx-font-size: 20px;" text="📄" />
                                                 <Region HBox.hgrow="ALWAYS" />
                                                 <Label fx:id="lblGuiaArrow" style="-fx-text-fill: #95a5a6; -fx-font-size: 14px; -fx-font-weight: bold;" text="▶" />
                                             </children>
