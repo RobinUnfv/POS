@@ -8,6 +8,7 @@ import com.robin.pos.MainApp;
 import com.robin.pos.util.Mensaje;
 
 import javafx.animation.*;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -80,6 +81,8 @@ public class DashboardController {
     @FXML private TabPane tabPane;
     @FXML private TextField txtBuscar;
     @FXML private Label lblUsuario;
+
+    @FXML private Label lblGuiaArrow;
     
     // Variables de estado
     private boolean isSidebarExpanded = true;
@@ -742,4 +745,72 @@ public class DashboardController {
             activeButton.getStyleClass().add("menu-button-active");
         }
     }
+
+    // Menú "Guía Remisión" > "Nueva Guía"  (ventana modal)
+    @FXML
+    void ingresarGuiaRemision(ActionEvent event) {
+        try {
+            GuiaRemisionController.abrirVentana(
+                    tabPane.getScene().getWindow(),
+                    lblUsuario.getText(),
+                    guia -> refrescarListaGuiasSiEstaAbierta());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Mensaje.error(null, "Error", "No se pudo abrir la guía de remisión:\n" + e.getMessage());
+        }
+    }
+
+    // Menú "Guía Remisión" > "Lista de Guías"  (pestaña)
+    @FXML
+    void ingresarListaGuias(ActionEvent event) {
+        ListaGuiaRemisionController ctrl = abrirPestana("Guías de Remisión",
+                "/com/robin/pos/view/ListaGuiaRemision.fxml");
+        if (ctrl != null) {
+            ctrl.setUsuario(lblUsuario.getText());
+        }
+    }
+
+    // Si el submenú de guía aún no tiene su toggle, este es el mismo patrón que Ventas:
+    @FXML
+    void toggleGuiaSubmenu(ActionEvent event) {
+        boolean abrir = !guiaSubmenu.isVisible();
+        guiaSubmenu.setVisible(abrir);
+        guiaSubmenu.setManaged(abrir);
+        lblGuiaArrow.setText(abrir ? "▼" : "▶");
+    }
+
+    // ---------- utilidades ----------
+
+    // Abre (o selecciona si ya existe) una pestaña con el FXML indicado y devuelve su controlador.
+    private <T> T abrirPestana(String titulo, String rutaFxml) {
+        for (Tab t : tabPane.getTabs()) {
+            if (titulo.equals(t.getText())) {
+                tabPane.getSelectionModel().select(t);
+                return null;
+            }
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFxml));
+            Parent vista = loader.load();
+            Tab tab = new Tab(titulo, vista);
+            tab.setUserData(loader.getController());
+            tabPane.getTabs().add(tab);
+            tabPane.getSelectionModel().select(tab);
+            return loader.getController();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Mensaje.error(null, "Error", "No se pudo abrir " + titulo + ":\n" + e.getMessage());
+            return null;
+        }
+    }
+
+    // Refresca la pestaña "Guías de Remisión" si está abierta.
+    private void refrescarListaGuiasSiEstaAbierta() {
+        for (Tab t : tabPane.getTabs()) {
+            if (t.getUserData() instanceof ListaGuiaRemisionController lista) {
+                lista.refrescar();
+            }
+        }
+    }
+
 }

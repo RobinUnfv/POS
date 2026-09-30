@@ -1,0 +1,156 @@
+<!-- Guía de Remisión Electrónica Remitente (GRE 2022) - Robin POS - JasperReports 7 -->
+<jasperReport name="guiaRemision" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c2fc6f48-5447-428e-9678-60077e05ef09">
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<parameter name="EMPRESA_RUC" class="java.lang.String"/>
+	<parameter name="EMPRESA_NOMBRE" class="java.lang.String"/>
+	<parameter name="EMPRESA_DESCRIPCION" class="java.lang.String"/>
+	<parameter name="EMPRESA_DIRECCION" class="java.lang.String"/>
+	<parameter name="EMPRESA_CONTACTO" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.awt.Image"/>
+	<parameter name="QR" class="java.awt.Image"/>
+	<parameter name="NUMERO_GUIA" class="java.lang.String"/>
+	<parameter name="FECHA_EMISION" class="java.lang.String"/>
+	<parameter name="HORA_EMISION" class="java.lang.String"/>
+	<parameter name="FECHA_INICIO" class="java.lang.String"/>
+	<parameter name="ESTADO" class="java.lang.String"/>
+	<parameter name="DESTINATARIO" class="java.lang.String"/>
+	<parameter name="DESTINATARIO_DOC" class="java.lang.String"/>
+	<parameter name="PUNTO_PARTIDA" class="java.lang.String"/>
+	<parameter name="PUNTO_LLEGADA" class="java.lang.String"/>
+	<parameter name="MOTIVO" class="java.lang.String"/>
+	<parameter name="MOTIVO_DESC" class="java.lang.String"/>
+	<parameter name="MODALIDAD" class="java.lang.String"/>
+	<parameter name="TRANSPORTISTA" class="java.lang.String"/>
+	<parameter name="VEHICULO" class="java.lang.String"/>
+	<parameter name="CONDUCTOR" class="java.lang.String"/>
+	<parameter name="PESO" class="java.lang.String"/>
+	<parameter name="BULTOS" class="java.lang.String"/>
+	<parameter name="DOC_REFERENCIA" class="java.lang.String"/>
+	<parameter name="OBSERVACIONES" class="java.lang.String"/>
+	<field name="itemOrden" class="java.lang.Integer"/>
+	<field name="codProducto" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="cantidad" class="java.math.BigDecimal"/>
+	<field name="undMedida" class="java.lang.String"/>
+	<title height="236">
+		<element kind="image" uuid="afce9c09-7736-44b3-ac9f-d07ee15641a8" x="0" y="0" width="90" height="70" scaleImage="RetainShape" hImageAlign="Center" vImageAlign="Middle" onErrorType="Blank"><expression><![CDATA[$P{LOGO}]]></expression></element>
+		<element kind="textField" uuid="2da2c233-ca51-4ed0-a8ee-61f311339530" x="96" y="2" width="292" height="16" forecolor="#1E40AF" fontSize="12" blankWhenNull="true" bold="true" vTextAlign="Middle"><expression><![CDATA[$P{EMPRESA_NOMBRE}]]></expression></element>
+		<element kind="textField" uuid="2a45e28a-bc2d-4e79-84dc-2fa27f6d2e1a" x="96" y="19" width="292" height="11" forecolor="#475569" fontSize="7" blankWhenNull="true" italic="true" vTextAlign="Middle"><expression><![CDATA[$P{EMPRESA_DESCRIPCION}]]></expression></element>
+		<element kind="textField" uuid="d0e9e00b-ffeb-4e57-b8b5-753adb664e35" x="96" y="31" width="292" height="22" forecolor="#0F172A" fontSize="7" blankWhenNull="true" vTextAlign="Top"><expression><![CDATA[$P{EMPRESA_DIRECCION}]]></expression></element>
+		<element kind="textField" uuid="3c0cf523-7fb5-4ae2-9945-cbce099c1b5a" x="96" y="54" width="292" height="11" forecolor="#475569" fontSize="7" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA[$P{EMPRESA_CONTACTO}]]></expression></element>
+		<element kind="rectangle" uuid="4bc0603b-7ed3-41d1-8a48-a1c18bd46034" mode="Transparent" x="395" y="0" width="160" height="78" radius="6"><pen lineWidth="1.2" lineColor="#1E40AF"/></element>
+		<element kind="textField" uuid="97683913-9936-4b65-a3a4-deefe2f524d5" x="397" y="5" width="156" height="17" forecolor="#0F172A" fontSize="11.5" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA["R.U.C. " + $P{EMPRESA_RUC}]]></expression></element>
+		<element kind="rectangle" uuid="178657ec-ac6d-4ac8-a77f-18455ddf285f" mode="Opaque" x="396" y="25" width="158" height="28" backcolor="#2563EB"><pen lineWidth="0" lineColor="#2563EB"/></element>
+		<element kind="staticText" uuid="c5f6a530-2701-41ae-a99a-e5f6589ee281" x="398" y="25" width="154" height="28" forecolor="#FFFFFF" fontSize="8.5" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[GUÍA DE REMISIÓN
+ELECTRÓNICA REMITENTE]]></text></element>
+		<element kind="textField" uuid="9d32819e-cb64-4eba-833a-fefd5b9b2f55" x="397" y="56" width="156" height="18" forecolor="#1E40AF" fontSize="12.5" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA["N° " + $P{NUMERO_GUIA}]]></expression></element>
+		<element kind="rectangle" uuid="570dfc00-6016-4d9b-b5dd-b527b7e8ea2d" mode="Transparent" x="0" y="86" width="555" height="74" radius="5"><pen lineWidth="0.8" lineColor="#94A3B8"/></element>
+		<element kind="staticText" uuid="1557bd8c-9728-45a8-b459-2da391d01518" x="6" y="90" width="80" height="12" forecolor="#475569" fontSize="7" bold="true" vTextAlign="Middle"><text><![CDATA[Fecha de emisión:]]></text></element>
+		<element kind="textField" uuid="3d52f047-0565-41ff-9025-edc19f60d41d" x="86" y="90" width="110" height="12" forecolor="#0F172A" fontSize="7.5" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA[$P{FECHA_EMISION} + ($P{HORA_EMISION} != null ? "  " + $P{HORA_EMISION} : "")]]></expression></element>
+		<element kind="staticText" uuid="94dbf0ed-c95a-47b5-97c7-7b1c0e56845d" x="200" y="90" width="96" height="12" forecolor="#475569" fontSize="7" bold="true" vTextAlign="Middle"><text><![CDATA[Fecha inicio traslado:]]></text></element>
+		<element kind="textField" uuid="423b1e60-c22e-4444-bb2f-22ac9d083182" x="296" y="90" width="80" height="12" forecolor="#0F172A" fontSize="7.5" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA[$P{FECHA_INICIO}]]></expression></element>
+		<element kind="staticText" uuid="f6fa9719-7a8e-4dc9-b398-f6fc32480347" x="376" y="90" width="64" height="12" forecolor="#475569" fontSize="7" bold="true" vTextAlign="Middle"><text><![CDATA[Estado SUNAT:]]></text></element>
+		<element kind="textField" uuid="48c88634-f92d-4535-a34d-2dfdecdf60bc" x="440" y="90" width="110" height="12" forecolor="#2563EB" fontSize="7.5" blankWhenNull="true" bold="true" vTextAlign="Middle"><expression><![CDATA[$P{ESTADO}]]></expression></element>
+		<element kind="staticText" uuid="98e38007-2c14-4238-bbad-791e3d852d48" x="6" y="104" width="80" height="12" forecolor="#475569" fontSize="7" bold="true" vTextAlign="Middle"><text><![CDATA[Destinatario:]]></text></element>
+		<element kind="textField" uuid="ff1c1550-661c-44a9-9c48-36cad249a16e" x="86" y="104" width="300" height="12" forecolor="#0F172A" fontSize="7.5" blankWhenNull="true" bold="true" vTextAlign="Middle"><expression><![CDATA[$P{DESTINATARIO}]]></expression></element>
+		<element kind="staticText" uuid="6fb7dd08-f34f-47be-a83a-908e1e04a793" x="390" y="104" width="48" height="12" forecolor="#475569" fontSize="7" bold="true" vTextAlign="Middle"><text><![CDATA[Documento:]]></text></element>
+		<element kind="textField" uuid="b8fc45d8-911f-4c65-83ef-8b6842107586" x="438" y="104" width="112" height="12" forecolor="#0F172A" fontSize="7.5" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA[$P{DESTINATARIO_DOC}]]></expression></element>
+		<element kind="staticText" uuid="a90d9906-b941-4592-9bb9-db8790964d18" x="6" y="118" width="80" height="12" forecolor="#475569" fontSize="7" bold="true" vTextAlign="Middle"><text><![CDATA[Punto de partida:]]></text></element>
+		<element kind="textField" uuid="e3e47cea-ecee-451d-b1d4-558511b748e6" x="86" y="118" width="464" height="12" forecolor="#0F172A" fontSize="7.5" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA[$P{PUNTO_PARTIDA}]]></expression></element>
+		<element kind="staticText" uuid="aaec572b-3e59-4ceb-b2d8-9fd3d9d9c030" x="6" y="132" width="80" height="12" forecolor="#475569" fontSize="7" bold="true" vTextAlign="Middle"><text><![CDATA[Punto de llegada:]]></text></element>
+		<element kind="textField" uuid="8007deca-8481-441d-8180-7020b584cc30" x="86" y="132" width="464" height="24" forecolor="#0F172A" fontSize="7.5" blankWhenNull="true" vTextAlign="Top"><expression><![CDATA[$P{PUNTO_LLEGADA}]]></expression></element>
+		<element kind="rectangle" uuid="b1c966ca-9b47-4e02-b676-a9b6779d5dcb" mode="Transparent" x="0" y="166" width="555" height="62" radius="5"><pen lineWidth="0.8" lineColor="#94A3B8"/></element>
+		<element kind="staticText" uuid="f66aa97b-c8a3-4c6d-b84d-32f628dc5b6c" x="6" y="169" width="200" height="12" forecolor="#1E40AF" fontSize="7.5" bold="true" vTextAlign="Middle"><text><![CDATA[MOTIVO DE TRASLADO]]></text></element>
+		<element kind="rectangle" uuid="ebb2424c-a126-40cd-a87d-05492ca0a558" mode="Transparent" x="6" y="186" width="8" height="8"><pen lineWidth="0.7" lineColor="#475569"/></element>
+		<element kind="textField" uuid="3a788ad8-021b-4b03-b588-fbbe55540b92" x="6" y="186" width="8" height="8" forecolor="#1E40AF" fontSize="6.5" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA["01".equals($P{MOTIVO}) ? "X" : ""]]></expression></element>
+		<element kind="staticText" uuid="1f3b5ba8-0af9-4961-a212-0a798636e7be" x="18" y="184" width="124" height="12" forecolor="#0F172A" fontSize="6.5" vTextAlign="Middle"><text><![CDATA[Venta]]></text></element>
+		<element kind="rectangle" uuid="5b3ab1c4-a7ff-4bf4-bfa9-ecd278fc1da3" mode="Transparent" x="144" y="186" width="8" height="8"><pen lineWidth="0.7" lineColor="#475569"/></element>
+		<element kind="textField" uuid="be04c1fd-acda-48da-8609-07c74ecaa760" x="144" y="186" width="8" height="8" forecolor="#1E40AF" fontSize="6.5" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA["14".equals($P{MOTIVO}) ? "X" : ""]]></expression></element>
+		<element kind="staticText" uuid="d5fd9641-11fe-4b21-8f73-e4a2445594b0" x="156" y="184" width="124" height="12" forecolor="#0F172A" fontSize="6.5" vTextAlign="Middle"><text><![CDATA[Venta sujeta a confirmación]]></text></element>
+		<element kind="rectangle" uuid="e9c650f2-0ede-4096-8cfa-f73c0606d368" mode="Transparent" x="282" y="186" width="8" height="8"><pen lineWidth="0.7" lineColor="#475569"/></element>
+		<element kind="textField" uuid="d4de4c08-e7c2-407f-a60d-b64f008b8b71" x="282" y="186" width="8" height="8" forecolor="#1E40AF" fontSize="6.5" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA["02".equals($P{MOTIVO}) ? "X" : ""]]></expression></element>
+		<element kind="staticText" uuid="b0be65d0-3837-41fb-b1c9-1d481cddee46" x="294" y="184" width="124" height="12" forecolor="#0F172A" fontSize="6.5" vTextAlign="Middle"><text><![CDATA[Compra]]></text></element>
+		<element kind="rectangle" uuid="45c012e9-dd75-4247-b59b-2c9008065952" mode="Transparent" x="420" y="186" width="8" height="8"><pen lineWidth="0.7" lineColor="#475569"/></element>
+		<element kind="textField" uuid="ca086f73-f126-40a8-9b2a-4ef7c90dfa2b" x="420" y="186" width="8" height="8" forecolor="#1E40AF" fontSize="6.5" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA["04".equals($P{MOTIVO}) ? "X" : ""]]></expression></element>
+		<element kind="staticText" uuid="ae9f9331-23c2-4ba9-b918-2a852f2c402d" x="432" y="184" width="124" height="12" forecolor="#0F172A" fontSize="6.5" vTextAlign="Middle"><text><![CDATA[Traslado entre establecimientos]]></text></element>
+		<element kind="rectangle" uuid="4f64c2bb-236a-483d-8b5f-706e52cfbe45" mode="Transparent" x="6" y="200" width="8" height="8"><pen lineWidth="0.7" lineColor="#475569"/></element>
+		<element kind="textField" uuid="ac3198f6-ff77-4698-9bbc-6ce623aada75" x="6" y="200" width="8" height="8" forecolor="#1E40AF" fontSize="6.5" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA["03".equals($P{MOTIVO}) ? "X" : ""]]></expression></element>
+		<element kind="staticText" uuid="29867210-4896-4be0-b6c3-1498ec83680c" x="18" y="198" width="124" height="12" forecolor="#0F172A" fontSize="6.5" vTextAlign="Middle"><text><![CDATA[Venta con entrega a terceros]]></text></element>
+		<element kind="rectangle" uuid="2b982b41-3dfc-4346-89ff-bfc9cad8bdf6" mode="Transparent" x="144" y="200" width="8" height="8"><pen lineWidth="0.7" lineColor="#475569"/></element>
+		<element kind="textField" uuid="daea2b8b-ae49-44c5-985f-113d2ac5a84c" x="144" y="200" width="8" height="8" forecolor="#1E40AF" fontSize="6.5" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA["05".equals($P{MOTIVO}) ? "X" : ""]]></expression></element>
+		<element kind="staticText" uuid="bf17a723-fbc5-44a0-b62f-9db9cf7f115e" x="156" y="198" width="124" height="12" forecolor="#0F172A" fontSize="6.5" vTextAlign="Middle"><text><![CDATA[Consignación]]></text></element>
+		<element kind="rectangle" uuid="83e923e8-f417-424b-a345-eb4955836345" mode="Transparent" x="282" y="200" width="8" height="8"><pen lineWidth="0.7" lineColor="#475569"/></element>
+		<element kind="textField" uuid="f274bab0-68d9-40d8-bb27-b2088dda948e" x="282" y="200" width="8" height="8" forecolor="#1E40AF" fontSize="6.5" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA["06".equals($P{MOTIVO}) ? "X" : ""]]></expression></element>
+		<element kind="staticText" uuid="3b4d1484-4ad9-4879-97a9-bb7faaf62fa3" x="294" y="198" width="124" height="12" forecolor="#0F172A" fontSize="6.5" vTextAlign="Middle"><text><![CDATA[Devolución]]></text></element>
+		<element kind="rectangle" uuid="2a19fdfc-a463-4b35-b928-19f67a9bd440" mode="Transparent" x="420" y="200" width="8" height="8"><pen lineWidth="0.7" lineColor="#475569"/></element>
+		<element kind="textField" uuid="4c6dd782-4ac1-4f12-b94c-4817ca4646ac" x="420" y="200" width="8" height="8" forecolor="#1E40AF" fontSize="6.5" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA["07".equals($P{MOTIVO}) ? "X" : ""]]></expression></element>
+		<element kind="staticText" uuid="6d9a2581-f9fa-4092-aa0e-4626e1b61e7b" x="432" y="198" width="124" height="12" forecolor="#0F172A" fontSize="6.5" vTextAlign="Middle"><text><![CDATA[Recojo de bienes transformados]]></text></element>
+		<element kind="rectangle" uuid="4ed13f9a-a02f-4fa5-a36e-b23098596218" mode="Transparent" x="6" y="214" width="8" height="8"><pen lineWidth="0.7" lineColor="#475569"/></element>
+		<element kind="textField" uuid="a55986eb-7065-4458-80b0-8585b93b9f0a" x="6" y="214" width="8" height="8" forecolor="#1E40AF" fontSize="6.5" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA["17".equals($P{MOTIVO}) ? "X" : ""]]></expression></element>
+		<element kind="staticText" uuid="8834d58e-8860-4bf0-813a-beb1e20609ff" x="18" y="212" width="124" height="12" forecolor="#0F172A" fontSize="6.5" vTextAlign="Middle"><text><![CDATA[Traslado para transformación]]></text></element>
+		<element kind="rectangle" uuid="ab64177e-720a-4408-89d7-094e86bf06d8" mode="Transparent" x="144" y="214" width="8" height="8"><pen lineWidth="0.7" lineColor="#475569"/></element>
+		<element kind="textField" uuid="5c4820ee-f8fb-4450-9358-cf267228f787" x="144" y="214" width="8" height="8" forecolor="#1E40AF" fontSize="6.5" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA["08".equals($P{MOTIVO}) ? "X" : ""]]></expression></element>
+		<element kind="staticText" uuid="d1343d30-1c70-4374-92bd-a981188d59cd" x="156" y="212" width="124" height="12" forecolor="#0F172A" fontSize="6.5" vTextAlign="Middle"><text><![CDATA[Importación]]></text></element>
+		<element kind="rectangle" uuid="dde64f82-2d5d-42c4-930e-7107b2734928" mode="Transparent" x="282" y="214" width="8" height="8"><pen lineWidth="0.7" lineColor="#475569"/></element>
+		<element kind="textField" uuid="327cd3dc-6978-4916-9d5b-5e6cfbf0c857" x="282" y="214" width="8" height="8" forecolor="#1E40AF" fontSize="6.5" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA["09".equals($P{MOTIVO}) ? "X" : ""]]></expression></element>
+		<element kind="staticText" uuid="7744c61e-f206-4f4f-93ed-d9b7bb7b6bb9" x="294" y="212" width="124" height="12" forecolor="#0F172A" fontSize="6.5" vTextAlign="Middle"><text><![CDATA[Exportación]]></text></element>
+		<element kind="rectangle" uuid="c8c03e2a-a870-423b-8524-3419ff0ed294" mode="Transparent" x="420" y="214" width="8" height="8"><pen lineWidth="0.7" lineColor="#475569"/></element>
+		<element kind="textField" uuid="0de41f08-2364-4746-8245-e3573a81ba45" x="420" y="214" width="8" height="8" forecolor="#1E40AF" fontSize="6.5" blankWhenNull="true" bold="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA["13".equals($P{MOTIVO}) ? "X" : ""]]></expression></element>
+		<element kind="textField" uuid="7c883361-ad60-44ae-a584-818784f16526" x="432" y="212" width="124" height="12" forecolor="#0F172A" fontSize="6.5" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA["Otros" + ("13".equals($P{MOTIVO}) && $P{MOTIVO_DESC} != null ? ": " + $P{MOTIVO_DESC} : "")]]></expression></element>
+	</title>
+	<columnHeader height="18">
+		<element kind="staticText" uuid="673d586f-3fd1-4807-b24d-93d77d0434ea" mode="Opaque" x="0" y="0" width="30" height="18" forecolor="#FFFFFF" backcolor="#1E40AF" fontSize="7" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[N°]]></text></element>
+		<element kind="staticText" uuid="5bc9316d-62a4-43be-b219-d7c409a37c8a" mode="Opaque" x="30" y="0" width="75" height="18" forecolor="#FFFFFF" backcolor="#1E40AF" fontSize="7" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[CÓDIGO]]></text></element>
+		<element kind="staticText" uuid="2e12d7a0-09ed-4634-9111-cef1b6d0bef6" mode="Opaque" x="105" y="0" width="300" height="18" forecolor="#FFFFFF" backcolor="#1E40AF" fontSize="7" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[DESCRIPCIÓN]]></text></element>
+		<element kind="staticText" uuid="fbb359f4-0341-41a0-9989-583eae9cba7a" mode="Opaque" x="405" y="0" width="75" height="18" forecolor="#FFFFFF" backcolor="#1E40AF" fontSize="7" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[CANTIDAD]]></text></element>
+		<element kind="staticText" uuid="45431f6d-179f-4b55-961d-cc1fc90055e9" mode="Opaque" x="480" y="0" width="75" height="18" forecolor="#FFFFFF" backcolor="#1E40AF" fontSize="7" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[UNIDAD]]></text></element>
+	</columnHeader>
+	<detail>
+		<band height="16">
+		<element kind="textField" uuid="59e66369-5134-4df7-9625-b9a9d12b4edf" x="0" y="0" width="30" height="16" forecolor="#0F172A" fontSize="7.5" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA[$F{itemOrden}]]></expression><box><leftPen lineWidth="0.5" lineColor="#94A3B8"/><bottomPen lineWidth="0.3" lineColor="#E2E8F0"/><rightPen lineWidth="0.5" lineColor="#94A3B8"/></box></element>
+		<element kind="textField" uuid="93c36d6d-f7e6-4ef8-9330-b86993e4c88b" x="30" y="0" width="75" height="16" forecolor="#0F172A" fontSize="7.5" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA[$F{codProducto}]]></expression><box leftPadding="3" rightPadding="3"><leftPen lineWidth="0.5" lineColor="#94A3B8"/><bottomPen lineWidth="0.3" lineColor="#E2E8F0"/><rightPen lineWidth="0.5" lineColor="#94A3B8"/></box></element>
+		<element kind="textField" uuid="64f70453-1762-4858-9e84-9fc3a2ff258a" x="105" y="0" width="300" height="16" forecolor="#0F172A" fontSize="7.5" textAdjust="StretchHeight" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA[$F{descripcion}]]></expression><box leftPadding="4" rightPadding="4"><leftPen lineWidth="0.5" lineColor="#94A3B8"/><bottomPen lineWidth="0.3" lineColor="#E2E8F0"/><rightPen lineWidth="0.5" lineColor="#94A3B8"/></box></element>
+		<element kind="textField" uuid="6c57007e-7687-4621-8c9c-950cb16e92b6" x="405" y="0" width="75" height="16" forecolor="#0F172A" fontSize="7.5" pattern="#,##0.00##" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Right" vTextAlign="Middle"><expression><![CDATA[$F{cantidad}]]></expression><box leftPadding="3" rightPadding="6"><leftPen lineWidth="0.5" lineColor="#94A3B8"/><bottomPen lineWidth="0.3" lineColor="#E2E8F0"/><rightPen lineWidth="0.5" lineColor="#94A3B8"/></box></element>
+		<element kind="textField" uuid="cd8b1491-59b1-4534-a8c4-13f6cba2df79" x="480" y="0" width="75" height="16" forecolor="#0F172A" fontSize="7.5" textAdjust="StretchHeight" blankWhenNull="true" hTextAlign="Center" vTextAlign="Middle"><expression><![CDATA[$F{undMedida}]]></expression><box><leftPen lineWidth="0.5" lineColor="#94A3B8"/><bottomPen lineWidth="0.3" lineColor="#E2E8F0"/><rightPen lineWidth="0.5" lineColor="#94A3B8"/></box></element>
+		</band>
+	</detail>
+	<pageFooter height="16">
+		<element kind="staticText" uuid="efa7e8a2-927f-4ff6-8d6c-11fff6aa3032" x="0" y="2" width="300" height="12" forecolor="#475569" fontSize="6.5" italic="true" vTextAlign="Middle"><text><![CDATA[Generado por Robin POS]]></text></element>
+		<element kind="textField" uuid="a63a0148-079a-48fd-8db8-232a1c63e899" x="395" y="2" width="120" height="12" forecolor="#475569" fontSize="6.5" blankWhenNull="true" hTextAlign="Right" vTextAlign="Middle"><expression><![CDATA["Página " + $V{PAGE_NUMBER} + " de"]]></expression></element>
+		<element kind="textField" uuid="ddb391e7-846c-451c-b608-ef3552e6239f" x="515" y="2" width="40" height="12" forecolor="#475569" fontSize="6.5" blankWhenNull="true" vTextAlign="Middle" evaluationTime="Report"><expression><![CDATA[" " + $V{PAGE_NUMBER}]]></expression></element>
+	</pageFooter>
+	<summary height="192">
+		<element kind="line" uuid="b3c5be21-6e52-4841-b1a2-6ef2bb8bbcd3" x="0" y="0" width="555" height="1"><pen lineWidth="0.8" lineColor="#94A3B8"/></element>
+		<element kind="rectangle" uuid="67db1aab-7586-4b0a-9e9a-2f465cd29109" mode="Transparent" x="0" y="8" width="370" height="60" radius="5"><pen lineWidth="0.8" lineColor="#94A3B8"/></element>
+		<element kind="staticText" uuid="bd99966d-58ca-4142-bcc8-c2beb5c73f22" x="6" y="11" width="250" height="12" forecolor="#1E40AF" fontSize="7.5" bold="true" vTextAlign="Middle"><text><![CDATA[UNIDAD DE TRANSPORTE Y CONDUCTOR]]></text></element>
+		<element kind="staticText" uuid="4822f840-2a1b-4f5f-9314-ca0942fe311f" x="6" y="24" width="62" height="10" forecolor="#475569" fontSize="7" bold="true" vTextAlign="Middle"><text><![CDATA[Modalidad:]]></text></element>
+		<element kind="textField" uuid="0943abdb-636f-4272-b919-52d1b94de0cb" x="68" y="24" width="298" height="10" forecolor="#0F172A" fontSize="7" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA[$P{MODALIDAD}]]></expression></element>
+		<element kind="staticText" uuid="db9c8dcd-338c-4792-bc76-7ef844a36218" x="6" y="34" width="62" height="10" forecolor="#475569" fontSize="7" bold="true" vTextAlign="Middle"><text><![CDATA[Transportista:]]></text></element>
+		<element kind="textField" uuid="4c7afd55-e8d5-47cc-8a76-710c20c2d152" x="68" y="34" width="298" height="10" forecolor="#0F172A" fontSize="7" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA[$P{TRANSPORTISTA}]]></expression></element>
+		<element kind="staticText" uuid="ed4d6e11-a07d-4d13-97d5-ebbc678d20b0" x="6" y="44" width="62" height="10" forecolor="#475569" fontSize="7" bold="true" vTextAlign="Middle"><text><![CDATA[Vehículo:]]></text></element>
+		<element kind="textField" uuid="c9ebff78-84b8-4c07-abf6-e9acabfb0d21" x="68" y="44" width="298" height="10" forecolor="#0F172A" fontSize="7" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA[$P{VEHICULO}]]></expression></element>
+		<element kind="staticText" uuid="bcc573dc-3ded-4a91-80c1-328a239ea415" x="6" y="54" width="62" height="10" forecolor="#475569" fontSize="7" bold="true" vTextAlign="Middle"><text><![CDATA[Conductor:]]></text></element>
+		<element kind="textField" uuid="52786c52-2cd8-4d9c-b072-2b35fb94ebe0" x="68" y="54" width="298" height="10" forecolor="#0F172A" fontSize="7" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA[$P{CONDUCTOR}]]></expression></element>
+		<element kind="rectangle" uuid="29367906-4e03-4ee5-9f9d-33e5aa14ce65" mode="Transparent" x="378" y="8" width="177" height="60" radius="5"><pen lineWidth="0.8" lineColor="#94A3B8"/></element>
+		<element kind="staticText" uuid="468ac859-5576-44bc-84bf-b9bbbed3b49b" x="384" y="11" width="160" height="12" forecolor="#1E40AF" fontSize="7.5" bold="true" vTextAlign="Middle"><text><![CDATA[DATOS DEL ENVÍO]]></text></element>
+		<element kind="staticText" uuid="67a09e7a-d021-4df7-8bc6-d96a2df57bd9" x="384" y="25" width="74" height="12" forecolor="#475569" fontSize="7" bold="true" vTextAlign="Middle"><text><![CDATA[Peso bruto total:]]></text></element>
+		<element kind="textField" uuid="62fd5e84-7602-48a9-9dce-bc085db3bfe8" x="458" y="25" width="93" height="12" forecolor="#0F172A" fontSize="7.5" blankWhenNull="true" bold="true" vTextAlign="Middle"><expression><![CDATA[$P{PESO}]]></expression></element>
+		<element kind="staticText" uuid="cac564e1-8e56-4e9a-a521-b07800d0bf2e" x="384" y="38" width="74" height="12" forecolor="#475569" fontSize="7" bold="true" vTextAlign="Middle"><text><![CDATA[N° de bultos:]]></text></element>
+		<element kind="textField" uuid="e82340ee-68ff-4533-be92-c56a7d9db1fc" x="458" y="38" width="93" height="12" forecolor="#0F172A" fontSize="7.5" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA[$P{BULTOS}]]></expression></element>
+		<element kind="staticText" uuid="3f98d7c7-2021-49fa-83ef-ed86ff0810a3" x="384" y="51" width="74" height="12" forecolor="#475569" fontSize="7" bold="true" vTextAlign="Middle"><text><![CDATA[Doc. referencia:]]></text></element>
+		<element kind="textField" uuid="eb9feb53-586f-4324-95d4-6761cd6da764" x="458" y="51" width="93" height="12" forecolor="#0F172A" fontSize="7.5" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA[$P{DOC_REFERENCIA}]]></expression></element>
+		<element kind="rectangle" uuid="e696b929-576e-4208-9c32-976e69d843aa" mode="Transparent" x="0" y="74" width="555" height="30" radius="5"><pen lineWidth="0.8" lineColor="#94A3B8"/></element>
+		<element kind="staticText" uuid="8509ffa1-f0b9-466d-843c-c247bcdf710d" x="6" y="76" width="100" height="11" forecolor="#1E40AF" fontSize="7.5" bold="true" vTextAlign="Middle"><text><![CDATA[OBSERVACIONES]]></text></element>
+		<element kind="textField" uuid="b0d1e523-3f74-4e21-aafd-be3a8f8ccb7f" x="6" y="87" width="543" height="16" forecolor="#0F172A" fontSize="7" blankWhenNull="true" vTextAlign="Top"><expression><![CDATA[$P{OBSERVACIONES}]]></expression></element>
+		<element kind="image" uuid="785d9b84-a4a2-40a7-a123-f84348804ba3" x="0" y="110" width="80" height="80" scaleImage="RetainShape" hImageAlign="Center" vImageAlign="Middle" onErrorType="Blank"><expression><![CDATA[$P{QR}]]></expression></element>
+		<element kind="staticText" uuid="3e44458d-621f-41c6-b5eb-88f89d3cb8e0" x="88" y="116" width="240" height="22" forecolor="#0F172A" fontSize="7.5" bold="true" vTextAlign="Top"><text><![CDATA[Representación impresa de la
+GUÍA DE REMISIÓN ELECTRÓNICA REMITENTE]]></text></element>
+		<element kind="staticText" uuid="620e3927-d670-49dc-bb10-d7b139a01a2c" x="88" y="140" width="240" height="10" forecolor="#475569" fontSize="7" vTextAlign="Middle"><text><![CDATA[Consulte su documento en www.sunat.gob.pe]]></text></element>
+		<element kind="textField" uuid="39ea1983-a539-45f2-825f-29e9e2da7aab" x="88" y="151" width="240" height="10" forecolor="#475569" fontSize="7" blankWhenNull="true" vTextAlign="Middle"><expression><![CDATA["Emitido por: " + $P{EMPRESA_RUC}]]></expression></element>
+		<element kind="rectangle" uuid="ef4e104a-1c80-4c96-96c9-47386829b351" mode="Transparent" x="340" y="110" width="215" height="78" radius="5"><pen lineWidth="0.8" lineColor="#94A3B8"/></element>
+		<element kind="line" uuid="b8b12933-7052-43a4-af11-e41d3573e49c" x="352" y="150" width="191" height="1"><pen lineWidth="0.6" lineColor="#475569"/></element>
+		<element kind="staticText" uuid="93e6af1c-ab1d-429e-8c44-000eadc4c54a" x="352" y="152" width="191" height="10" forecolor="#0F172A" fontSize="7" bold="true" hTextAlign="Center" vTextAlign="Middle"><text><![CDATA[Conformidad del cliente]]></text></element>
+		<element kind="staticText" uuid="aa319a13-36f4-4ed0-868d-f581ad4bb3c3" x="352" y="164" width="191" height="10" forecolor="#475569" fontSize="7" vTextAlign="Middle"><text><![CDATA[Nombre: ______________________________]]></text></element>
+		<element kind="staticText" uuid="b44e6664-ef82-447a-b677-e8a74496dc91" x="352" y="175" width="191" height="10" forecolor="#475569" fontSize="7" vTextAlign="Middle"><text><![CDATA[DNI: _________________   Fecha: ___/___/____]]></text></element>
+	</summary>
+</jasperReport>

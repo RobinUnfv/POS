@@ -126,21 +126,29 @@
                                 <!-- Sub-menú Guía de Remisión -->
                                 <VBox fx:id="guiaSubmenu" managed="false" spacing="2" style="-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 5;" visible="false">
                                     <children>
-                                        <Button fx:id="btnRemitente" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarFactura" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Remitente">
+                                        <!-- Registro de una nueva GRE Remitente (ventana modal) -->
+                                        <Button fx:id="btnNuevaGuia" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarGuiaRemision" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Nueva Guía">
                                             <cursor>
                                                 <Cursor fx:constant="HAND" />
                                             </cursor>
                                             <padding>
                                                 <Insets left="50.0" />
                                             </padding>
+                                            <tooltip>
+                                                <Tooltip text="Registrar guía de remisión remitente desde una factura/boleta" />
+                                            </tooltip>
                                         </Button>
-                                        <Button fx:id="btnTransportista" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarProforma" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Transportista">
+                                        <!-- Lista de guías (FACTU.V_GUIA_PENDIENTE) en una pestaña -->
+                                        <Button fx:id="btnListaGuias" alignment="CENTER_LEFT" mnemonicParsing="false" onAction="#ingresarListaGuias" prefHeight="40.0" prefWidth="190.0" styleClass="submenu-button" text="Lista de Guías">
                                             <cursor>
                                                 <Cursor fx:constant="HAND" />
                                             </cursor>
                                             <padding>
                                                 <Insets left="50.0" />
                                             </padding>
+                                            <tooltip>
+                                                <Tooltip text="Consultar, imprimir y exportar las guías emitidas" />
+                                            </tooltip>
                                         </Button>
 
                                     </children>

@@ -1,0 +1,378 @@
+/* =====================================================================
+   LISTA DE GUIAS DE REMISION ELECTRONICA
+   Sistema POS - Robin  |  Basado en listaCliente.css
+   ===================================================================== */
+
+.root-container {
+    -fx-background-color: #f1f5f9;
+    -fx-font-family: "Segoe UI", "SF Pro Text", sans-serif;
+}
+
+/* ============================ CABECERA ============================== */
+.header-container {
+    -fx-background-color: linear-gradient(to right, #1e40af, #3b82f6);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);
+}
+
+.header-icon-container {
+    -fx-background-color: rgba(255,255,255,0.16);
+    -fx-background-radius: 12;
+}
+
+.header-title {
+    -fx-font-family: "Segoe UI Semibold", sans-serif;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.header-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(255,255,255,0.85);
+}
+
+/* ============================ KPI / RESUMEN ========================= */
+.kpi-card {
+    -fx-background-color: rgba(255,255,255,0.14);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255,255,255,0.22);
+    -fx-border-radius: 10;
+    -fx-padding: 8 14 8 14;
+    -fx-cursor: hand;
+}
+
+.kpi-card:hover {
+    -fx-background-color: rgba(255,255,255,0.22);
+}
+
+.kpi-card-activa {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
+
+.kpi-valor {
+    -fx-font-family: "Segoe UI Semibold", sans-serif;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.kpi-titulo {
+    -fx-font-size: 11px;
+    -fx-text-fill: rgba(255,255,255,0.85);
+}
+
+.kpi-card-activa .kpi-valor { -fx-text-fill: #1e40af; }
+.kpi-card-activa .kpi-titulo { -fx-text-fill: #475569; }
+
+.kpi-dot {
+    -fx-background-radius: 5;
+    -fx-min-width: 10;
+    -fx-min-height: 10;
+    -fx-max-width: 10;
+    -fx-max-height: 10;
+}
+
+.dot-todas { -fx-background-color: #e0e7ff; }
+.dot-pend  { -fx-background-color: #f59e0b; }
+.dot-env   { -fx-background-color: #38bdf8; }
+.dot-acep  { -fx-background-color: #22c55e; }
+.dot-rech  { -fx-background-color: #ef4444; }
+.dot-baja  { -fx-background-color: #94a3b8; }
+
+/* ============================ TOOLBAR =============================== */
+.toolbar-container {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+}
+
+.search-container {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 8;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.search-icon {
+    -fx-fill: #94a3b8;
+}
+
+.search-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 13px;
+    -fx-text-fill: #1e293b;
+    -fx-prompt-text-fill: #94a3b8;
+}
+
+.filter-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748b;
+}
+
+.modern-date,
+.modern-combo {
+    -fx-font-size: 12px;
+    -fx-background-color: white;
+    -fx-background-radius: 7;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 7;
+}
+
+.modern-date:focused,
+.modern-combo:focused {
+    -fx-border-color: #3b82f6;
+}
+
+.modern-date .text-field {
+    -fx-background-color: transparent;
+    -fx-padding: 5 6 5 8;
+}
+
+.modern-date .arrow-button,
+.modern-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.modern-date .calendar-button .calendar-icon {
+    -fx-background-color: #2563eb;
+}
+
+/* ============================ BOTONES =============================== */
+.action-button {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 8 14 8 14;
+    -fx-font-family: "Segoe UI Semibold", sans-serif;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 2);
+}
+
+.action-button:disabled {
+    -fx-opacity: 0.5;
+}
+
+.plain-button {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-text-fill: #475569;
+}
+
+.plain-button:hover {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #cbd5e1;
+}
+
+.filter-button {
+    -fx-background-color: #eff6ff;
+    -fx-border-color: #bfdbfe;
+    -fx-text-fill: #1d4ed8;
+}
+
+.filter-button:hover {
+    -fx-background-color: #dbeafe;
+}
+
+.new-button {
+    -fx-background-color: linear-gradient(to bottom, #22c55e, #16a34a);
+    -fx-border-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.new-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #16a34a, #15803d);
+}
+
+.icon-white { -fx-fill: white; }
+.icon-gray  { -fx-fill: #64748b; }
+.icon-blue  { -fx-fill: #2563eb; }
+
+/* ============================ TABLA ================================= */
+.table-container {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+}
+
+.modern-table {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 0;
+    -fx-table-cell-border-color: transparent;
+}
+
+.modern-table .column-header-background {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 12 12 0 0;
+}
+
+.modern-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 12 10 12 10;
+}
+
+.modern-table .column-header .label {
+    -fx-font-family: "Segoe UI Semibold", sans-serif;
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748b;
+    -fx-font-weight: bold;
+}
+
+.modern-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #f1f5f9 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-cell-size: 46px;
+}
+
+.modern-table .table-row-cell:odd {
+    -fx-background-color: #fcfdfe;
+}
+
+.modern-table .table-row-cell:hover {
+    -fx-background-color: #f0f9ff;
+}
+
+.modern-table .table-row-cell:selected {
+    -fx-background-color: #dbeafe;
+}
+
+.modern-table .table-cell {
+    -fx-padding: 0 10 0 10;
+    -fx-font-size: 12px;
+    -fx-text-fill: #334155;
+    -fx-alignment: center-left;
+}
+
+.modern-table .table-row-cell:selected .table-cell {
+    -fx-text-fill: #1e3a8a;
+}
+
+.modern-table .col-center { -fx-alignment: center; }
+.modern-table .col-right  { -fx-alignment: center-right; }
+
+.numero-guia,
+.modern-table .table-cell.numero-guia {
+    -fx-font-family: "Consolas", "SF Mono", monospace;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1e40af;
+}
+
+.texto-principal {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.texto-secundario,
+.modern-table .table-cell.texto-secundario {
+    -fx-font-size: 11px;
+    -fx-text-fill: #94a3b8;
+}
+
+.mono,
+.modern-table .table-cell.mono {
+    -fx-font-family: "Consolas", "SF Mono", monospace;
+}
+
+.modern-table .placeholder .label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #94a3b8;
+}
+
+.modern-table .scroll-bar:vertical,
+.modern-table .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-padding: 3;
+}
+
+.modern-table .scroll-bar .thumb {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 4;
+}
+
+.modern-table .scroll-bar .increment-button,
+.modern-table .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.modern-table .scroll-bar .increment-arrow,
+.modern-table .scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+
+/* ====================== BADGES DE ESTADO SUNAT ====================== */
+.badge {
+    -fx-background-radius: 12;
+    -fx-padding: 3 10 3 10;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.badge-P { -fx-background-color: #fef3c7; -fx-text-fill: #92400e; }  /* Pendiente */
+.badge-G { -fx-background-color: #ffedd5; -fx-text-fill: #9a3412; }  /* Error interno */
+.badge-E { -fx-background-color: #e0f2fe; -fx-text-fill: #075985; }  /* Enviada */
+.badge-A { -fx-background-color: #dcfce7; -fx-text-fill: #166534; }  /* Aceptada */
+.badge-O { -fx-background-color: #ecfccb; -fx-text-fill: #3f6212; }  /* Aceptada c/obs */
+.badge-R { -fx-background-color: #fee2e2; -fx-text-fill: #991b1b; }  /* Rechazada */
+.badge-B { -fx-background-color: #f1f5f9; -fx-text-fill: #475569; }  /* Baja solicitada */
+.badge-X { -fx-background-color: #e2e8f0; -fx-text-fill: #334155; }  /* Baja confirmada */
+.badge-N { -fx-background-color: #f8fafc; -fx-text-fill: #64748b; }  /* No enviar */
+
+/* ============================ BARRA DE ESTADO ======================= */
+.status-bar {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.status-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+}
+
+.shortcut-hint {
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748b;
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 4;
+    -fx-padding: 3 8 3 8;
+}
+
+.progress-indicator {
+    -fx-progress-color: #3b82f6;
+}
+
+.tooltip {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 6;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 8 12 8 12;
+}
+
+.context-menu {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-padding: 4;
+}
+
+.context-menu .menu-item:focused {
+    -fx-background-color: #eff6ff;
+    -fx-background-radius: 6;
+}
+
+.context-menu .menu-item:focused .label {
+    -fx-text-fill: #1e40af;
+}
