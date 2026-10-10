@@ -204,6 +204,22 @@ public class GuiaRemisionDao {
     // =====================================================================
     // 2. CATÁLOGOS Y SERIES
     // =====================================================================
+    public String obtenerSerieCorrelativo(String noCia, String serie) {
+        String sql = "FACTU.PR_DOCUMENTO.GET_NUM_DOCUMENTO(? , ?, ?, )";
+        try (Connection cx = ConexionBD.obtenerConexion();
+             PreparedStatement ps = cx.prepareStatement(sql)) {
+            ps.setString(1, noCia);
+            ps.setString(2, serie);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString(1);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.WARNING, "Error al obtener serie-correlativo", e);
+        }
+        return null;
+    }
 
     public List<String> listarSeriesActivas(String noCia) {
         List<String> series = new ArrayList<>();

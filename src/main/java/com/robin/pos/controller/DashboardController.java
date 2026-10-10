@@ -21,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
@@ -102,6 +103,7 @@ public class DashboardController {
     private Tab tabCompania;
     private Tab tabRegistroVenta;
     private Tab tabConfSunat;
+    private Tab tabGuiaRemitente;
 
     @FXML
     public void initialize() {
@@ -746,9 +748,10 @@ public class DashboardController {
         }
     }
 
-    // Menú "Guía Remisión" > "Nueva Guía"  (ventana modal)
+    // Menú "Guía Remisión" > "Nueva Guía"
     @FXML
-    void ingresarGuiaRemision(ActionEvent event) {
+    void ingresarGuiaRemision(ActionEvent event) throws IOException {
+        /*
         try {
             GuiaRemisionController.abrirVentana(
                     tabPane.getScene().getWindow(),
@@ -757,6 +760,24 @@ public class DashboardController {
         } catch (Exception e) {
             e.printStackTrace();
             Mensaje.error(null, "Error", "No se pudo abrir la guía de remisión:\n" + e.getMessage());
+        }
+        */
+        if (this.tabGuiaRemitente == null)  {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/GuiaRemision.fxml"));
+            // Cargar la vista
+            StackPane ap = loader.load();
+            ImageView icono = createIcon("/com/robin/pos/imagenes/icono_guia.png");
+            tabGuiaRemitente = new Tab("Guía de Remisión", ap);
+            tabGuiaRemitente.setGraphic(icono);
+
+            tabGuiaRemitente.setClosable(true);
+            tabGuiaRemitente.setOnClosed(e -> tabGuiaRemitente = null);
+
+            this.tabPane.getTabs().add(tabGuiaRemitente);
+            this.tabPane.getSelectionModel().select(tabGuiaRemitente);
+        } else {
+            // Si el tab ya existe, solo selecciónalo
+            this.tabPane.getSelectionModel().select(tabGuiaRemitente);
         }
     }
 
