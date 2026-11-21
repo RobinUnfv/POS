@@ -316,7 +316,7 @@ public class GuiaRemisionDao {
         try {
             cx = ConexionBD.obtenerConexion();
             cx.setAutoCommit(false);
-
+            /*
             // 3.1 Correlativo
             long corr;
             try (PreparedStatement ps = cx.prepareStatement(
@@ -341,7 +341,7 @@ public class GuiaRemisionDao {
                 ps.setString(3, g.getSerieElect());
                 ps.executeUpdate();
             }
-
+            */
             // 3.2 ID de la guía
             long idGuia;
             try (PreparedStatement ps = cx.prepareStatement("SELECT FACTU.SEQ_ARGUIA.NEXTVAL FROM DUAL");
@@ -351,7 +351,11 @@ public class GuiaRemisionDao {
             }
 
             g.setIdGuia(idGuia);
+            int corr = Integer.parseInt(g.getSerieElect().substring(4));
             g.setCorrElect(String.valueOf(corr));
+
+            System.out.println("ID guía: " + g.getSerieElect());
+            System.out.println("ID guía: " + g.getIdGuia() + ", correlativo: " + g.getCorrElect());
             g.setHoraEmision(LocalTime.now().format(HORA));
 
             // 3.3 Cabecera
@@ -361,7 +365,7 @@ public class GuiaRemisionDao {
             insertarDetalle(cx, g);
 
             cx.commit();
-            LOGGER.info("GRE registrada: " + g.getNumeroCompleto() + " (ID " + idGuia + ")");
+            System.out.println("GRE registrada: " + g.getNumeroCompleto() + " (ID " + g.getIdGuia() + ")");
             return g;
         } catch (SQLException e) {
             ConexionBD.rollback(cx);

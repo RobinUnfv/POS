@@ -32,7 +32,7 @@ public class DashboardController {
     @FXML private VBox menuContainer;
     @FXML private Button btnToggleMenu;
     @FXML private ImageView imgLogoCia;
-    
+
     // Botones del menú principal
     @FXML private Button btnDashboard;
     @FXML private Button btnVentas;
@@ -41,7 +41,7 @@ public class DashboardController {
     @FXML private Button btnReportes;
     @FXML private Button btnConfiguracion;
     @FXML private Button btnSalir;
-    
+
     // Botones del sub-menú
     @FXML private Button btnFactura;
     @FXML private Button btnProforma;
@@ -54,7 +54,7 @@ public class DashboardController {
     @FXML private Button btnCompania;
     @FXML private Button btnRegistroVenta;
     @FXML private Button btnConfSunat;
-    
+
     // Sub-menús
     @FXML private VBox ventasSubmenu;
     @FXML private VBox guiaSubmenu;
@@ -62,14 +62,14 @@ public class DashboardController {
     @FXML private VBox productosSubmenu;
     @FXML private VBox ConfiguracionSubmenu;
     @FXML private VBox reporteSubmenu;
-    
+
     // Flechas de sub-menús
     @FXML private Label lblVentasArrow;
     @FXML private Label lblClientesArrow;
     @FXML private Label lblProductosArrow;
     @FXML private Label lblConfiguracionArrow;
     @FXML private Label lblReporteArrow1;
-    
+
     // Iconos del menú
     @FXML private Label iconDashboard;
     @FXML private Label iconVentas;
@@ -77,20 +77,20 @@ public class DashboardController {
     @FXML private Label iconProductos;
     @FXML private Label iconReportes;
     @FXML private Label iconConfiguracion;
-    
+
     // Otros componentes
     @FXML private TabPane tabPane;
     @FXML private TextField txtBuscar;
     @FXML private Label lblUsuario;
 
     @FXML private Label lblGuiaArrow;
-    
+
     // Variables de estado
     private boolean isSidebarExpanded = true;
     private static final double EXPANDED_WIDTH = 220.0;
     private static final double COLLAPSED_WIDTH = 70.0;
     private static final Duration ANIMATION_DURATION = Duration.millis(300);
-    
+
     private Tab tabVenta;
     private Tab tabCliente;
     private Tab tabListaCliente;
@@ -109,10 +109,10 @@ public class DashboardController {
     public void initialize() {
         // Configurar el estado inicial
         setupInitialState();
-        
+
         // Configurar eventos de hover para efectos visuales
         setupHoverEffects();
-        
+
         System.out.println("Dashboard Controller inicializado correctamente");
     }
 
@@ -122,7 +122,7 @@ public class DashboardController {
     private void setupInitialState() {
         // Asegurar que todos los sub-menús estén cerrados al inicio
         closeAllSubmenus();
-        
+
         // Configurar el ancho inicial del sidebar
         sidebar.setPrefWidth(EXPANDED_WIDTH);
         sidebar.setMinWidth(EXPANDED_WIDTH);
@@ -142,18 +142,18 @@ public class DashboardController {
     @FXML
     public void toggleSidebar() {
         isSidebarExpanded = !isSidebarExpanded;
-        
+
         // Cerrar todos los sub-menús al colapsar
         if (!isSidebarExpanded) {
             closeAllSubmenus();
         }
-        
+
         // Animación de ancho del sidebar
         animateSidebarWidth();
-        
+
         // Animar visibilidad de textos y logo
         animateContentVisibility();
-        
+
         // Cambiar el símbolo del botón toggle
         animateToggleButton();
     }
@@ -163,18 +163,18 @@ public class DashboardController {
      */
     private void animateSidebarWidth() {
         double targetWidth = isSidebarExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH;
-        
+
         Timeline timeline = new Timeline(
-            new KeyFrame(Duration.ZERO,
-                new KeyValue(sidebar.prefWidthProperty(), sidebar.getPrefWidth()),
-                new KeyValue(sidebar.minWidthProperty(), sidebar.getMinWidth()),
-                new KeyValue(sidebar.maxWidthProperty(), sidebar.getMaxWidth())
-            ),
-            new KeyFrame(ANIMATION_DURATION,
-                new KeyValue(sidebar.prefWidthProperty(), targetWidth, Interpolator.EASE_BOTH),
-                new KeyValue(sidebar.minWidthProperty(), targetWidth, Interpolator.EASE_BOTH),
-                new KeyValue(sidebar.maxWidthProperty(), targetWidth, Interpolator.EASE_BOTH)
-            )
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(sidebar.prefWidthProperty(), sidebar.getPrefWidth()),
+                        new KeyValue(sidebar.minWidthProperty(), sidebar.getMinWidth()),
+                        new KeyValue(sidebar.maxWidthProperty(), sidebar.getMaxWidth())
+                ),
+                new KeyFrame(ANIMATION_DURATION,
+                        new KeyValue(sidebar.prefWidthProperty(), targetWidth, Interpolator.EASE_BOTH),
+                        new KeyValue(sidebar.minWidthProperty(), targetWidth, Interpolator.EASE_BOTH),
+                        new KeyValue(sidebar.maxWidthProperty(), targetWidth, Interpolator.EASE_BOTH)
+                )
         );
         timeline.play();
     }
@@ -186,7 +186,7 @@ public class DashboardController {
         // Animar opacidad del logo
         FadeTransition logoFade = new FadeTransition(ANIMATION_DURATION, imgLogoCia);
         logoFade.setToValue(isSidebarExpanded ? 1.0 : 0.0);
-        
+
         // Animar visibilidad de los textos de los botones
         animateButtonTexts(btnDashboard);
         animateButtonTexts(btnVentas);
@@ -195,10 +195,10 @@ public class DashboardController {
         animateButtonTexts(btnReportes);
         animateButtonTexts(btnConfiguracion);
         animateButtonTexts(btnSalir);
-        
+
         // Ocultar/mostrar flechas de sub-menú
         animateArrows();
-        
+
         logoFade.play();
     }
 
@@ -240,6 +240,7 @@ public class DashboardController {
         animateLabelOpacity(lblProductosArrow);
         animateLabelOpacity(lblConfiguracionArrow);
         animateLabelOpacity(lblReporteArrow1);
+        animateLabelOpacity(lblGuiaArrow);
     }
 
     /**
@@ -259,7 +260,7 @@ public class DashboardController {
         RotateTransition rotate = new RotateTransition(ANIMATION_DURATION, btnToggleMenu);
         rotate.setByAngle(isSidebarExpanded ? 0 : 180);
         rotate.play();
-        
+
         // Cambiar el símbolo si lo deseas
         // btnToggleMenu.setText(isSidebarExpanded ? "☰" : "→");
     }
@@ -273,6 +274,7 @@ public class DashboardController {
         closeSubmenu(productosSubmenu, lblProductosArrow);
         closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
         closeSubmenu(reporteSubmenu, lblReporteArrow1);
+        closeSubmenu(guiaSubmenu, lblGuiaArrow);
     }
 
     /**
@@ -290,15 +292,17 @@ public class DashboardController {
     @FXML
     public void toggleVentasSubmenu() {
         if (!isSidebarExpanded) return; // No permitir abrir sub-menús si está colapsado
-        
+
         boolean isCurrentlyVisible = ventasSubmenu.isVisible();
-        
+
         // Cerrar otros sub-menús
         closeSubmenu(clientesSubmenu, lblClientesArrow);
         closeSubmenu(productosSubmenu, lblProductosArrow);
         closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
         closeSubmenu(reporteSubmenu, lblReporteArrow1);
-        
+
+        closeSubmenu(guiaSubmenu, lblGuiaArrow);
+
         // Toggle del sub-menú actual
         animateSubmenu(ventasSubmenu, lblVentasArrow, !isCurrentlyVisible);
     }
@@ -320,7 +324,7 @@ public class DashboardController {
         closeSubmenu(ventasSubmenu, lblVentasArrow);
 
         // Toggle del sub-menú actual
-        animateSubmenu(guiaSubmenu, lblVentasArrow, !isCurrentlyVisible);
+        animateSubmenu(guiaSubmenu, lblGuiaArrow, !isCurrentlyVisible);
     }
 
     /**
@@ -329,15 +333,17 @@ public class DashboardController {
     @FXML
     public void toggleClientesSubmenu() {
         if (!isSidebarExpanded) return;
-        
+
         boolean isCurrentlyVisible = clientesSubmenu.isVisible();
-        
+
         // Cerrar otros sub-menús
         closeSubmenu(ventasSubmenu, lblVentasArrow);
         closeSubmenu(productosSubmenu, lblProductosArrow);
         closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
         closeSubmenu(reporteSubmenu, lblReporteArrow1);
-        
+
+        closeSubmenu(guiaSubmenu, lblGuiaArrow);
+
         // Toggle del sub-menú actual
         animateSubmenu(clientesSubmenu, lblClientesArrow, !isCurrentlyVisible);
     }
@@ -348,15 +354,17 @@ public class DashboardController {
     @FXML
     public void toggleProductosSubmenu() {
         if (!isSidebarExpanded) return;
-        
+
         boolean isCurrentlyVisible = productosSubmenu.isVisible();
-        
+
         // Cerrar otros sub-menús
         closeSubmenu(ventasSubmenu, lblVentasArrow);
         closeSubmenu(clientesSubmenu, lblClientesArrow);
         closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
         closeSubmenu(reporteSubmenu, lblReporteArrow1);
-        
+
+        closeSubmenu(guiaSubmenu, lblGuiaArrow);
+
         // Toggle del sub-menú actual
         animateSubmenu(productosSubmenu, lblProductosArrow, !isCurrentlyVisible);
     }
@@ -373,6 +381,8 @@ public class DashboardController {
         closeSubmenu(clientesSubmenu, lblClientesArrow);
         closeSubmenu(reporteSubmenu, lblReporteArrow1);
 
+        closeSubmenu(guiaSubmenu, lblGuiaArrow);
+
         // Toggle del sub-menú actual
         animateSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow, !isCurrentlyVisible);
     }
@@ -384,13 +394,15 @@ public class DashboardController {
     public void toggleReporteSubmenu() {
         if (!isSidebarExpanded) return;
 
-        boolean isCurrentlyVisible = clientesSubmenu.isVisible();
+        boolean isCurrentlyVisible = reporteSubmenu.isVisible();
 
         // Cerrar otros sub-menús
         closeSubmenu(ventasSubmenu, lblVentasArrow);
         closeSubmenu(productosSubmenu, lblProductosArrow);
         closeSubmenu(ConfiguracionSubmenu, lblConfiguracionArrow);
         closeSubmenu(clientesSubmenu, lblClientesArrow);
+
+        closeSubmenu(guiaSubmenu, lblGuiaArrow);
 
         // Toggle del sub-menú actual
         animateSubmenu(reporteSubmenu, lblReporteArrow1, !isCurrentlyVisible);
@@ -404,41 +416,41 @@ public class DashboardController {
             // Mostrar sub-menú
             submenu.setVisible(true);
             submenu.setManaged(true);
-            
+
             // Animación de altura
             submenu.setMaxHeight(0);
             Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(submenu.maxHeightProperty(), 0)),
-                new KeyFrame(ANIMATION_DURATION, new KeyValue(submenu.maxHeightProperty(), 200, Interpolator.EASE_BOTH))
+                    new KeyFrame(Duration.ZERO, new KeyValue(submenu.maxHeightProperty(), 0)),
+                    new KeyFrame(ANIMATION_DURATION, new KeyValue(submenu.maxHeightProperty(), 200, Interpolator.EASE_BOTH))
             );
-            
+
             // Animación de opacidad
             FadeTransition fade = new FadeTransition(ANIMATION_DURATION, submenu);
             fade.setFromValue(0);
             fade.setToValue(1);
-            
+
             // Rotar flecha
             RotateTransition rotate = new RotateTransition(ANIMATION_DURATION, arrow);
             rotate.setToAngle(90);
-            
+
             ParallelTransition parallel = new ParallelTransition(timeline, fade, rotate);
             parallel.play();
-            
+
         } else {
             // Ocultar sub-menú
             Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(submenu.maxHeightProperty(), submenu.getHeight())),
-                new KeyFrame(ANIMATION_DURATION, new KeyValue(submenu.maxHeightProperty(), 0, Interpolator.EASE_BOTH))
+                    new KeyFrame(Duration.ZERO, new KeyValue(submenu.maxHeightProperty(), submenu.getHeight())),
+                    new KeyFrame(ANIMATION_DURATION, new KeyValue(submenu.maxHeightProperty(), 0, Interpolator.EASE_BOTH))
             );
-            
+
             FadeTransition fade = new FadeTransition(ANIMATION_DURATION, submenu);
             fade.setFromValue(1);
             fade.setToValue(0);
-            
+
             // Rotar flecha
             RotateTransition rotate = new RotateTransition(ANIMATION_DURATION, arrow);
             rotate.setToAngle(0);
-            
+
             ParallelTransition parallel = new ParallelTransition(timeline, fade, rotate);
             parallel.setOnFinished(e -> {
                 submenu.setVisible(false);
@@ -449,7 +461,7 @@ public class DashboardController {
     }
 
     // ===== MÉTODOS DE NAVEGACIÓN =====
-    
+
     @FXML
     public void ingresarDashboard() {
         setActiveButton(btnDashboard);
@@ -641,7 +653,7 @@ public class DashboardController {
 
     @FXML
     public void ingresarNuevoProducto() throws IOException {
-    	if (this.tabArticulo == null) {
+        if (this.tabArticulo == null) {
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/Arinda1.fxml"));
             Parent  ap = loader.load();
 
@@ -710,10 +722,10 @@ public class DashboardController {
 
     @FXML
     public void salirSistema() {
-    	Optional<ButtonType> opt = Mensaje.confirmacion(null,"Confirmar","¿Está seguro de salir del sistema?");
-    	if (opt.isPresent() && opt.get() != ButtonType.CANCEL) {
-    		this.btnSalir.getScene().getWindow().hide();
-    	}
+        Optional<ButtonType> opt = Mensaje.confirmacion(null,"Confirmar","¿Está seguro de salir del sistema?");
+        if (opt.isPresent() && opt.get() != ButtonType.CANCEL) {
+            this.btnSalir.getScene().getWindow().hide();
+        }
     }
 
     /**
@@ -741,42 +753,40 @@ public class DashboardController {
         btnCliente.getStyleClass().remove("menu-button-active");
         btnProductos.getStyleClass().remove("menu-button-active");
         btnReportes.getStyleClass().remove("menu-button-active");
-        
+
         // Agregar clase activa al botón seleccionado
         if (!activeButton.getStyleClass().contains("menu-button-active")) {
             activeButton.getStyleClass().add("menu-button-active");
         }
     }
 
-    // Menú "Guía Remisión" > "Nueva Guía"
+    // Menú "Guía Remisión" > "Nueva Guía"  (pestaña)
     @FXML
     void ingresarGuiaRemision(ActionEvent event) throws IOException {
-        /*
-        try {
-            GuiaRemisionController.abrirVentana(
-                    tabPane.getScene().getWindow(),
-                    lblUsuario.getText(),
-                    guia -> refrescarListaGuiasSiEstaAbierta());
-        } catch (Exception e) {
-            e.printStackTrace();
-            Mensaje.error(null, "Error", "No se pudo abrir la guía de remisión:\n" + e.getMessage());
-        }
-        */
-        if (this.tabGuiaRemitente == null)  {
+        if (this.tabGuiaRemitente == null) {
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/robin/pos/fxml/GuiaRemision.fxml"));
-            // Cargar la vista
-            StackPane ap = loader.load();
-            ImageView icono = createIcon("/com/robin/pos/imagenes/icono_guia.png");
+            // La raíz de GuiaRemision.fxml es un StackPane: se usa Parent para no depender del tipo
+            Parent ap = loader.load();
+            GuiaRemisionController ctrl = loader.getController();
+
+            ImageView icono = createIcon("/com/robin/pos/imagenes/icono_guia_azul.png");
             tabGuiaRemitente = new Tab("Guía de Remisión", ap);
             tabGuiaRemitente.setGraphic(icono);
-
             tabGuiaRemitente.setClosable(true);
             tabGuiaRemitente.setOnClosed(e -> tabGuiaRemitente = null);
+
+            // Dentro de una pestaña, "Cancelar"/Esc/registrar deben cerrar la PESTAÑA,
+            // no la ventana principal del sistema.
+            ctrl.setUsuario(lblUsuario.getText());
+            ctrl.setOnCerrar(() -> {
+                tabPane.getTabs().remove(tabGuiaRemitente);
+                tabGuiaRemitente = null;
+            });
+            ctrl.setOnGuiaRegistrada(guia -> refrescarListaGuiasSiEstaAbierta());
 
             this.tabPane.getTabs().add(tabGuiaRemitente);
             this.tabPane.getSelectionModel().select(tabGuiaRemitente);
         } else {
-            // Si el tab ya existe, solo selecciónalo
             this.tabPane.getSelectionModel().select(tabGuiaRemitente);
         }
     }
@@ -785,19 +795,10 @@ public class DashboardController {
     @FXML
     void ingresarListaGuias(ActionEvent event) {
         ListaGuiaRemisionController ctrl = abrirPestana("Guías de Remisión",
-                "/com/robin/pos/view/ListaGuiaRemision.fxml");
+                "/com/robin/pos/fxml/ListaGuiaRemision.fxml");
         if (ctrl != null) {
             ctrl.setUsuario(lblUsuario.getText());
         }
-    }
-
-    // Si el submenú de guía aún no tiene su toggle, este es el mismo patrón que Ventas:
-    @FXML
-    void toggleGuiaSubmenu(ActionEvent event) {
-        boolean abrir = !guiaSubmenu.isVisible();
-        guiaSubmenu.setVisible(abrir);
-        guiaSubmenu.setManaged(abrir);
-        lblGuiaArrow.setText(abrir ? "▼" : "▶");
     }
 
     // ---------- utilidades ----------

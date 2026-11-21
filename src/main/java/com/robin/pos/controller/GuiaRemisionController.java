@@ -1,10 +1,6 @@
 package com.robin.pos.controller;
 
-import com.robin.pos.dao.ArccdiDao;
-import com.robin.pos.dao.ArccdpDao;
-import com.robin.pos.dao.ArccprDao;
-import com.robin.pos.dao.ClienteDao;
-import com.robin.pos.dao.GuiaRemisionDao;
+import com.robin.pos.dao.*;
 import com.robin.pos.model.Arccdi;
 import com.robin.pos.model.Arccdp;
 import com.robin.pos.model.Arccpr;
@@ -105,10 +101,10 @@ public class GuiaRemisionController implements Initializable {
     // Cabecera
     @FXML private Label lblTitulo;
     @FXML private Label lblSubtitulo;
-    @FXML private Label lblRucEmisor;
-    @FXML private ComboBox<String> cbxSerie;
-    @FXML private Label lblNumeroGuia;
-    @FXML private Label lblNumeroHint;
+    //@FXML private Label lblRucEmisor;
+    //@FXML private ComboBox<String> cbxSerie;
+    //@FXML private Label lblNumeroGuia;
+    //@FXML private Label lblNumeroHint;
 
     // Documento origen
     @FXML private TextField txtNoFactu;
@@ -214,13 +210,15 @@ public class GuiaRemisionController implements Initializable {
     private String usuario = System.getProperty("user.name");
     private Consumer<GuiaRemision> onGuiaRegistrada;
     private Runnable onCerrar;
+    /** Serie GRE activa (FACTU.GRE_SERIE_CTRL). Se toma la primera porque el formulario ya no muestra el combo. */
+    private String serieGuia;
 
     // =================================================================
     // INICIALIZACIÓN
     // =================================================================
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        lblRucEmisor.setText("R.U.C. " + AppConfig.empresaRuc());
+        //lblRucEmisor.setText("R.U.C. " + AppConfig.empresaRuc());
 
         configurarFechas();
         configurarCombosEstaticos();
@@ -232,13 +230,13 @@ public class GuiaRemisionController implements Initializable {
         ubigeoLlegada = new UbigeoSelector(cbxLlegDep, cbxLlegProv, cbxLlegDist, txtLlegUbigeo);
 
         cbxMotivo.valueProperty().addListener((o, a, n) -> actualizarPorMotivo());
-        cbxSerie.valueProperty().addListener((o, a, n) -> mostrarCorrelativoReferencial(n));
+        //cbxSerie.valueProperty().addListener((o, a, n) -> mostrarCorrelativoReferencial(n));
 
         limpiarErrorAlEditar(txtNoFactu, txtNroDocDestin, txtRazonDestin, txtDescMotivo, txtPeso,
                 txtPartDireccion, txtPartUbigeo, txtPartCodEstab, txtLlegDireccion, txtLlegUbigeo,
                 txtLlegCodEstab, txtRucTransp, txtRazonTransp, txtPlaca, txtNroDocConduc, txtLicencia,
                 txtNombreConduc, txtApellidoConduc, txtNroDocCompr, txtRazonCompr, txtCorrRef,
-                dpFecEmision, dpFecInicio, cbxSerie, cbxMotivo, cbxTipoDocDestin);
+                dpFecEmision, dpFecInicio, cbxMotivo, cbxTipoDocDestin);
 
         configurarAtajos();
         cargarCatalogos();
@@ -462,12 +460,16 @@ public class GuiaRemisionController implements Initializable {
                 dao.listarDocumentosRelacionados(),
                 new ArccdpDao().listarDepartamentos(NO_CIA)
         ), cat -> {
-            cbxSerie.getItems().setAll(cat.series());
+            //serieGuia = cat.series().isEmpty() ? null : cat.series().get(0);
+            serieGuia = DocumentoDao.obtenerSerieDocumento(NO_CIA, "41", "G");
+            System.out.println("Serie GRE: " + serieGuia);
+            /*
             if (!cat.series().isEmpty()) {
                 cbxSerie.getSelectionModel().selectFirst();
             } else {
                 lblNumeroHint.setText("Registre una serie en FACTU.GRE_SERIE_CTRL");
             }
+            */
             cbxMotivo.getItems().setAll(cat.motivos());
             seleccionarCodigo(cbxMotivo, "01");
             cbxTipoDocRef.getItems().setAll(cat.docsRel());
@@ -481,17 +483,19 @@ public class GuiaRemisionController implements Initializable {
     }
 
     private void mostrarCorrelativoReferencial(String serie) {
+        /*
         if (serie == null) {
             lblNumeroGuia.setText("--------");
             return;
         }
+        */
         Task<Long> t = new Task<>() {
             @Override
             protected Long call() {
                 return dao.siguienteCorrelativo(NO_CIA, serie);
             }
         };
-        t.setOnSucceeded(e -> lblNumeroGuia.setText(t.getValue() > 0 ? String.format("%08d", t.getValue()) : "--------"));
+        //t.setOnSucceeded(e -> lblNumeroGuia.setText(t.getValue() > 0 ? String.format("%08d", t.getValue()) : "--------"));
         iniciar(t);
     }
 
@@ -732,7 +736,7 @@ public class GuiaRemisionController implements Initializable {
         g.setNoCia(NO_CIA);
         g.setBodega(guiaOrigen.getBodega());
         g.setNoGuia(guiaOrigen.getNoGuia());
-        g.setSerieElect(cbxSerie.getValue());
+        g.setSerieElect(serieGuia);
         g.setFecEmision(dpFecEmision.getValue());
         g.setFecInicioTraslado(dpFecInicio.getValue());
         g.setObservaciones(texto(txtObservaciones));
@@ -801,10 +805,11 @@ public class GuiaRemisionController implements Initializable {
         if (guiaOrigen == null) {
             return marcarError(txtNoFactu, "Primero cargue la factura o boleta: la guía se vincula a su guía interna (FACTU.ARPFFE).");
         }
-        if (cbxSerie.getValue() == null) {
-            return marcarError(cbxSerie, "Seleccione la serie de la guía de remisión.");
+        if (serieGuia == null) {
+            Mensaje.alerta(null, "Validación", "No hay una serie activa para la guía de remisión.\n"
+                    + "Registre una en FACTU.GRE_SERIE_CTRL (ej. T001).");
+            return false;
         }
-
         // Fechas
         LocalDate emision = dpFecEmision.getValue();
         LocalDate inicio = dpFecInicio.getValue();
@@ -1023,16 +1028,13 @@ public class GuiaRemisionController implements Initializable {
         }
     }
 
+    /**
+     * Los atajos se registran en el propio formulario (rootStack) y no en la escena:
+     * dentro de una pestaña del Dashboard la escena es la de toda la aplicación, y
+     * Esc / Ctrl+S / F3 actuarían en cualquier otra pantalla.
+     */
     private void configurarAtajos() {
-        rootStack.sceneProperty().addListener((o, a, scene) -> {
-            if (scene != null) {
-                registrarAtajos(scene);
-            }
-        });
-    }
-
-    private void registrarAtajos(Scene scene) {
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, ev -> {
+        rootStack.addEventFilter(KeyEvent.KEY_PRESSED, ev -> {
             if (overlayCarga.isVisible()) {
                 return;
             }
@@ -1184,6 +1186,9 @@ public class GuiaRemisionController implements Initializable {
 
     private void limpiarErrorAlEditar(Control... campos) {
         for (Control c : campos) {
+            if (c == null) {
+                continue;   // campo eliminado del FXML: se ignora en lugar de lanzar NPE
+            }
             c.focusedProperty().addListener((o, a, foco) -> {
                 if (!foco) {
                     return;
