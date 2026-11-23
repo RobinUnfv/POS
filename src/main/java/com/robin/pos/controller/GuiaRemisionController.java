@@ -967,7 +967,7 @@ public class GuiaRemisionController implements Initializable {
         };
     }
 
-    private void imprimirEnSegundoPlano(long idGuia) {
+    private void imprimirEnSegundoPlano(String idGuia) {
         Thread t = new Thread(() -> {
             try {
                 new GuiaRemisionReporte().abrirPdf(idGuia);

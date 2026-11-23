@@ -7,13 +7,7 @@ import com.robin.pos.model.ItemCatalogo;
 import com.robin.pos.util.ConexionBD;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -311,8 +305,9 @@ public class GuiaRemisionDao {
      *
      * @return la misma guía con ID_GUIA, CORR_ELECT y HORA_EMISION asignados.
      */
-    public GuiaRemision registrar(GuiaRemision g) throws SQLException {
+    public GuiaRemision registrar(GuiaRemision guiaRemision) throws SQLException {
         Connection cx = null;
+        CallableStatement cstmt = null;
         try {
             cx = ConexionBD.obtenerConexion();
             cx.setAutoCommit(false);
@@ -341,7 +336,7 @@ public class GuiaRemisionDao {
                 ps.setString(3, g.getSerieElect());
                 ps.executeUpdate();
             }
-            */
+
             // 3.2 ID de la guía
             long idGuia;
             try (PreparedStatement ps = cx.prepareStatement("SELECT FACTU.SEQ_ARGUIA.NEXTVAL FROM DUAL");
@@ -349,28 +344,62 @@ public class GuiaRemisionDao {
                 rs.next();
                 idGuia = rs.getLong(1);
             }
+            */
+            try {
+                String sql = "{? = call FACTU.PR_DOCUMENTO.GET_NUM_DOCUMENTO(?, ?, ?)}";
+                cstmt = cx.prepareCall(sql);
 
-            g.setIdGuia(idGuia);
-            int corr = Integer.parseInt(g.getSerieElect().substring(4));
-            g.setCorrElect(String.valueOf(corr));
+                cstmt.registerOutParameter(1, Types.VARCHAR);
 
-            System.out.println("ID guía: " + g.getSerieElect());
-            System.out.println("ID guía: " + g.getIdGuia() + ", correlativo: " + g.getCorrElect());
-            g.setHoraEmision(LocalTime.now().format(HORA));
+                cstmt.setString(2, guiaRemision.getNoCia().trim());    // p_cNoCia
+                cstmt.setString(3, "41"); // p_cCentro
+                cstmt.setString(4, "G");  // p_cTipoDoc
+
+                cstmt.execute();
+
+                String idGuia = cstmt.getString(1);
+
+                if (idGuia == null || idGuia.trim().isEmpty()) {
+                    throw new SQLException("No se pudo obtener el número de guía.");
+                }
+
+
+            } catch (java.sql.SQLException ex) {
+                System.out.println("Error SQL al obtener número: " + ex.getMessage());
+                throw new SQLException("Error SQL al obtener número de guía.", ex);
+            } catch (Exception ex) {
+                System.out.println("Error inesperado: " + ex.getMessage());
+                throw new SQLException("Error inesperado al obtener número de guía.", ex);
+            } finally {
+                try {
+                    if (cstmt != null) cstmt.close();
+                    if (cx != null) cx.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            guiaRemision.setIdGuia(idGuia);
+            int corr = Integer.parseInt(guiaRemision.getSerieElect().substring(4));
+            guiaRemision.setCorrElect(String.valueOf(corr));
+
+            System.out.println("ID guía: " + guiaRemision.getSerieElect());
+            System.out.println("ID guía: " + guiaRemision.getIdGuia() + ", correlativo: " + guiaRemision.getCorrElect());
+            guiaRemision.setHoraEmision(LocalTime.now().format(HORA));
 
             // 3.3 Cabecera
-            insertarCabecera(cx, g);
+            insertarCabecera(cx, guiaRemision);
 
             // 3.4 Detalle
-            insertarDetalle(cx, g);
+            insertarDetalle(cx, guiaRemision);
 
             cx.commit();
-            System.out.println("GRE registrada: " + g.getNumeroCompleto() + " (ID " + g.getIdGuia() + ")");
-            return g;
+            System.out.println("GRE registrada: " + guiaRemision.getNumeroCompleto() + " (ID " + guiaRemision.getIdGuia() + ")");
+            return guiaRemision;
         } catch (SQLException e) {
             ConexionBD.rollback(cx);
-            g.setIdGuia(null);
-            g.setCorrElect(null);
+            guiaRemision.setIdGuia(null);
+            guiaRemision.setCorrElect(null);
             LOGGER.log(Level.SEVERE, "Error al registrar la guía de remisión", e);
             throw e;
         } finally {
@@ -605,7 +634,7 @@ public class GuiaRemisionDao {
     }
 
     /** Obtiene la guía completa (cabecera + detalle) para reimpresión o consulta. */
-    public GuiaRemision obtenerPorId(long idGuia) throws SQLException {
+    public GuiaRemision obtenerPorId(String idGuia) throws SQLException {
         String sqlCab = """
             SELECT A.*, M.DESCRIPCION AS DESC_MOTIVO_CAT
               FROM FACTU.ARGUIA A
@@ -621,7 +650,7 @@ public class GuiaRemisionDao {
         try (Connection cx = ConexionBD.obtenerConexion()) {
             GuiaRemision g = null;
             try (PreparedStatement ps = cx.prepareStatement(sqlCab)) {
-                ps.setLong(1, idGuia);
+                ps.setString(1, idGuia);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         g = mapearGuia(rs);
@@ -632,7 +661,7 @@ public class GuiaRemisionDao {
                 return null;
             }
             try (PreparedStatement ps = cx.prepareStatement(sqlDet)) {
-                ps.setLong(1, idGuia);
+                ps.setString(1, idGuia);
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         GuiaRemisionDetalle d = new GuiaRemisionDetalle(
@@ -651,7 +680,7 @@ public class GuiaRemisionDao {
 
     private GuiaRemision mapearGuia(ResultSet rs) throws SQLException {
         GuiaRemision g = new GuiaRemision();
-        g.setIdGuia(rs.getLong("ID_GUIA"));
+        g.setIdGuia(rs.getString("ID_GUIA"));
         g.setNoCia(rs.getString("NO_CIA"));
         g.setBodega(rs.getString("BODEGA"));
         g.setNoGuia(rs.getString("NO_GUIA"));

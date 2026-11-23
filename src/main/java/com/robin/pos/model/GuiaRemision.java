@@ -13,7 +13,7 @@ import java.util.List;
 public class GuiaRemision {
 
     // ---- Identificación ----
-    private Long idGuia;
+    private String idGuia;
     private String noCia;
     private String bodega;
     private String noGuia;             // N° guía interna ARPFFE
@@ -104,8 +104,8 @@ public class GuiaRemision {
         }
     }
 
-    public Long getIdGuia() { return idGuia; }
-    public void setIdGuia(Long v) { idGuia = v; }
+    public String getIdGuia() { return idGuia; }
+    public void setIdGuia(String v) { idGuia = v; }
     public String getNoCia() { return noCia; }
     public void setNoCia(String v) { noCia = v; }
     public String getBodega() { return bodega; }

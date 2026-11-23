@@ -78,7 +78,7 @@ public class GuiaRemisionReporte {
     }
 
     /** Llena el reporte a partir del ID de la guía (lee ARGUIA / ARGUIL). */
-    public JasperPrint generar(long idGuia) throws JRException, SQLException {
+    public JasperPrint generar(String idGuia) throws JRException, SQLException {
         GuiaRemision guia = dao.obtenerPorId(idGuia);
         if (guia == null) {
             throw new JRException("No existe la guía con ID " + idGuia);
@@ -134,7 +134,7 @@ public class GuiaRemisionReporte {
     }
 
     /** Genera el PDF en la carpeta temporal y lo abre con el visor predeterminado. */
-    public File abrirPdf(long idGuia) throws JRException, SQLException, IOException {
+    public File abrirPdf(String idGuia) throws JRException, SQLException, IOException {
         JasperPrint print = generar(idGuia);
         File pdf = File.createTempFile("GRE-" + idGuia + "-", ".pdf");
         pdf.deleteOnExit();
